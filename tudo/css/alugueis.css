@@ -1,0 +1,115 @@
+*{margin: 0; padding: 0; box-sizing: border-box;}
+
+
+body, html {
+  font-family: 'Merriweather', serif;
+  height: 100%;
+}
+img{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.TelaAlugueis{
+    display: flex;
+}
+.ladoDireito {
+  width: 85%;
+  display: flex;
+  flex-direction: column;
+}
+.containerOptions{
+    width: 15%;
+    height: 100vh;
+    font-size: 3vh;
+    display: flex;
+    
+    flex-direction: column;
+    box-shadow: 5px 0 10px rgba(0, 0, 0, 0.5); /* sombra na direita */
+    background-color: rgba(10, 101, 104, 1);
+}
+a{
+    text-decoration: none;
+    color: inherit;
+}
+.logoWDA{
+    width: 37%;
+    margin-left: 5%;
+    /* background-color: brown; */
+
+}
+.alugueisOption{
+    background-color: rgba(159, 252, 255, 1);
+    color:  black;
+    height: 10%;
+    padding-left: 15%;
+    align-items: center;  
+    display: flex;
+}
+#options-heigh{
+    height: 10%;
+    padding-left: 5%;
+    align-items: center;  
+    display: flex;
+    transition: background-color 0.3s; /* animação suave */
+    cursor: pointer; /* muda o cursor para indicar interatividade */
+}
+
+#options-heigh:hover {
+  background-color: #0a6568; /* cor ao passar o mouse */
+  color:  rgba(159, 252, 255, 1); /* opcional: muda a cor do texto */
+}
+
+.containerMenu{
+    width: 100%;
+    display: flex;
+    justify-content: center; /* centraliza na horizontal */
+    align-items: center;  
+    background-color: rgba(10, 101, 104, 1);
+}
+#containerMenu_heigh{
+    height: 7vh;
+}
+.Name{
+    width: 85%;
+    height: 100%;
+    font-size: 5vh;
+    padding-left: 2%;
+    font-family: 'Archivo Black', sans-serif;
+    color: rgba(159, 252, 255, 1);
+}
+.emailUser{
+    width: 15%;
+    margin-left: auto;
+    height: 100%;
+    justify-content: center; /* centraliza na horizontal */
+    align-items: center;  
+    display: flex;
+    color: rgba(159, 252, 255, 1);
+    /* background-color: rgb(20, 58, 58); */
+}
+.logoUser{
+    width: 3%;
+    height: 100%;
+    margin-right: 2%;
+    margin-left: auto;
+    /* background-color: aqua; */
+}
+.containerPesquisa{
+    width: 100%;
+    height: 6%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3vh;
+    gap: 2vh;
+    margin-top: 1%;
+    /* background-color: blueviolet; */
+}
+#pesquisa{
+    width: 80%;
+    height: 100%;
+    border-radius: 8px;
+    background-color:  rgba(242, 255, 255, 1);
+}
