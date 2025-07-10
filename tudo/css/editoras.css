@@ -121,4 +121,83 @@ a{
     font-size: 3vh;
     background-color: #0a6568;
     color: white;
+    cursor: pointer;
+}
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: none; /* começa invisível */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal {
+    background-color: white;
+    width: 70%;
+    height: 70%; 
+    margin-left: 15%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 3vh;
+}
+
+.textModal1{
+    /* background-color: #aefcfc; */
+    font-size: 5vh;
+    margin-bottom: 5%;
+
+}
+.modal-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5vh;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 5%;
+}
+
+.modal-form input {
+    width: 30%;
+    height: 25%;
+    padding: 10px;
+    font-size: 2vh;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.modal-buttons {
+    width: 30%;
+    height: 10%;
+    margin-top: 2vh;
+    display: flex;
+    justify-content: center;;
+    align-items: center;
+    gap: 3vh;
+    
+} 
+
+.btn-cadastrar, .btn-cancelar {
+    width: 100%;
+    height: 100%;
+    font-size: 4vh;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-cadastrar {
+    background-color: #aefcfc;
+    color: black;
+}
+
+.btn-cancelar {
+    background-color: #0a6568;
+    color: white;
 }

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Locadora De Livros</title>
     <link rel="stylesheet" href="style.css">
+    
     <link href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap" rel="stylesheet">
 
 </head>
@@ -30,9 +31,34 @@
             <div class="containerButton">
                 <input class="button" type="button" value="Logar" id="logar" onclick="logar()">
             </div>
+            <div id="res">Erro ao fazer o Login. Email ou senha invalidos</div>
         </div>
     </div>
     
-    
+    <script>
+          function logar() {
+            const emailInput = document.getElementById("email");
+            const senhaInput = document.getElementById("senha");
+            const email = emailInput.value;
+            const senha = senhaInput.value;
+            const mensagemErro = document.getElementById("res");
+
+            // Limpar estado anterior
+            emailInput.classList.remove("erro");
+            senhaInput.classList.remove("erro");
+            mensagemErro.style.display = "none";
+
+            if (email === "admin@gmail.com" && senha === "12345678") {
+                window.location.href = "/tudo/html/dashboard.html";
+            } else {
+                // Mostrar erro
+                mensagemErro.style.display = "flex";
+
+                // Destacar campos
+                emailInput.classList.add("erro");
+                senhaInput.classList.add("erro");
+            }
+        }
+    </script>
 </body>
 </html>

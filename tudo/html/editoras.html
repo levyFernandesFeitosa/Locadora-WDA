@@ -32,7 +32,41 @@
                 <input type="text" name="pesquisa" id="pesquisa">
                 <input type="button" value="Cadastrar" id="button">
             </div>
+            
+        </div>
+        <div id="modal-overlay" class="modal-overlay">
+                <div class="modal">
+                    <div class="textModal1">Cadastrar Locatário</div>
+                    <div class="modal-form">
+                        <input type="text" placeholder="Nome do Locatário">
+                        <input type="text" placeholder="Telefone">
+                        <input type="text" placeholder="CPF">
+                        <input type="email" placeholder="Email">
+                        <input type="text" placeholder="CEP">
+                        <input type="text" placeholder="UF">
+                        <input type="text" placeholder="Cidade">
+                        <input type="text" placeholder="Bairro">
+                        <input type="text" placeholder="Rua">
+                        <input type="text" placeholder="N° Casa/Condomínio">
+                    </div>
+                    <div class="modal-buttons">
+                        <button class="btn-cadastrar">Cadastrar</button>
+                        <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
+                    </div>
+                </div>
         </div>
     </div>
+    <script>
+        const botaoCadastrar = document.getElementById('button');
+        const modalOverlay = document.getElementById('modal-overlay');
+
+        botaoCadastrar.addEventListener('click', () => {
+            modalOverlay.style.display = 'flex';
+        });
+
+        function fecharModal() {
+            modalOverlay.style.display = 'none';
+        }
+    </script>
 </body>
 </html>
