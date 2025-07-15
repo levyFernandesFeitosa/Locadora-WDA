@@ -143,6 +143,15 @@ a{
     color: white;
     cursor: pointer;
 }
+.titulo{
+    width: 100%;
+    margin-top: 1%;
+    font-size: 5vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
 .modal-overlay {
     position: fixed;
     top: 0;

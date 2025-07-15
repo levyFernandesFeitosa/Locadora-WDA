@@ -113,3 +113,12 @@ a{
     border-radius: 8px;
     background-color:  rgba(242, 255, 255, 1);
 }
+.titulo{
+    width: 100%;
+    margin-top: 1%;
+    font-size: 5vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
