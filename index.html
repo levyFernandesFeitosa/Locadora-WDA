@@ -36,29 +36,32 @@
     </div>
     
     <script>
-          function logar() {
-            const emailInput = document.getElementById("email");
-            const senhaInput = document.getElementById("senha");
-            const email = emailInput.value;
-            const senha = senhaInput.value;
+        const usuarios = [
+            { email: "admin@gmail.com", senha: "12345678", tipo: "admin" },
+            { email: "editor@gmail.com", senha: "12345678", tipo: "editor" },
+            { email: "leitor@gmail.com", senha: "12345678", tipo: "leitor" }
+        ];
+
+        function logar() {
+            const emailInput = document.getElementById("email").value;
+            const senhaInput = document.getElementById("senha").value;
             const mensagemErro = document.getElementById("res");
 
-            // Limpar estado anterior
-            emailInput.classList.remove("erro");
-            senhaInput.classList.remove("erro");
-            mensagemErro.style.display = "none";
+            const usuario = usuarios.find(u => u.email === emailInput && u.senha === senhaInput);
 
-            if (email === "admin@gmail.com" && senha === "12345678") {
+            if (usuario) {
+                // Salvar tipo do usuário no localStorage para usar em outras telas
+                localStorage.setItem("tipoUsuario", usuario.tipo);
+                localStorage.setItem("emailUsuario", usuario.email);
+                
                 window.location.href = "/tudo/html/dashboard.html";
             } else {
-                // Mostrar erro
                 mensagemErro.style.display = "flex";
-
-                // Destacar campos
-                emailInput.classList.add("erro");
-                senhaInput.classList.add("erro");
+                document.getElementById("email").classList.add("erro");
+                document.getElementById("senha").classList.add("erro");
             }
         }
     </script>
+
 </body>
 </html>

@@ -132,61 +132,6 @@ a{
     align-items: center;
     
 }
-.tabela-container {
-    width: 90%;
-    margin: 2vh auto;
-    margin-top: 2%;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.tabela-locatarios {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 2.5vh;
-}
-
-.tabela-locatarios thead {
-    background-color: #0a6568;
-    color: white;
-}
-
-.tabela-locatarios th, .tabela-locatarios td {
-    padding: 12px;
-    text-align: left;
-}
-
-.tabela-locatarios tbody tr {
-    background-color: #aefcfc;
-    border-bottom: 1px solid #ccc;
-}
-
-.icone-editar,
-.icone-deletar, .icone-visualizar {
-    width: 4vh;
-    height: 4vh;
-    cursor: pointer;
-    margin-right: 10px;
-    transition: transform 0.2s;
-}
-.icone-visualizar:hover {
-    transform: scale(1.1);
-}
-.icone-editar:hover {
-    transform: scale(1.1);
-}
-
-.icone-deletar:hover {
-    transform: scale(1.1);
-}
-
-.icone-editar:hover {
-    color: green;
-}
-
-.icone-deletar:hover {
-    color: red;
-}
 
 .modal-overlay {
     position: fixed;
@@ -265,6 +210,61 @@ a{
 .btn-cancelar {
     background-color: #0a6568;
     color: white;
+}
+.tabela-container {
+    width: 90%;
+    margin: 2vh auto;
+    margin-top: 2%;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.tabela-locatarios {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 2.5vh;
+}
+
+.tabela-locatarios thead {
+    background-color: #0a6568;
+    color: white;
+}
+
+.tabela-locatarios th, .tabela-locatarios td {
+    padding: 12px;
+    text-align: left;
+}
+
+.tabela-locatarios tbody tr {
+    background-color: #aefcfc;
+    border-bottom: 1px solid #ccc;
+}
+
+.icone-editar,
+.icone-deletar, .icone-visualizar {
+    width: 4vh;
+    height: 4vh;
+    cursor: pointer;
+    margin-right: 10px;
+    transition: transform 0.2s;
+}
+.icone-visualizar:hover {
+    transform: scale(1.1);
+}
+.icone-editar:hover {
+    transform: scale(1.1);
+}
+
+.icone-deletar:hover {
+    transform: scale(1.1);
+}
+
+.icone-editar:hover {
+    color: green;
+}
+
+.icone-deletar:hover {
+    color: red;
 }
 .btn-salvar{
     background-color: rgba(159, 252, 255, 1);

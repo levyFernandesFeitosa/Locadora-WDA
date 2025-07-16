@@ -34,6 +34,27 @@
                 <input type="button" value="Cadastrar" id="button">
             </div>
             <div class="titulo">Lista de Locatários</div>
+            <div id="modal-overlay" class="modal-overlay">
+                <div class="modal">
+                    <div class="textModal1">Cadastrar Locatário</div>
+                    <div class="modal-form">
+                        <input type="text" id="inputNome" placeholder="Nome do Locatário">
+                        <input type="text" id="inputTelefone" placeholder="Telefone">
+                        <input type="text" id="inputCPF" placeholder="CPF">
+                        <input type="email" id="inputEmail" placeholder="Email">
+                        <input type="text" id="inputCEP" placeholder="CEP">
+                        <input type="text" id="inputUF" placeholder="UF">
+                        <input type="text" id="inputCidade" placeholder="Cidade">
+                        <input type="text" id="inputBairro" placeholder="Bairro">
+                        <input type="text" id="inputRua" placeholder="Rua">
+                        <input type="text" id="inputNumero" placeholder="N° Casa/Condomínio">
+                    </div>
+                    <div class="modal-buttons">
+                        <button class="btn-cadastrar">Cadastrar</button>
+                        <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
+                    </div>
+                </div>
+            </div>
             <div class="tabela-container">
                 <table class="tabela-locatarios">
                     <thead>
@@ -60,28 +81,6 @@
                         <!-- Novos locatários aparecerão aqui -->
                     </tbody>
                 </table>
-            </div>
-
-            <div id="modal-overlay" class="modal-overlay">
-                <div class="modal">
-                    <div class="textModal1">Cadastrar Locatário</div>
-                    <div class="modal-form">
-                        <input type="text" id="inputNome" placeholder="Nome do Locatário">
-                        <input type="text" id="inputTelefone" placeholder="Telefone">
-                        <input type="text" id="inputCPF" placeholder="CPF">
-                        <input type="email" id="inputEmail" placeholder="Email">
-                        <input type="text" id="inputCEP" placeholder="CEP">
-                        <input type="text" id="inputUF" placeholder="UF">
-                        <input type="text" id="inputCidade" placeholder="Cidade">
-                        <input type="text" id="inputBairro" placeholder="Bairro">
-                        <input type="text" id="inputRua" placeholder="Rua">
-                        <input type="text" id="inputNumero" placeholder="N° Casa/Condomínio">
-                    </div>
-                    <div class="modal-buttons">
-                        <button class="btn-cadastrar">Cadastrar</button>
-                        <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
-                    </div>
-                </div>
             </div>
             <div id="modal-visualizar" class="modal-overlay">
                 <div class="modal">

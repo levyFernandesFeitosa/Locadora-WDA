@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/tudo/css/logOut.css">
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap" rel="stylesheet">
-
+    
 </head>
 <body>
     <div class="TelaLogout">
@@ -37,11 +37,30 @@
                     <p>
                         Sentiremos sua falta!
                     </p>
-                    <input type="button" value="Log Out">
+                    <input type="button" id="btnLogout" value="Log Out">
                 </div>
                 
             </div>
         </div>
+        <script>
+            // Exibir o email no topo (opcional, se quiser manter isso na tela)
+            const emailUsuario = localStorage.getItem("emailUsuario");
+            document.querySelector('.emailUser').textContent = emailUsuario;
+
+            // Evento do botão de logout
+            document.getElementById('btnLogout').addEventListener('click', () => {
+                // Limpar o localStorage (remove email e tipo de usuário)
+                localStorage.removeItem("emailUsuario");
+                localStorage.removeItem("tipoUsuario");
+
+                // Ou se quiser limpar tudo do localStorage:
+                // localStorage.clear();
+
+                // Redirecionar para a tela de login
+                window.location.href = "/index.html"; // Ajuste o caminho se for diferente
+            });
+        </script>
+
         
 </body>
 </html>
