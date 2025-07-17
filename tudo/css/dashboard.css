@@ -98,4 +98,52 @@ a{
     margin-left: auto;
     /* background-color: aqua; */
 }
+.containerDashboard {
+    padding: 2%;
+    display: flex;
+    flex-direction: column;
+    gap: 3vh;
+}
+
+.cardsResumo {
+    display: flex;
+    justify-content: space-around;
+}
+
+.cardAlugueis, .cardTopLivros, .cardEstoques {
+    background-color: #f0f0f0;               
+    border-radius: 10px;
+    width: 25%; 
+    height: 100%;                 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+#graficoPizza{
+    width: 80%;
+    height: 80%;
+    margin: 0 auto;
+    display: block;
+}
+
+.graficosInferiores {
+    display: flex;
+    justify-content: space-around;
+    gap: 2vw;
+}
+
+.graficoLocatarios, .graficoAtrasos {
+    
+    padding: 1.5%;              
+    border-radius: 10px;
+    width: 40%;
+    
+}
+
+
+canvas {
+    canvas {
+    width: 100% !important;
+    height: 1vh !important;  /* Menor altura, mais compacto */
+}
+}
+
 

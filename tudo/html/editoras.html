@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="/tudo/css/editoras.css">
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap" rel="stylesheet">
-
 </head>
 <body>
     <div class="TelaEditora">
@@ -35,7 +34,7 @@
             <div class="titulo">Lista de Editoras</div>
             <div id="modal-overlay" class="modal-overlay">
                 <div class="modal">
-                    <div class="textModal1">Cadastrar Editoras</div>
+                    <div class="textModal1">Cadastrar Editora</div>
                     <div class="modal-form">
                         <input type="text" id="inputNomeEditora" placeholder="Nome da Editora">
                         <input type="email" id="inputEmailEditora" placeholder="Email da Editora">
@@ -52,7 +51,7 @@
                 <table class="tabela-locatarios">
                     <thead>
                         <tr>
-                            <th>Nome da Locadora</th>
+                            <th>Nome da Editora</th>
                             <th>Telefone</th>
                             <th>Email</th>
                             <th>Site</th>
@@ -60,33 +59,22 @@
                         </tr>
                     </thead>
                     <tbody id="tbody-locatarios">
-                        <tr>
-                            <td>levy</td>
-                            <td>123</td>
-                            <td>123</td>
-                            <td>123</td>
-                            <td>
-                            <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" alt="Editar">
-                            <img src="/tudo/icons/lixo.png" class="icone-deletar" alt="Deletar">
-                        </td>
-                        </tr>
-                        <!-- Novos locatários aparecerão aqui -->
+                        <!-- Dados dinâmicos -->
                     </tbody>
                 </table>
             </div>
+
             <div id="modal-editar" class="modal-overlay">
                 <div class="modal">
                     <div class="textModal1">Atualizar Editora</div>
-                    <div class="modal-form" id="dadosAtualização">
-                        <!-- Campos preenchidos via JS -->
-                    </div>
+                    <div class="modal-form" id="dadosAtualizacao"></div>
                     <div class="modal-buttons">
                         <button class="btn-salvar" onclick="abrirModalConfirmarEditar()">Atualizar</button>
                         <button class="btn-cancelar" onclick="fecharModalAtualizar()">Fechar</button>
                     </div>
                 </div>
             </div>
-            <!-- Modal Confirmação Atualizar -->
+
             <div id="modal-confirmar-editar" class="modal-overlay">
                 <div id="delete_edit" class="modal">
                     <div class="textModal1">Certeza que deseja atualizar essa Editora?</div>
@@ -97,7 +85,6 @@
                 </div>
             </div>
 
-            <!-- Modal Confirmação Deletar -->
             <div id="modal-confirmar-deletar" class="modal-overlay">
                 <div id="delete_edit" class="modal">
                     <div class="textModal1">Certeza que deseja excluir essa Editora?</div>
@@ -110,20 +97,47 @@
             </div>
 
         </div>
-        
     </div>
+
     <script>
+        const emailUsuario = localStorage.getItem("emailUsuario");
+        document.querySelector('.emailUser').textContent = emailUsuario;
+
         const btnCadastrar = document.querySelector('.btn-cadastrar');
         const tbody = document.getElementById('tbody-locatarios');
         const botaoCadastrar = document.getElementById('button');
         const modalOverlay = document.getElementById('modal-overlay');
 
+        let editoras = JSON.parse(localStorage.getItem('editoras')) || [];
         let editando = false;
         let linhaEditando = null;
 
+        function salvarEditoras() {
+            localStorage.setItem('editoras', JSON.stringify(editoras));
+        }
+
+        function carregarEditoras() {
+            tbody.innerHTML = '';
+            editoras.forEach((editora, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${editora.nome}</td>
+                    <td>${editora.telefone}</td>
+                    <td>${editora.email}</td>
+                    <td>${editora.site}</td>
+                    <td>
+                        <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" data-index="${index}" alt="Editar">
+                        <img src="/tudo/icons/lixo.png" class="icone-deletar" data-index="${index}" alt="Deletar">
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        carregarEditoras();
+
         botaoCadastrar.addEventListener('click', () => {
             limparCampos();
-            editando = false;
             abrirModal();
         });
 
@@ -133,131 +147,84 @@
             const email = document.getElementById('inputEmailEditora').value.trim();
             const site = document.getElementById('inputSiteEditora').value.trim();
 
-            
-
-            if (!nome || !telefone || !site || !email) {
-                alert("Preencha todos os campos obrigatórios.");
+            if (!nome || !telefone || !email || !site) {
+                alert("Preencha todos os campos.");
                 return;
             }
 
-            if (editando) {
-                linhaEditando.children[0].textContent = nome;
-                linhaEditando.children[1].textContent = telefone;
-                linhaEditando.children[2].textContent = email;
-                linhaEditando.children[3].textContent = site;
-            } else {
-                const novaLinha = document.createElement('tr');
-                novaLinha.innerHTML = `
-                    <td>${nome}</td>
-                    <td>${telefone}</td>
-                    <td>${email}</td>
-                    <td>${site}</td>
-                    <td>
-                        <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" alt="Editar">
-                        <img src="/tudo/icons/lixo.png" class="icone-deletar" alt="Deletar">
-                    </td>
-                `;
-
-                tbody.appendChild(novaLinha);
-            }
-
+            const novaEditora = { nome, telefone, email, site };
+            editoras.push(novaEditora);
+            salvarEditoras();
+            carregarEditoras();
             fecharModal();
-            limparCampos();
         });
 
-        function abrirModal() {
-            modalOverlay.style.display = 'flex';
-        }
-
-        function fecharModal() {
-            modalOverlay.style.display = 'none';
-        }
-
-        function limparCampos() {
-            document.querySelectorAll('.modal-form input').forEach(input => input.value = '');
-        }
-
-        // Excluir
         tbody.addEventListener('click', (e) => {
-            if (e.target.classList.contains('icone-deletar')) {
-                const linha = e.target.closest('tr');
-                abrirModalConfirmarDeletar(linha);
-            }
-            document.getElementById('btnConfirmarDeletar').addEventListener('click', () => {
-                if (locatarioASerDeletado) {
-                    locatarioASerDeletado.remove();
-                    locatarioASerDeletado = null;
-                    fecharModalConfirmarDeletar();
-                }
-            });
-            //editar
-            document.getElementById('btnConfirmarEditar').addEventListener('click', () => {
-                Atualizar();
-                fecharModalConfirmarEditar();
-            });
+            const index = e.target.dataset.index;
+
             if (e.target.classList.contains('icone-editar')) {
-                linhaEditando = e.target.closest('tr');
+                linhaEditando = index;
+                const editora = editoras[index];
 
-                const nome = linhaEditando.children[0].textContent;
-                const telefone = linhaEditando.children[1].textContent;
-                const email = linhaEditando.children[2].textContent;
-                const site = linhaEditando.children[3].textContent;
-
-                const container = document.getElementById('dadosAtualização');
-                container.innerHTML = `
-                    <input type="text" id="editNome" value="${nome}">
-                    <input type="text" id="editTelefone" value="${telefone}">
-                    <input type="email" id="editEmail" value="${email}">
-                    <input type="text" id="editCPF" value="${site}">
+                document.getElementById('dadosAtualizacao').innerHTML = `
+                    <input type="text" id="editNome" value="${editora.nome}">
+                    <input type="text" id="editTelefone" value="${editora.telefone}">
+                    <input type="email" id="editEmail" value="${editora.email}">
+                    <input type="text" id="editSite" value="${editora.site}">
                 `;
 
                 document.getElementById('modal-editar').style.display = 'flex';
             }
 
+            if (e.target.classList.contains('icone-deletar')) {
+                abrirModalConfirmarDeletar(index);
+            }
         });
-        function Atualizar() {
+
+        document.getElementById('btnConfirmarEditar').addEventListener('click', () => {
             const nome = document.getElementById('editNome').value.trim();
             const telefone = document.getElementById('editTelefone').value.trim();
             const email = document.getElementById('editEmail').value.trim();
-            const site = document.getElementById('editCPF').value.trim();
+            const site = document.getElementById('editSite').value.trim();
 
-            if (!nome || !telefone || !site || !email) {
-                alert("Preencha todos os campos!");
+            if (!nome || !telefone || !email || !site) {
+                alert("Preencha todos os campos.");
                 return;
             }
 
-            // Atualiza a linha na tabela
-            linhaEditando.children[0].textContent = nome;
-            linhaEditando.children[1].textContent = telefone;
-            linhaEditando.children[2].textContent = email;
-            linhaEditando.children[3].textContent = site;
-
+            editoras[linhaEditando] = { nome, telefone, email, site };
+            salvarEditoras();
+            carregarEditoras();
             fecharModalAtualizar();
-        }
-        function fecharModalAtualizar() {
-            document.getElementById('modal-editar').style.display = 'none';
-        }
-        // Variável global para controlar qual ação está sendo confirmada
-        let locatarioASerDeletado = null;
+            fecharModalConfirmarEditar();
+        });
+
+        function abrirModal() { modalOverlay.style.display = 'flex'; }
+        function fecharModal() { modalOverlay.style.display = 'none'; }
+        function limparCampos() { document.querySelectorAll('.modal-form input').forEach(input => input.value = ''); }
 
         function abrirModalConfirmarEditar() {
             document.getElementById('modal-confirmar-editar').style.display = 'flex';
         }
-
         function fecharModalConfirmarEditar() {
             document.getElementById('modal-confirmar-editar').style.display = 'none';
         }
-
-        function abrirModalConfirmarDeletar(linha) {
-            locatarioASerDeletado = linha;
-            document.getElementById('modal-confirmar-deletar').style.display = 'flex';
+        function fecharModalAtualizar() {
+            document.getElementById('modal-editar').style.display = 'none';
         }
 
+        function abrirModalConfirmarDeletar(index) {
+            document.getElementById('modal-confirmar-deletar').style.display = 'flex';
+            document.getElementById('btnConfirmarDeletar').onclick = () => {
+                editoras.splice(index, 1);
+                salvarEditoras();
+                carregarEditoras();
+                fecharModalConfirmarDeletar();
+            };
+        }
         function fecharModalConfirmarDeletar() {
             document.getElementById('modal-confirmar-deletar').style.display = 'none';
         }
-
-
     </script>
 </body>
 </html>

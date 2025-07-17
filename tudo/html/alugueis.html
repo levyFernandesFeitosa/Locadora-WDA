@@ -54,6 +54,7 @@
                             <td>123</td>
                             <td>123</td>
                             <td>
+                            <img src="/tudo/icons/gostar.png" class="icone-recebido" alt="Marcar como Recebido">
                             <img src="/tudo/icons/olho.png" class="icone-visualizar" alt="Visualizar">
                             <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" alt="Editar">
                             
@@ -94,62 +95,34 @@
                     </div>
                 </div>
             </div>
+            <div id="modal-confirmar-deletar" class="modal-overlay">
+                <div id="delete_edit" class="modal">
+                    <div class="textModal1">Certeza que deseja excluir esse locatário?</div>
+                    <div class="textModal2">Após essa ação não haverá retorno.</div>
+                    <div class="modal-buttons">
+                        <button class="btn-deletar" id="btnConfirmarDeletar">Excluir</button>
+                        <button class="btn-cancelar" onclick="fecharModalConfirmarDeletar()">Voltar</button>
+                    </div>
+                </div>
+            </div>
 
         </div>
         
     </div>
     <script>
-        const btnCadastrar = document.querySelector('.btn-cadastrar');
+        const tipoUsuario = localStorage.getItem("tipoUsuario");
+        const emailUsuario = localStorage.getItem("emailUsuario");
+        
+
+        // Exibir email no topo
+        document.querySelector('.emailUser').textContent = emailUsuario;
+
         const tbody = document.getElementById('tbody-locatarios');
         const botaoCadastrar = document.getElementById('button');
         const modalOverlay = document.getElementById('modal-overlay');
 
         let editando = false;
-        let linhaEditando = null;
-
-        botaoCadastrar.addEventListener('click', () => {
-            limparCampos();
-            editando = false;
-            abrirModal();
-        });
-
-        btnCadastrar.addEventListener('click', () => {
-            const nome = document.getElementById('inputNomeEditora').value.trim();
-            const telefone = document.getElementById('inputTelefoneEditora').value.trim();
-            const email = document.getElementById('inputEmailEditora').value.trim();
-            const site = document.getElementById('inputSiteEditora').value.trim();
-
-            
-
-            if (!nome || !telefone || !site || !email) {
-                alert("Preencha todos os campos obrigatórios.");
-                return;
-            }
-
-            if (editando) {
-                linhaEditando.children[0].textContent = nome;
-                linhaEditando.children[1].textContent = telefone;
-                linhaEditando.children[2].textContent = email;
-                linhaEditando.children[3].textContent = site;
-            } else {
-                const novaLinha = document.createElement('tr');
-                novaLinha.innerHTML = `
-                    <td>${nome}</td>
-                    <td>${telefone}</td>
-                    <td>${email}</td>
-                    <td>${site}</td>
-                    <td>
-                        <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" alt="Editar">
-                        <img src="/tudo/icons/lixo.png" class="icone-deletar" alt="Deletar">
-                    </td>
-                `;
-
-                tbody.appendChild(novaLinha);
-            }
-
-            fecharModal();
-            limparCampos();
-        });
+        let linhaEditando = null;  
 
         function abrirModal() {
             modalOverlay.style.display = 'flex';
@@ -195,12 +168,12 @@
 
                 const container = document.getElementById('dadosAtualização');
                 container.innerHTML = `
-                    <label>Locatário:</label><input type="text" id="editLocatario" value="${locatario}">
-                    <label>Livro:</label><input type="text" id="editLivro" value="${livro}">
-                    <label>Autor:</label><input type="text" id="editAutor" value="${autor}">
-                    <label>Editora:</label><input type="text" id="editEditora" value="${editora}">
-                    <label>Devolução:</label><input type="text" id="editDevolucao" value="${devolucao}">
-                    <label>Status:</label><input type="text" id="editStatus" value="${status}">
+                    <input type="text" id="editLocatario" value="${locatario}">
+                    <input type="text" id="editLivro" value="${livro}">
+                    <input type="text" id="editAutor" value="${autor}">
+                    <input type="text" id="editEditora" value="${editora}">
+                    <input type="text" id="editDevolucao" value="${devolucao}">
+                    <input type="text" id="editStatus" value="${status}">
                 `;
 
                 document.getElementById('modal-editar').style.display = 'flex';
@@ -209,6 +182,27 @@
                     const linha = e.target.closest('tr');
                     abrirModalVisualizar(linha);
                 }
+            
+            if (e.target.classList.contains('icone-recebido')) {
+                const linha = e.target.closest('tr');
+                const locatario = linha.children[0].textContent;
+                const tituloLivro = linha.children[1].textContent;
+
+                let alugueis = JSON.parse(localStorage.getItem("alugueis")) || [];
+
+                alugueis = alugueis.map(aluguel => {
+                    if (aluguel.locatario === locatario && aluguel.tituloLivro === tituloLivro) {
+                        aluguel.status = "Recebido";
+                        aluguel.dataRecebimento = new Date().toISOString().split('T')[0]; // Salva data atual
+                    }
+                    return aluguel;
+                });
+
+                localStorage.setItem("alugueis", JSON.stringify(alugueis));
+                carregarAlugueis();
+            }
+
+
 
 
         });
@@ -269,6 +263,55 @@
         function fecharModalConfirmarDeletar() {
             document.getElementById('modal-confirmar-deletar').style.display = 'none';
         }
+        function carregarAlugueis() {
+            const alugueis = JSON.parse(localStorage.getItem("alugueis")) || [];
+            const tbody = document.getElementById("tbody-locatarios");
+            tbody.innerHTML = ""; // Limpa a tabela antes
+
+            const hoje = new Date().toISOString().split('T')[0];
+
+            alugueis.forEach(aluguel => {
+                let status;
+                const hoje = new Date().toISOString().split('T')[0];
+
+                if (aluguel.status === "Recebido") {
+                    status = "Recebido";
+
+                    // Verifica se já passaram 7 dias do recebimento
+                    const dataRecebimento = new Date(aluguel.dataRecebimento);
+                    const hojeDate = new Date();
+                    const diferencaDias = Math.floor((hojeDate - dataRecebimento) / (1000 * 60 * 60 * 24));
+
+                    if (diferencaDias >= 1) {
+                        return; // Não renderiza esse aluguel na tabela
+                    }
+
+                } else {
+                    status = aluguel.dataDevolucao >= hoje ? "No Prazo" : "Atrasado";
+                }
+
+                const linha = document.createElement("tr");
+                linha.innerHTML = `
+                    <td>${aluguel.locatario}</td>
+                    <td>${aluguel.tituloLivro}</td>
+                    <td>${aluguel.autor}</td>
+                    <td>${aluguel.editora}</td>
+                    <td>${aluguel.dataDevolucao}</td>
+                    <td>${status}</td>
+                    <td>
+                        <img src="/tudo/icons/gostar.png" class="icone-recebido" alt="Marcar como Recebido">
+                        <img src="/tudo/icons/olho.png" class="icone-visualizar" alt="Visualizar">
+                        <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" alt="Editar">
+                        
+                    </td>
+                `;
+                tbody.appendChild(linha);
+            });
+
+        }
+
+        window.onload = carregarAlugueis;
+
 
 
     </script>

@@ -130,9 +130,6 @@
     <script>
         const tipoUsuario = localStorage.getItem("tipoUsuario");
         const emailUsuario = localStorage.getItem("emailUsuario");
-        
-
-        // Exibir email no topo
         document.querySelector('.emailUser').textContent = emailUsuario;
 
         const btnCadastrar = document.querySelector('.btn-cadastrar');
@@ -140,18 +137,34 @@
         const botaoCadastrar = document.getElementById('button');
         const modalOverlay = document.getElementById('modal-overlay');
 
-        // Permissão
         if (tipoUsuario !== "admin") {
             botaoCadastrar.style.display = "none";
         }
 
-        // Abrir modal de cadastro
+        // Carregar usuários salvos
+        window.addEventListener('DOMContentLoaded', () => {
+            const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+
+            usuarios.forEach(usuario => {
+                const novaLinha = document.createElement('tr');
+                novaLinha.innerHTML = `
+                    <td>${usuario.nome}</td>
+                    <td>${usuario.email}</td>
+                    <td>${usuario.permissao}</td>
+                    <td>
+                        <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" alt="Editar">
+                        <img src="/tudo/icons/lixo.png" class="icone-deletar" alt="Deletar">
+                    </td>
+                `;
+                tbody.appendChild(novaLinha);
+            });
+        });
+
         botaoCadastrar.addEventListener('click', () => {
             limparCampos();
             abrirModal();
         });
 
-        // Cadastrar novo usuário
         btnCadastrar.addEventListener('click', () => {
             const nome = document.getElementById('inputNomeUsuario').value.trim();
             const email = document.getElementById('inputEmailUsuario').value.trim();
@@ -181,11 +194,17 @@
             `;
 
             tbody.appendChild(novaLinha);
+
+            // Salvar no LocalStorage
+            const novoUsuario = { nome, email, permissao };
+            let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+            usuarios.push(novoUsuario);
+            localStorage.setItem('usuarios', JSON.stringify(usuarios));
+
             fecharModal();
             limparCampos();
         });
 
-        // Eventos da tabela (editar e deletar) usando delegation sem duplicar listeners
         tbody.addEventListener('click', (e) => {
             const linha = e.target.closest('tr');
 
@@ -207,7 +226,6 @@
             }
         });
 
-        // Funções dos modais
         function abrirModal() {
             modalOverlay.style.display = 'flex';
         }
@@ -220,7 +238,6 @@
             document.querySelectorAll('.modal-form input').forEach(input => input.value = '');
         }
 
-        // Editar usuário
         function abrirModalEditar(linha) {
             document.getElementById('modal-editar').style.display = 'flex';
 
@@ -233,7 +250,6 @@
             });
         }
 
-        // Confirmar edição
         document.getElementById('btnConfirmarEditar').addEventListener('click', () => {
             const nome = document.getElementById('editNome').value.trim();
             const email = document.getElementById('editEmail').value.trim();
@@ -251,15 +267,26 @@
                 return;
             }
 
+            // Atualizar na tabela
+            const emailAntigo = linhaEditando.children[1].textContent;
             linhaEditando.children[0].textContent = nome;
             linhaEditando.children[1].textContent = email;
             linhaEditando.children[2].textContent = permissao;
 
+            // Atualizar no LocalStorage
+            let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+            usuarios = usuarios.map(u => {
+                if (u.email === emailAntigo) {
+                    return { nome, email, permissao };
+                }
+                return u;
+            });
+
+            localStorage.setItem('usuarios', JSON.stringify(usuarios));
+
             fecharModalAtualizar();
             fecharModalConfirmarEditar();
         });
-
-        
 
         function abrirModalConfirmarDeletar(linha) {
             linhaParaDeletar = linha;
@@ -268,47 +295,25 @@
 
         document.getElementById('btnConfirmarDeletar').addEventListener('click', () => {
             if (linhaParaDeletar) {
+                const emailDeletado = linhaParaDeletar.children[1].textContent;
+
+                let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+                usuarios = usuarios.filter(u => u.email !== emailDeletado);
+                localStorage.setItem('usuarios', JSON.stringify(usuarios));
+
                 linhaParaDeletar.remove();
                 linhaParaDeletar = null;
                 document.getElementById('modal-confirmar-deletar').style.display = 'none';
             }
         });
+
         // Variáveis globais
         let linhaEditando = null;
         let linhaParaDeletar = null;
 
-        // Abrir modal de confirmação de edição
         function abrirModalConfirmarEditar() {
             document.getElementById('modal-confirmar-editar').style.display = 'flex';
         }
-
-        // Botão confirmar edição
-        document.getElementById('btnConfirmarEditar').addEventListener('click', () => {
-            const nome = document.getElementById('editNome').value.trim();
-            const email = document.getElementById('editEmail').value.trim();
-            const senha = document.getElementById('editSenha').value.trim();
-            const confirmarSenha = document.getElementById('editConfirmarSenha').value.trim();
-            const permissao = document.querySelector('input[name="editTipo"]:checked').value;
-
-            if (!nome || !email) {
-                alert("Nome e email são obrigatórios!");
-                return;
-            }
-
-            if (senha && senha !== confirmarSenha) {
-                alert("As senhas não conferem!");
-                return;
-            }
-
-            // Atualiza os dados na tabela
-            linhaEditando.children[0].textContent = nome;
-            linhaEditando.children[1].textContent = email;
-            linhaEditando.children[2].textContent = permissao;
-
-            fecharModalAtualizar();
-            fecharModalConfirmarEditar();
-        });
-
 
         function fecharModalAtualizar() {
             document.getElementById('modal-editar').style.display = 'none';
@@ -318,13 +323,13 @@
         function fecharModalConfirmarEditar() {
             document.getElementById('modal-confirmar-editar').style.display = 'none';
         }
+
         function fecharModalConfirmarDeletar() {
             document.getElementById('modal-confirmar-deletar').style.display = 'none';
-            linhaParaDeletar = null; // opcional, limpa referência
+            linhaParaDeletar = null;
         }
-
-
     </script>
+
         
 </body>
 </html>

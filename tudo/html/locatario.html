@@ -132,13 +132,52 @@
         
     </div>
     <script>
-        const btnCadastrar = document.querySelector('.btn-cadastrar');
+        const tipoUsuario = localStorage.getItem("tipoUsuario");
+        const emailUsuario = localStorage.getItem("emailUsuario");
+
+        document.querySelector('.emailUser').textContent = emailUsuario;
+
+        let locatarios = JSON.parse(localStorage.getItem('locatarios')) || [];
+
         const tbody = document.getElementById('tbody-locatarios');
         const botaoCadastrar = document.getElementById('button');
+        const btnCadastrar = document.querySelector('.btn-cadastrar');
         const modalOverlay = document.getElementById('modal-overlay');
 
         let editando = false;
         let linhaEditando = null;
+
+        function salvarLocatarios() {
+            localStorage.setItem('locatarios', JSON.stringify(locatarios));
+        }
+
+        function carregarLocatarios() {
+            tbody.innerHTML = '';
+            locatarios.forEach(loc => {
+                const novaLinha = document.createElement('tr');
+                novaLinha.innerHTML = `
+                    <td>${loc.nome}</td>
+                    <td>${loc.telefone}</td>
+                    <td>${loc.email}</td>
+                    <td>${loc.cpf}</td>
+                    <td>
+                        <img src="/tudo/icons/olho.png" class="icone-visualizar" alt="Visualizar">
+                        <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" alt="Editar">
+                        <img src="/tudo/icons/lixo.png" class="icone-deletar" alt="Deletar">
+                    </td>
+                `;
+                novaLinha.dataset.cep = loc.cep;
+                novaLinha.dataset.uf = loc.uf;
+                novaLinha.dataset.cidade = loc.cidade;
+                novaLinha.dataset.bairro = loc.bairro;
+                novaLinha.dataset.rua = loc.rua;
+                novaLinha.dataset.numero = loc.numeroDaCasa;
+
+                tbody.appendChild(novaLinha);
+            });
+        }
+
+        carregarLocatarios();
 
         botaoCadastrar.addEventListener('click', () => {
             limparCampos();
@@ -157,46 +196,19 @@
             const bairro = document.getElementById('inputBairro').value.trim();
             const rua = document.getElementById('inputRua').value.trim();
             const numeroDaCasa = document.getElementById('inputNumero').value.trim();
-            
 
-            if (!nome || !telefone || !cpf || !email || !cep || !uf || !cidade || !bairro || !rua || !numeroDaCasa ) {
+            if (!nome || !telefone || !cpf || !email || !cep || !uf || !cidade || !bairro || !rua || !numeroDaCasa) {
                 alert("Preencha todos os campos obrigatórios.");
                 return;
             }
 
-            if (editando) {
-                linhaEditando.children[0].textContent = nome;
-                linhaEditando.children[1].textContent = telefone;
-                linhaEditando.children[2].textContent = email;
-                linhaEditando.children[3].textContent = cpf;
-            } else {
-                const novaLinha = document.createElement('tr');
-                novaLinha.innerHTML = `
-                    <td>${nome}</td>
-                    <td>${telefone}</td>
-                    <td>${email}</td>
-                    <td>${cpf}</td>
-                    <td>
-                        <img src="/tudo/icons/olho.png" class="icone-visualizar" alt="Visualizar">
-                        <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" alt="Editar">
-                        <img src="/tudo/icons/lixo.png" class="icone-deletar" alt="Deletar">
-                    </td>
-                `;
-                novaLinha.dataset.cep = cep;
-                novaLinha.dataset.uf = uf;
-                novaLinha.dataset.cidade = cidade;
-                novaLinha.dataset.bairro = bairro;
-                novaLinha.dataset.rua = rua;
-                novaLinha.dataset.numero = numeroDaCasa;
-                novaLinha.dataset.cep = cep;
-                novaLinha.dataset.uf = uf;
-                novaLinha.dataset.cidade = cidade;
-                novaLinha.dataset.bairro = bairro;
-                novaLinha.dataset.rua = rua;
-                novaLinha.dataset.numero = numeroDaCasa;
+            const novoLocatario = {
+                nome, telefone, cpf, email, cep, uf, cidade, bairro, rua, numeroDaCasa
+            };
 
-                tbody.appendChild(novaLinha);
-            }
+            locatarios.push(novoLocatario);
+            salvarLocatarios();
+            carregarLocatarios();
 
             fecharModal();
             limparCampos();
@@ -214,128 +226,124 @@
             document.querySelectorAll('.modal-form input').forEach(input => input.value = '');
         }
 
-        // Excluir
+        // Variável global para deletar
+        let locatarioASerDeletado = null;
+
         tbody.addEventListener('click', (e) => {
+            const linha = e.target.closest('tr');
+
             if (e.target.classList.contains('icone-deletar')) {
-                const linha = e.target.closest('tr');
                 abrirModalConfirmarDeletar(linha);
             }
-            document.getElementById('btnConfirmarDeletar').addEventListener('click', () => {
-                if (locatarioASerDeletado) {
-                    locatarioASerDeletado.remove();
-                    locatarioASerDeletado = null;
-                    fecharModalConfirmarDeletar();
-                }
-            });
-            //editar
-            document.getElementById('btnConfirmarEditar').addEventListener('click', () => {
-                Atualizar();
-                fecharModalConfirmarEditar();
-            });
+
             if (e.target.classList.contains('icone-editar')) {
-                linhaEditando = e.target.closest('tr');
-
-                const nome = linhaEditando.children[0].textContent;
-                const telefone = linhaEditando.children[1].textContent;
-                const email = linhaEditando.children[2].textContent;
-                const cpf = linhaEditando.children[3].textContent;
-
-                const cep = linhaEditando.dataset.cep;
-                const uf = linhaEditando.dataset.uf;
-                const cidade = linhaEditando.dataset.cidade;
-                const bairro = linhaEditando.dataset.bairro;
-                const rua = linhaEditando.dataset.rua;
-                const numero = linhaEditando.dataset.numero;
-
-                const container = document.getElementById('dadosAtualização');
-                container.innerHTML = `
-                    <input type="text" id="editNome" value="${nome}">
-                    <input type="text" id="editTelefone" value="${telefone}">
-                    <input type="email" id="editEmail" value="${email}">
-                    <input type="text" id="editCPF" value="${cpf}">
-                    <input type="text" id="editCEP" value="${cep}">
-                    <input type="text" id="editUF" value="${uf}">
-                    <input type="text" id="editCidade" value="${cidade}">
-                    <input type="text" id="editBairro" value="${bairro}">
-                    <input type="text" id="editRua" value="${rua}">
-                    <input type="text" id="editNumero" value="${numero}">
-                `;
-
-                document.getElementById('modal-editar').style.display = 'flex';
+                editarLocatario(linha);
             }
-            //Visualizar
+
             if (e.target.classList.contains('icone-visualizar')) {
-                const linha = e.target.closest('tr');
-                const nome = linha.children[0].textContent;
-                const telefone = linha.children[1].textContent;
-                const email = linha.children[2].textContent;
-                const cpf = linha.children[3].textContent;
-
-                const cep = linha.dataset.cep;
-                const uf = linha.dataset.uf;
-                const cidade = linha.dataset.cidade;
-                const bairro = linha.dataset.bairro;
-                const rua = linha.dataset.rua;
-                const numero = linha.dataset.numero;
-
-                const container = document.getElementById('dadosVisualizacao');
-                container.innerHTML = `
-                    <input type="text" value="Nome: ${nome}" readonly>
-                    <input type="text" value="Telefone: ${telefone}" readonly>
-                    <input type="text" value="Email: ${email}" readonly>
-                    <input type="text" value="CPF: ${cpf}" readonly>
-                    <input type="text" value="CEP: ${cep}" readonly>
-                    <input type="text" value="UF: ${uf}" readonly>
-                    <input type="text" value="Cidade: ${cidade}" readonly>
-                    <input type="text" value="Bairro: ${bairro}" readonly>
-                    <input type="text" value="Rua: ${rua}" readonly>
-                    <input type="text" value="Número: ${numero}" readonly>
-                `;
-
-                document.getElementById('modal-visualizar').style.display = 'flex';
+                visualizarLocatario(linha);
             }
-
         });
-        function fecharModalVisualizar() {
-            document.getElementById('modal-visualizar').style.display = 'none';
+
+        function editarLocatario(linha) {
+            linhaEditando = linha;
+            editando = true;
+
+            const nome = linha.children[0].textContent;
+            const telefone = linha.children[1].textContent;
+            const email = linha.children[2].textContent;
+            const cpf = linha.children[3].textContent;
+
+            const cep = linha.dataset.cep;
+            const uf = linha.dataset.uf;
+            const cidade = linha.dataset.cidade;
+            const bairro = linha.dataset.bairro;
+            const rua = linha.dataset.rua;
+            const numero = linha.dataset.numero;
+
+            const container = document.getElementById('dadosAtualização');
+            container.innerHTML = `
+                <input type="text" id="editNome" value="${nome}">
+                <input type="text" id="editTelefone" value="${telefone}">
+                <input type="email" id="editEmail" value="${email}">
+                <input type="text" id="editCPF" value="${cpf}">
+                <input type="text" id="editCEP" value="${cep}">
+                <input type="text" id="editUF" value="${uf}">
+                <input type="text" id="editCidade" value="${cidade}">
+                <input type="text" id="editBairro" value="${bairro}">
+                <input type="text" id="editRua" value="${rua}">
+                <input type="text" id="editNumero" value="${numero}">
+            `;
+
+            document.getElementById('modal-editar').style.display = 'flex';
+
+            document.getElementById('btnConfirmarEditar').onclick = () => {
+                const nomeEdit = document.getElementById('editNome').value.trim();
+                const telefoneEdit = document.getElementById('editTelefone').value.trim();
+                const emailEdit = document.getElementById('editEmail').value.trim();
+                const cpfEdit = document.getElementById('editCPF').value.trim();
+                const cepEdit = document.getElementById('editCEP').value.trim();
+                const ufEdit = document.getElementById('editUF').value.trim();
+                const cidadeEdit = document.getElementById('editCidade').value.trim();
+                const bairroEdit = document.getElementById('editBairro').value.trim();
+                const ruaEdit = document.getElementById('editRua').value.trim();
+                const numeroEdit = document.getElementById('editNumero').value.trim();
+
+                // Atualizar array e salvar
+                const index = locatarios.findIndex(l => l.cpf === linha.children[3].textContent);
+                locatarios[index] = {
+                    nome: nomeEdit,
+                    telefone: telefoneEdit,
+                    email: emailEdit,
+                    cpf: cpfEdit,
+                    cep: cepEdit,
+                    uf: ufEdit,
+                    cidade: cidadeEdit,
+                    bairro: bairroEdit,
+                    rua: ruaEdit,
+                    numeroDaCasa: numeroEdit
+                };
+
+                salvarLocatarios();
+                carregarLocatarios();
+                fecharModalAtualizar();
+                fecharModalConfirmarEditar();
+            };
         }
-        function Atualizar() {
-            const nome = document.getElementById('editNome').value.trim();
-            const telefone = document.getElementById('editTelefone').value.trim();
-            const email = document.getElementById('editEmail').value.trim();
-            const cpf = document.getElementById('editCPF').value.trim();
-            const cep = document.getElementById('editCEP').value.trim();
-            const uf = document.getElementById('editUF').value.trim();
-            const cidade = document.getElementById('editCidade').value.trim();
-            const bairro = document.getElementById('editBairro').value.trim();
-            const rua = document.getElementById('editRua').value.trim();
-            const numero = document.getElementById('editNumero').value.trim();
 
-            if (!nome || !telefone || !cpf || !email || !cep || !uf || !cidade || !bairro || !rua || !numero) {
-                alert("Preencha todos os campos!");
-                return;
-            }
-
-            // Atualiza a linha na tabela
-            linhaEditando.children[0].textContent = nome;
-            linhaEditando.children[1].textContent = telefone;
-            linhaEditando.children[2].textContent = email;
-            linhaEditando.children[3].textContent = cpf;
-
-            linhaEditando.dataset.cep = cep;
-            linhaEditando.dataset.uf = uf;
-            linhaEditando.dataset.cidade = cidade;
-            linhaEditando.dataset.bairro = bairro;
-            linhaEditando.dataset.rua = rua;
-            linhaEditando.dataset.numero = numero;
-
-            fecharModalAtualizar();
+        function visualizarLocatario(linha) {
+            const container = document.getElementById('dadosVisualizacao');
+            container.innerHTML = `
+                <input type="text" value="Nome: ${linha.children[0].textContent}" readonly>
+                <input type="text" value="Telefone: ${linha.children[1].textContent}" readonly>
+                <input type="text" value="Email: ${linha.children[2].textContent}" readonly>
+                <input type="text" value="CPF: ${linha.children[3].textContent}" readonly>
+                <input type="text" value="CEP: ${linha.dataset.cep}" readonly>
+                <input type="text" value="UF: ${linha.dataset.uf}" readonly>
+                <input type="text" value="Cidade: ${linha.dataset.cidade}" readonly>
+                <input type="text" value="Bairro: ${linha.dataset.bairro}" readonly>
+                <input type="text" value="Rua: ${linha.dataset.rua}" readonly>
+                <input type="text" value="Número: ${linha.dataset.numero}" readonly>
+            `;
+            document.getElementById('modal-visualizar').style.display = 'flex';
         }
-        function fecharModalAtualizar() {
-            document.getElementById('modal-editar').style.display = 'none';
+
+        function abrirModalConfirmarDeletar(linha) {
+            locatarioASerDeletado = linha;
+            document.getElementById('modal-confirmar-deletar').style.display = 'flex';
+
+            document.getElementById('btnConfirmarDeletar').onclick = () => {
+                const cpf = linha.children[3].textContent;
+                locatarios = locatarios.filter(loc => loc.cpf !== cpf);
+                salvarLocatarios();
+                carregarLocatarios();
+                fecharModalConfirmarDeletar();
+            };
         }
-        // Variável global para controlar qual ação está sendo confirmada
-        let locatarioASerDeletado = null;
+
+        function fecharModalConfirmarDeletar() {
+            document.getElementById('modal-confirmar-deletar').style.display = 'none';
+        }
 
         function abrirModalConfirmarEditar() {
             document.getElementById('modal-confirmar-editar').style.display = 'flex';
@@ -345,17 +353,15 @@
             document.getElementById('modal-confirmar-editar').style.display = 'none';
         }
 
-        function abrirModalConfirmarDeletar(linha) {
-            locatarioASerDeletado = linha;
-            document.getElementById('modal-confirmar-deletar').style.display = 'flex';
+        function fecharModalAtualizar() {
+            document.getElementById('modal-editar').style.display = 'none';
         }
 
-        function fecharModalConfirmarDeletar() {
-            document.getElementById('modal-confirmar-deletar').style.display = 'none';
+        function fecharModalVisualizar() {
+            document.getElementById('modal-visualizar').style.display = 'none';
         }
-
-
     </script>
+
 
 
 </body>

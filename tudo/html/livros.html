@@ -139,6 +139,14 @@
         
     </div>
     <script>
+        const tipoUsuario = localStorage.getItem("tipoUsuario");
+        const emailUsuario = localStorage.getItem("emailUsuario");
+        
+
+        // Exibir email no topo
+        document.querySelector('.emailUser').textContent = emailUsuario;
+
+        
         const btnCadastrar = document.querySelector('.btn-cadastrar');
         const tbody = document.getElementById('tbody-locatarios');
         const botaoCadastrar = document.getElementById('button');
@@ -193,6 +201,20 @@
                 `;
                 tbody.appendChild(novaLinha);
             }
+            // Salvar no localStorage
+            const catalogo = JSON.parse(localStorage.getItem("catalogoLivros")) || [];
+
+            catalogo.push({
+                nome,
+                autor,
+                editora,
+                disponivel,
+                alugados,
+                genero
+            });
+
+            localStorage.setItem("catalogoLivros", JSON.stringify(catalogo));
+
 
             fecharModal();
             limparCampos();
@@ -217,6 +239,13 @@
                 abrirModalConfirmarDeletar(linha);
             }
             document.getElementById('btnConfirmarDeletar').addEventListener('click', () => {
+                const nomeLivro = locatarioASerDeletado.children[0].textContent;
+                let catalogo = JSON.parse(localStorage.getItem("catalogoLivros")) || [];
+
+                catalogo = catalogo.filter(livro => livro.nome !== nomeLivro);
+
+                localStorage.setItem("catalogoLivros", JSON.stringify(catalogo));
+
                 if (locatarioASerDeletado) {
                     locatarioASerDeletado.remove();
                     locatarioASerDeletado = null;
@@ -254,6 +283,19 @@
 
                 document.getElementById('modal-editar').style.display = 'flex';
             }  
+            const nomeOriginal = linhaEditando.children[0].getAttribute("data-nome") || linhaEditando.children[0].textContent;
+
+            let catalogo = JSON.parse(localStorage.getItem("catalogoLivros")) || [];
+
+            catalogo = catalogo.map(livro => {
+                if (livro.nome === nomeOriginal) {
+                    return { nome, autor, editora, disponivel, alugados, genero };
+                }
+                return livro;
+            });
+
+            localStorage.setItem("catalogoLivros", JSON.stringify(catalogo));
+
 
         });
 
@@ -348,6 +390,36 @@
             // Atualiza a tabela
             const disponivel = parseInt(livroSelecionadoParaAluguel.children[3].textContent);
             const alugados = parseInt(livroSelecionadoParaAluguel.children[4].textContent);
+            if (disponivel <= 0) {
+                alert("Este livro não está disponível para aluguel.");
+                return;
+            }
+
+            // Atualiza a tabela de livros (reduz estoque e aumenta alugados)
+            livroSelecionadoParaAluguel.children[3].textContent = disponivel - 1;
+            livroSelecionadoParaAluguel.children[4].textContent = alugados + 1;
+
+            // Pega os dados do livro
+            const tituloLivro = livroSelecionadoParaAluguel.children[0].textContent;
+            const autor = livroSelecionadoParaAluguel.children[1].textContent;
+            const editora = livroSelecionadoParaAluguel.children[2].textContent;
+
+            // Calcula o status 
+            const hoje = new Date().toISOString().split('T')[0];
+            const status = dataDevolucao >= hoje ? "No Prazo" : "Atrasado";
+
+            // Salva no localStorage o aluguel
+            const alugueis = JSON.parse(localStorage.getItem("alugueis")) || [];
+            alugueis.push({
+                locatario: nomeLocatario,
+                email: emailLocatario,
+                tituloLivro,
+                autor,
+                editora,
+                dataDevolucao,
+                status
+            });
+            localStorage.setItem("alugueis", JSON.stringify(alugueis));
 
             if (disponivel <= 0) {
                 alert("Este livro não está disponível para aluguel.");
@@ -358,9 +430,32 @@
             livroSelecionadoParaAluguel.children[4].textContent = alugados + 1;
 
             fecharModalAluguel();
+            alert("Aluguel cadastrado com sucesso!");
 
             // Opcional: Pode guardar as informações do aluguel em uma lista se quiser exibir depois.
         });
+        window.addEventListener('load', () => {
+            const catalogo = JSON.parse(localStorage.getItem("catalogoLivros")) || [];
+
+            catalogo.forEach(livro => {
+                const novaLinha = document.createElement('tr');
+                novaLinha.innerHTML = `
+                    <td>${livro.nome}</td>
+                    <td>${livro.autor}</td>
+                    <td>${livro.editora}</td>
+                    <td>${livro.disponivel}</td>
+                    <td>${livro.alugados}</td>
+                    <td>${livro.genero}</td>
+                    <td>
+                        <img src="/tudo/icons/livro-de-capa-preta-fechado.png" class="icone-cadastrarAluguel" alt="Aluguel">
+                        <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" alt="Editar">
+                        <img src="/tudo/icons/lixo.png" class="icone-deletar" alt="Deletar">
+                    </td>
+                `;
+                tbody.appendChild(novaLinha);
+            });
+        });
+
         
         
 

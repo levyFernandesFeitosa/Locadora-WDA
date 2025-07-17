@@ -137,8 +137,8 @@ a{
 
 .modal {
     background-color: white;
-    width: 40%;
-    height: 70%; 
+    width: 50%;
+    height: 90%; 
     margin-left: 15%;
     display: flex;
     justify-content: center;
@@ -151,6 +151,7 @@ a{
     /* background-color: #aefcfc; */
     font-size: 5vh;
     
+    
 
 }
 .modal-form {
@@ -159,20 +160,23 @@ a{
     gap: 2vh;
     justify-content: center;
     width: 100%;
-    margin-bottom: 5%;
+    margin-bottom: 2%;
+    margin-top: 2%;
+    /* background-color: brown; */
 }
 
 .modal-form input {
     width: 90%;
-    height: 20%;
+    height: 10%;
     padding: 1rem;
     font-size: 2vh;
     border: 1px solid #ccc;
     border-radius: 8px;
+    /* background-color: blueviolet; */
 }
 
 .modal-buttons {
-    width: 30%;
+    width: 50%;
     height: 10%;
     margin-top: 5%;
     display: flex;
@@ -232,7 +236,7 @@ a{
 }
 
 .icone-editar,
-.icone-deletar, .icone-visualizar {
+.icone-deletar, .icone-visualizar, .icone-recebido {
     width: 4vh;
     height: 4vh;
     cursor: pointer;
