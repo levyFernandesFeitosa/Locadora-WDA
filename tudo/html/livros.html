@@ -44,7 +44,7 @@
                         <input type="text" id="inputNome" placeholder="Nome do Livro">
                         <input type="text" id="inputAutor" placeholder="Autor">
                         <input type="text" id="inputEditora" placeholder="Editora">
-                        <input type="date" id="inputDataLancamento" placeholder="Data de Lançamento">
+                        <input type="text" id="inputGenero" placeholder="Gênero">
                         <input type="text" id="inputEstoque" placeholder="Estoque">
                     </div>
                     <div class="modal-buttons">
@@ -62,7 +62,7 @@
                             <th>Editora</th>
                             <th>Disponível</th>
                             <th>Alugados</th>
-                            <th>Data Lançada</th>
+                            <th>Gênero</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -85,14 +85,30 @@
                 </table>
             </div>
             <div id="modal-editar" class="modal-overlay">
-                <div class="modal">
+                <div class="modal" id="modal-idit">
                     <div class="textModal1">Atualizar Livro</div>
                     <div class="modal-form" id="dadosAtualização">
                         <!-- Campos preenchidos via JS -->
                     </div>
-                    <div class="modal-buttons">
+                    <div class="modal-buttons" id="modal-buttons">
                         <button class="btn-salvar" onclick="abrirModalConfirmarEditar()">Atualizar</button>
                         <button class="btn-cancelar" onclick="fecharModalAtualizar()">Fechar</button>
+                    </div>
+                </div>
+            </div>
+            <div id="modal-cadastrarAluguel" class="modal-overlay">
+                <div class="modal">
+                    <div class="textModal1">Cadastrar Aluguel</div>
+                    <div class="modal-form" id="formAluguel">
+                        <input type="text" id="nomeLocatario" placeholder="Nome do Locatário">
+                        <input type="email" id="emailLocatario" placeholder="Email do Locatário">
+                        <input type="date" id="dataDevolucao" placeholder="Data de Devolução" >
+
+                        <p id="infoLivro"></p>
+                    </div>
+                    <div class="modal-buttons" >
+                        <button class="btn-salvar" id="btnConfirmarAluguel">Alugar</button>
+                        <button class="btn-cancelar" onclick="fecharModalAluguel()">Cancelar</button>
                     </div>
                 </div>
             </div>
@@ -142,12 +158,12 @@
             const autor = document.getElementById('inputAutor').value.trim();
             const editora = document.getElementById('inputEditora').value.trim();
             const disponivel = document.getElementById('inputEstoque').value.trim();
-            const alugados = document.getElementById('inputAlugados').value.trim();
-            const dataLancada = document.getElementById('inputDataLancamento').value.trim();
+            const genero = document.getElementById('inputGenero').value.trim();
+            const alugados = 0; // Quando cadastra um livro novo, começa com 0 aluguéis
             
             
 
-            if (!nome || !autor || !editora || !disponivel || !alugados || !dataLancada) {
+            if (!nome || !autor || !editora || !disponivel || !genero) {
                 alert("Preencha todos os campos obrigatórios.");
                 return;
             }
@@ -158,7 +174,7 @@
                 linhaEditando.children[2].textContent = editora;
                 linhaEditando.children[3].textContent = disponivel;
                 linhaEditando.children[4].textContent = alugados;
-                linhaEditando.children[5].textContent = dataLancada;
+                linhaEditando.children[5].textContent = genero;
             } else {
                 const novaLinha = document.createElement('tr');
                 novaLinha.innerHTML = `
@@ -167,9 +183,10 @@
                     <td>${editora}</td>
                     <td>${disponivel}</td>
                     <td>${alugados}</td>
-                    <td>${dataLancada}</td>
+                    <td>${genero}</td>
 
                     <td>
+                        <img src="/tudo/icons/livro-de-capa-preta-fechado.png" class="icone-cadastrarAluguel" alt="Aluguel">
                         <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" alt="Editar">
                         <img src="/tudo/icons/lixo.png" class="icone-deletar" alt="Deletar">
                     </td>
@@ -211,6 +228,10 @@
                 Atualizar();
                 fecharModalConfirmarEditar();
             });
+            if (e.target.classList.contains('icone-cadastrarAluguel')) {
+                const linha = e.target.closest('tr');
+                abrirModalAluguel(linha);
+            }
             if (e.target.classList.contains('icone-editar')) {
                 linhaEditando = e.target.closest('tr');
 
@@ -220,15 +241,15 @@
                 const  disponivel= linhaEditando.children[3].textContent;
 
                 const alugados = linhaEditando.children[4].textContent;
-                const dataLancada = linhaEditando.children[5].textContent;
+                const genero = linhaEditando.children[5].textContent;
                 const container = document.getElementById('dadosAtualização');
                 container.innerHTML = `
                     <input type="text" id="editNome" value="${nome}">
-                    <input type="text" id="editTelefone" value="${autor}">
-                    <input type="email" id="editEmail" value="${editora}">
-                    <input type="text" id="editCPF" value="${disponivel}">
-                    <input type="text" id="editCEP" value="${alugados}">
-                    <input type="text" id="editUF" value="${dataLancada}">
+                    <input type="text" id="editAutor" value="${autor}">
+                    <input type="email" id="editEditora" value="${editora}">
+                    <input type="text" id="editDisponivel" value="${disponivel}">
+                    <input type="text" id="editAluguel" value="${alugados}">
+                    <input type="text" id="editGenero" value="${genero}">
                 `;
 
                 document.getElementById('modal-editar').style.display = 'flex';
@@ -238,13 +259,13 @@
 
         function Atualizar() {
             const nome = document.getElementById('editNome').value.trim();
-            const autor = document.getElementById('editTelefone').value.trim();
-            const editora = document.getElementById('editEmail').value.trim();
-            const disponivel = document.getElementById('editCPF').value.trim();
-            const alugados = document.getElementById('editCEP').value.trim();
-            const dataLancada= document.getElementById('editUF').value.trim();
+            const autor = document.getElementById('editAutor').value.trim();
+            const editora = document.getElementById('editEditora').value.trim();
+            const disponivel = document.getElementById('editDisponivel').value.trim();
+            const alugados = document.getElementById('editAluguel').value.trim();
+            const genero= document.getElementById('editGenero').value.trim();
 
-            if (!nome || !autor || !editora || !disponivel || !alugados || !dataLancada) {
+            if (!nome || !autor || !editora || !disponivel || !alugados || !genero) {
                 alert("Preencha todos os campos!");
                 return;
             }
@@ -255,7 +276,7 @@
             linhaEditando.children[2].textContent = editora;
             linhaEditando.children[3].textContent = disponivel;
             linhaEditando.children[4].textContent = alugados;
-            linhaEditando.children[5].textContent = dataLancada;
+            linhaEditando.children[5].textContent = genero;
 
             fecharModalAtualizar();
         }
@@ -281,6 +302,66 @@
         function fecharModalConfirmarDeletar() {
             document.getElementById('modal-confirmar-deletar').style.display = 'none';
         }
+        let livroSelecionadoParaAluguel = null;
+
+        // Função para abrir modal de aluguel com os dados preenchidos
+        function abrirModalAluguel(linha) {
+            livroSelecionadoParaAluguel = linha;
+
+            const nome = linha.children[0].textContent;
+            const autor = linha.children[1].textContent;
+            const editora = linha.children[2].textContent;
+            const genero = linha.children[3].textContent;
+
+            // Preencher data de devolução com hoje
+            const hoje = new Date().toISOString().split('T')[0];
+            document.getElementById('dataDevolucao').value = hoje;
+
+             // Exibir como texto
+            document.getElementById('infoLivro').innerHTML = `
+                <strong>Título do Livro:</strong> ${nome}<br>
+                <strong>Gênero:</strong> ${genero} <br>
+                <strong>Autor:</strong> ${autor}<br>
+                <strong>Editora:</strong> ${editora}
+            `;
+
+
+            document.getElementById('modal-cadastrarAluguel').style.display = 'flex';
+        }
+
+        // Fechar modal de aluguel
+        function fecharModalAluguel() {
+            document.getElementById('modal-cadastrarAluguel').style.display = 'none';
+        }
+
+        // Confirmação do aluguel
+        document.getElementById('btnConfirmarAluguel').addEventListener('click', () => {
+            const nomeLocatario = document.getElementById('nomeLocatario').value.trim();
+            const emailLocatario = document.getElementById('emailLocatario').value.trim();
+            const dataDevolucao = document.getElementById('dataDevolucao').value;
+
+            if (!nomeLocatario || !emailLocatario || !dataDevolucao) {
+                alert("Preencha todos os campos do aluguel!");
+                return;
+            }
+
+            // Atualiza a tabela
+            const disponivel = parseInt(livroSelecionadoParaAluguel.children[3].textContent);
+            const alugados = parseInt(livroSelecionadoParaAluguel.children[4].textContent);
+
+            if (disponivel <= 0) {
+                alert("Este livro não está disponível para aluguel.");
+                return;
+            }
+
+            livroSelecionadoParaAluguel.children[3].textContent = disponivel - 1;
+            livroSelecionadoParaAluguel.children[4].textContent = alugados + 1;
+
+            fecharModalAluguel();
+
+            // Opcional: Pode guardar as informações do aluguel em uma lista se quiser exibir depois.
+        });
+        
         
 
 

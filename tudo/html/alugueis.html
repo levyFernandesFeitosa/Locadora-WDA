@@ -32,7 +32,246 @@
                 <input type="text" name="pesquisa" id="pesquisa">
             </div>
             <div class="titulo">Lista de Alugueis</div>
+            <div class="tabela-container">
+                <table class="tabela-locatarios">
+                    <thead>
+                        <tr>
+                            <th>Locatário</th>
+                            <th>Título do Livro</th>
+                            <th>Autor</th>
+                            <th>Editora</th>
+                            <th>Devolução</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-locatarios">
+                        <tr>
+                            <td>levy</td>
+                            <td>123</td>
+                            <td>123</td>
+                            <td>123</td>
+                            <td>123</td>
+                            <td>123</td>
+                            <td>
+                            <img src="/tudo/icons/olho.png" class="icone-visualizar" alt="Visualizar">
+                            <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" alt="Editar">
+                            
+                        </td>
+                        </tr>
+                        <!-- Novos locatários aparecerão aqui -->
+                    </tbody>
+                </table>
+            </div>
+            <div id="modal-editar" class="modal-overlay">
+                <div class="modal">
+                    <div class="textModal1">Atualizar Editora</div>
+                    <div class="modal-form" id="dadosAtualização">
+                        <!-- Campos preenchidos via JS -->
+                    </div>
+                    <div class="modal-buttons">
+                        <button class="btn-salvar" onclick="abrirModalConfirmarEditar()">Atualizar</button>
+                        <button class="btn-cancelar" onclick="fecharModalAtualizar()">Fechar</button>
+                    </div>
+                </div>
+            </div>
+            <div id="modal-visualizar" class="modal-overlay">
+                <div class="modal">
+                    <div class="textModal1">Detalhes do Aluguel</div>
+                    <div id="dadosVisualizacao"></div>
+                    <div class="modal-buttons">
+                        <button class="btn-cancelar" onclick="fecharModalVisualizar()">Fechar</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal Confirmação Atualizar -->
+            <div id="modal-confirmar-editar" class="modal-overlay">
+                <div id="delete_edit" class="modal">
+                    <div class="textModal1">Certeza que deseja atualizar essa Editora?</div>
+                    <div class="modal-buttons">
+                        <button class="btn-confirmar" id="btnConfirmarEditar">Atualizar</button>
+                        <button class="btn-cancelar" onclick="fecharModalConfirmarEditar()">Voltar</button>
+                    </div>
+                </div>
+            </div>
+
         </div>
+        
     </div>
+    <script>
+        const btnCadastrar = document.querySelector('.btn-cadastrar');
+        const tbody = document.getElementById('tbody-locatarios');
+        const botaoCadastrar = document.getElementById('button');
+        const modalOverlay = document.getElementById('modal-overlay');
+
+        let editando = false;
+        let linhaEditando = null;
+
+        botaoCadastrar.addEventListener('click', () => {
+            limparCampos();
+            editando = false;
+            abrirModal();
+        });
+
+        btnCadastrar.addEventListener('click', () => {
+            const nome = document.getElementById('inputNomeEditora').value.trim();
+            const telefone = document.getElementById('inputTelefoneEditora').value.trim();
+            const email = document.getElementById('inputEmailEditora').value.trim();
+            const site = document.getElementById('inputSiteEditora').value.trim();
+
+            
+
+            if (!nome || !telefone || !site || !email) {
+                alert("Preencha todos os campos obrigatórios.");
+                return;
+            }
+
+            if (editando) {
+                linhaEditando.children[0].textContent = nome;
+                linhaEditando.children[1].textContent = telefone;
+                linhaEditando.children[2].textContent = email;
+                linhaEditando.children[3].textContent = site;
+            } else {
+                const novaLinha = document.createElement('tr');
+                novaLinha.innerHTML = `
+                    <td>${nome}</td>
+                    <td>${telefone}</td>
+                    <td>${email}</td>
+                    <td>${site}</td>
+                    <td>
+                        <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" alt="Editar">
+                        <img src="/tudo/icons/lixo.png" class="icone-deletar" alt="Deletar">
+                    </td>
+                `;
+
+                tbody.appendChild(novaLinha);
+            }
+
+            fecharModal();
+            limparCampos();
+        });
+
+        function abrirModal() {
+            modalOverlay.style.display = 'flex';
+        }
+
+        function fecharModal() {
+            modalOverlay.style.display = 'none';
+        }
+
+        function limparCampos() {
+            document.querySelectorAll('.modal-form input').forEach(input => input.value = '');
+        }
+
+        // Excluir
+        tbody.addEventListener('click', (e) => {
+            if (e.target.classList.contains('icone-deletar')) {
+                const linha = e.target.closest('tr');
+                abrirModalConfirmarDeletar(linha);
+            }
+            document.getElementById('btnConfirmarDeletar').addEventListener('click', () => {
+                if (locatarioASerDeletado) {
+                    locatarioASerDeletado.remove();
+                    locatarioASerDeletado = null;
+                    fecharModalConfirmarDeletar();
+                }
+                
+
+            });
+            //editar
+            document.getElementById('btnConfirmarEditar').addEventListener('click', () => {
+                Atualizar();
+                fecharModalConfirmarEditar();
+            });
+            if (e.target.classList.contains('icone-editar')) {
+                linhaEditando = e.target.closest('tr');
+
+                const locatario = linhaEditando.children[0].textContent;
+                const livro = linhaEditando.children[1].textContent;
+                const autor = linhaEditando.children[2].textContent;
+                const editora = linhaEditando.children[3].textContent;
+                const devolucao = linhaEditando.children[4].textContent;
+                const status = linhaEditando.children[5].textContent;
+
+                const container = document.getElementById('dadosAtualização');
+                container.innerHTML = `
+                    <label>Locatário:</label><input type="text" id="editLocatario" value="${locatario}">
+                    <label>Livro:</label><input type="text" id="editLivro" value="${livro}">
+                    <label>Autor:</label><input type="text" id="editAutor" value="${autor}">
+                    <label>Editora:</label><input type="text" id="editEditora" value="${editora}">
+                    <label>Devolução:</label><input type="text" id="editDevolucao" value="${devolucao}">
+                    <label>Status:</label><input type="text" id="editStatus" value="${status}">
+                `;
+
+                document.getElementById('modal-editar').style.display = 'flex';
+            }
+            if (e.target.classList.contains('icone-visualizar')) {
+                    const linha = e.target.closest('tr');
+                    abrirModalVisualizar(linha);
+                }
+
+
+        });
+        function Atualizar() {
+            linhaEditando.children[0].textContent = document.getElementById('editLocatario').value.trim();
+            linhaEditando.children[1].textContent = document.getElementById('editLivro').value.trim();
+            linhaEditando.children[2].textContent = document.getElementById('editAutor').value.trim();
+            linhaEditando.children[3].textContent = document.getElementById('editEditora').value.trim();
+            linhaEditando.children[4].textContent = document.getElementById('editDevolucao').value.trim();
+            linhaEditando.children[5].textContent = document.getElementById('editStatus').value.trim();
+
+            fecharModalAtualizar();
+        }
+        function abrirModalVisualizar(linha) {
+            const locatario = linha.children[0].textContent;
+            const livro = linha.children[1].textContent;
+            const autor = linha.children[2].textContent;
+            const editora = linha.children[3].textContent;
+            const devolucao = linha.children[4].textContent;
+            const status = linha.children[5].textContent;
+
+            document.getElementById('dadosVisualizacao').innerHTML = `
+                <p><strong>Locatário:</strong> ${locatario}</p>
+                <p><strong>Livro:</strong> ${livro}</p>
+                <p><strong>Autor:</strong> ${autor}</p>
+                <p><strong>Editora:</strong> ${editora}</p>
+                <p><strong>Devolução:</strong> ${devolucao}</p>
+                <p><strong>Status:</strong> ${status}</p>
+            `;
+
+            document.getElementById('modal-visualizar').style.display = 'flex';
+        }
+
+        function fecharModalVisualizar() {
+            document.getElementById('modal-visualizar').style.display = 'none';
+        }
+
+
+        function fecharModalAtualizar() {
+            document.getElementById('modal-editar').style.display = 'none';
+        }
+        // Variável global para controlar qual ação está sendo confirmada
+        let locatarioASerDeletado = null;
+
+        function abrirModalConfirmarEditar() {
+            document.getElementById('modal-confirmar-editar').style.display = 'flex';
+        }
+
+        function fecharModalConfirmarEditar() {
+            document.getElementById('modal-confirmar-editar').style.display = 'none';
+        }
+
+        function abrirModalConfirmarDeletar(linha) {
+            locatarioASerDeletado = linha;
+            document.getElementById('modal-confirmar-deletar').style.display = 'flex';
+        }
+
+        function fecharModalConfirmarDeletar() {
+            document.getElementById('modal-confirmar-deletar').style.display = 'none';
+        }
+
+
+    </script>
+
 </body>
 </html>
