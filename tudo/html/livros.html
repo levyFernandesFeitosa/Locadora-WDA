@@ -41,11 +41,11 @@
                 <div class="modal">
                     <div class="textModal1">Cadastrar Livros</div>
                     <div class="modal-form">
-                        <input type="text" placeholder="Nome do Livro">
-                        <input type="text" placeholder="Autor">
-                        <input type="text" placeholder="Editora">
-                        <input type="date" placeholder="Data de Lançamento">
-                        <input type="text" placeholder="Estoque">
+                        <input type="text" id="inputNome" placeholder="Nome do Livro">
+                        <input type="text" id="inputAutor" placeholder="Autor">
+                        <input type="text" id="inputEditora" placeholder="Editora">
+                        <input type="date" id="inputDataLancamento" placeholder="Data de Lançamento">
+                        <input type="text" id="inputEstoque" placeholder="Estoque">
                     </div>
                     <div class="modal-buttons">
                         <button class="btn-cadastrar">Cadastrar</button>
@@ -57,11 +57,12 @@
                 <table class="tabela-locatarios">
                     <thead>
                         <tr>
-                            <th>Titulo do Livro</th>
+                            <th>Título do Livro</th>
                             <th>Autor</th>
-                            <th>Ediora</th>
-                            <th>Disponíveis</th>
+                            <th>Editora</th>
+                            <th>Disponível</th>
                             <th>Alugados</th>
+                            <th>Data Lançada</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -69,11 +70,12 @@
                         <tr>
                             <td>levy</td>
                             <td>123</td>
-                            <th>123</th>
-                            <th>123</th>
                             <td>123</td>
+                            <td>123</td>
+                            <td>123</td>
+                            <th>123</th>
                             <td>
-                            <img src="/tudo/icons/livro-de-capa-preta-fechado.png" class="icone-cadastrar-aluguel" alt="cadastrar-aluguell">
+                            <img src="/tudo/icons/livro-de-capa-preta-fechado.png" class="icone-cadastrarAluguel" alt="Aluguel">
                             <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" alt="Editar">
                             <img src="/tudo/icons/lixo.png" class="icone-deletar" alt="Deletar">
                         </td>
@@ -84,30 +86,22 @@
             </div>
             <div id="modal-editar" class="modal-overlay">
                 <div class="modal">
-                    <div class="textModal1">Atualizar Usuário</div>
-                    <div class="modal-form">
-                        <input type="text" id="editNome" placeholder="Nome do Usuário">
-                        <input type="email" id="editEmail" placeholder="Email">
-                        <input type="password" id="editSenha" placeholder="Nova Senha (opcional)">
-                        <input type="password" id="editConfirmarSenha" placeholder="Confirmar Nova Senha">
-                    </div>
-                    <div class="tipo-usuario">
-                        <label><input type="radio" name="editTipo" value="editor"> Editor</label>
-                        <label><input type="radio" name="editTipo" value="leitor"> Leitor</label>
+                    <div class="textModal1">Atualizar Livro</div>
+                    <div class="modal-form" id="dadosAtualização">
+                        <!-- Campos preenchidos via JS -->
                     </div>
                     <div class="modal-buttons">
                         <button class="btn-salvar" onclick="abrirModalConfirmarEditar()">Atualizar</button>
-                        <button class="btn-cancelar" onclick="fecharModalAtualizar()">Cancelar</button>
+                        <button class="btn-cancelar" onclick="fecharModalAtualizar()">Fechar</button>
                     </div>
                 </div>
             </div>
-
             <!-- Modal Confirmação Atualizar -->
             <div id="modal-confirmar-editar" class="modal-overlay">
                 <div id="delete_edit" class="modal">
-                    <div class="textModal1">Certeza que deseja atualizar esse Usuário?</div>
+                    <div class="textModal1">Certeza que deseja atualizar esse livro?</div>
                     <div class="modal-buttons">
-                        <button class="btn-salvar" id="btnConfirmarEditar">Atualizar</button>
+                        <button class="btn-confirmar" id="btnConfirmarEditar">Atualizar</button>
                         <button class="btn-cancelar" onclick="fecharModalConfirmarEditar()">Voltar</button>
                     </div>
                 </div>
@@ -116,7 +110,7 @@
             <!-- Modal Confirmação Deletar -->
             <div id="modal-confirmar-deletar" class="modal-overlay">
                 <div id="delete_edit" class="modal">
-                    <div class="textModal1">Certeza que deseja excluir esse Usário?</div>
+                    <div class="textModal1">Certeza que deseja excluir esse livro?</div>
                     <div class="textModal2">Após essa ação não haverá retorno.</div>
                     <div class="modal-buttons">
                         <button class="btn-deletar" id="btnConfirmarDeletar">Excluir</button>
@@ -128,90 +122,65 @@
         </div>
         
     </div>
-
-
-    <!-- Script -->
     <script>
-        const tipoUsuario = localStorage.getItem("tipoUsuario");
-        const emailUsuario = localStorage.getItem("emailUsuario");
-        
-
-        // Exibir email no topo
-        document.querySelector('.emailUser').textContent = emailUsuario;
-
         const btnCadastrar = document.querySelector('.btn-cadastrar');
         const tbody = document.getElementById('tbody-locatarios');
         const botaoCadastrar = document.getElementById('button');
         const modalOverlay = document.getElementById('modal-overlay');
 
-        // Permissão
-        if (tipoUsuario !== "admin") {
-            botaoCadastrar.style.display = "none";
-        }
+        let editando = false;
+        let linhaEditando = null;
 
-        // Abrir modal de cadastro
         botaoCadastrar.addEventListener('click', () => {
             limparCampos();
+            editando = false;
             abrirModal();
         });
 
-        // Cadastrar novo usuário
         btnCadastrar.addEventListener('click', () => {
-            const nome = document.getElementById('inputNomeUsuario').value.trim();
-            const email = document.getElementById('inputEmailUsuario').value.trim();
-            const senha = document.getElementById('inputSenhaUsuario').value.trim();
-            const confirmarSenha = document.getElementById('inputConfirmarSenha').value.trim();
-            const permissao = document.querySelector('input[name="tipo"]:checked').value;
+            const nome = document.getElementById('inputNome').value.trim();
+            const autor = document.getElementById('inputAutor').value.trim();
+            const editora = document.getElementById('inputEditora').value.trim();
+            const disponivel = document.getElementById('inputEstoque').value.trim();
+            const alugados = document.getElementById('inputAlugados').value.trim();
+            const dataLancada = document.getElementById('inputDataLancamento').value.trim();
+            
+            
 
-            if (!nome || !email || !senha || !confirmarSenha) {
-                alert("Preencha todos os campos!");
+            if (!nome || !autor || !editora || !disponivel || !alugados || !dataLancada) {
+                alert("Preencha todos os campos obrigatórios.");
                 return;
             }
 
-            if (senha !== confirmarSenha) {
-                alert("As senhas não conferem!");
-                return;
+            if (editando) {
+                linhaEditando.children[0].textContent = nome;
+                linhaEditando.children[1].textContent = autor;
+                linhaEditando.children[2].textContent = editora;
+                linhaEditando.children[3].textContent = disponivel;
+                linhaEditando.children[4].textContent = alugados;
+                linhaEditando.children[5].textContent = dataLancada;
+            } else {
+                const novaLinha = document.createElement('tr');
+                novaLinha.innerHTML = `
+                    <td>${nome}</td>
+                    <td>${autor}</td>
+                    <td>${editora}</td>
+                    <td>${disponivel}</td>
+                    <td>${alugados}</td>
+                    <td>${dataLancada}</td>
+
+                    <td>
+                        <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" alt="Editar">
+                        <img src="/tudo/icons/lixo.png" class="icone-deletar" alt="Deletar">
+                    </td>
+                `;
+                tbody.appendChild(novaLinha);
             }
 
-            const novaLinha = document.createElement('tr');
-            novaLinha.innerHTML = `
-                <td>${nome}</td>
-                <td>${email}</td>
-                <td>${permissao}</td>
-                <td>
-                    <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" alt="Editar">
-                    <img src="/tudo/icons/lixo.png" class="icone-deletar" alt="Deletar">
-                </td>
-            `;
-
-            tbody.appendChild(novaLinha);
             fecharModal();
             limparCampos();
         });
 
-        // Eventos da tabela (editar e deletar) usando delegation sem duplicar listeners
-        tbody.addEventListener('click', (e) => {
-            const linha = e.target.closest('tr');
-
-            if (e.target.classList.contains('icone-editar')) {
-                if (tipoUsuario !== "admin") {
-                    alert("Você não tem permissão para editar.");
-                    return;
-                }
-                linhaEditando = linha;
-                abrirModalEditar(linha);
-            }
-
-            if (e.target.classList.contains('icone-deletar')) {
-                if (tipoUsuario !== "admin") {
-                    alert("Você não tem permissão para deletar.");
-                    return;
-                }
-                abrirModalConfirmarDeletar(linha);
-            }
-        });
-
-        // Funções dos modais
         function abrirModal() {
             modalOverlay.style.display = 'flex';
         }
@@ -224,110 +193,99 @@
             document.querySelectorAll('.modal-form input').forEach(input => input.value = '');
         }
 
-        // Editar usuário
-        function abrirModalEditar(linha) {
-            document.getElementById('modal-editar').style.display = 'flex';
-
-            document.getElementById('editNome').value = linha.children[0].textContent;
-            document.getElementById('editEmail').value = linha.children[1].textContent;
-
-            const permissao = linha.children[2].textContent;
-            document.querySelectorAll('input[name="editTipo"]').forEach(radio => {
-                radio.checked = (radio.value === permissao);
+        // Excluir
+        tbody.addEventListener('click', (e) => {
+            if (e.target.classList.contains('icone-deletar')) {
+                const linha = e.target.closest('tr');
+                abrirModalConfirmarDeletar(linha);
+            }
+            document.getElementById('btnConfirmarDeletar').addEventListener('click', () => {
+                if (locatarioASerDeletado) {
+                    locatarioASerDeletado.remove();
+                    locatarioASerDeletado = null;
+                    fecharModalConfirmarDeletar();
+                }
             });
-        }
+            //editar
+            document.getElementById('btnConfirmarEditar').addEventListener('click', () => {
+                Atualizar();
+                fecharModalConfirmarEditar();
+            });
+            if (e.target.classList.contains('icone-editar')) {
+                linhaEditando = e.target.closest('tr');
 
-        // Confirmar edição
-        document.getElementById('btnConfirmarEditar').addEventListener('click', () => {
+                const nome = linhaEditando.children[0].textContent;
+                const autor = linhaEditando.children[1].textContent;
+                const editora = linhaEditando.children[2].textContent;
+                const  disponivel= linhaEditando.children[3].textContent;
+
+                const alugados = linhaEditando.children[4].textContent;
+                const dataLancada = linhaEditando.children[5].textContent;
+                const container = document.getElementById('dadosAtualização');
+                container.innerHTML = `
+                    <input type="text" id="editNome" value="${nome}">
+                    <input type="text" id="editTelefone" value="${autor}">
+                    <input type="email" id="editEmail" value="${editora}">
+                    <input type="text" id="editCPF" value="${disponivel}">
+                    <input type="text" id="editCEP" value="${alugados}">
+                    <input type="text" id="editUF" value="${dataLancada}">
+                `;
+
+                document.getElementById('modal-editar').style.display = 'flex';
+            }  
+
+        });
+
+        function Atualizar() {
             const nome = document.getElementById('editNome').value.trim();
-            const email = document.getElementById('editEmail').value.trim();
-            const senha = document.getElementById('editSenha').value.trim();
-            const confirmarSenha = document.getElementById('editConfirmarSenha').value.trim();
-            const permissao = document.querySelector('input[name="editTipo"]:checked').value;
+            const autor = document.getElementById('editTelefone').value.trim();
+            const editora = document.getElementById('editEmail').value.trim();
+            const disponivel = document.getElementById('editCPF').value.trim();
+            const alugados = document.getElementById('editCEP').value.trim();
+            const dataLancada= document.getElementById('editUF').value.trim();
 
-            if (!nome || !email) {
-                alert("Nome e email são obrigatórios!");
+            if (!nome || !autor || !editora || !disponivel || !alugados || !dataLancada) {
+                alert("Preencha todos os campos!");
                 return;
             }
 
-            if (senha && senha !== confirmarSenha) {
-                alert("As senhas não conferem!");
-                return;
-            }
-
+            // Atualiza a linha na tabela
             linhaEditando.children[0].textContent = nome;
-            linhaEditando.children[1].textContent = email;
-            linhaEditando.children[2].textContent = permissao;
+            linhaEditando.children[1].textContent = autor;
+            linhaEditando.children[2].textContent = editora;
+            linhaEditando.children[3].textContent = disponivel;
+            linhaEditando.children[4].textContent = alugados;
+            linhaEditando.children[5].textContent = dataLancada;
 
             fecharModalAtualizar();
-            fecharModalConfirmarEditar();
-        });
-
-        
-
-        function abrirModalConfirmarDeletar(linha) {
-            linhaParaDeletar = linha;
-            document.getElementById('modal-confirmar-deletar').style.display = 'flex';
         }
-
-        document.getElementById('btnConfirmarDeletar').addEventListener('click', () => {
-            if (linhaParaDeletar) {
-                linhaParaDeletar.remove();
-                linhaParaDeletar = null;
-                document.getElementById('modal-confirmar-deletar').style.display = 'none';
-            }
-        });
-        // Variáveis globais
-        let linhaEditando = null;
-        let linhaParaDeletar = null;
-
-        // Abrir modal de confirmação de edição
-        function abrirModalConfirmarEditar() {
-            document.getElementById('modal-confirmar-editar').style.display = 'flex';
-        }
-
-        // Botão confirmar edição
-        document.getElementById('btnConfirmarEditar').addEventListener('click', () => {
-            const nome = document.getElementById('editNome').value.trim();
-            const email = document.getElementById('editEmail').value.trim();
-            const senha = document.getElementById('editSenha').value.trim();
-            const confirmarSenha = document.getElementById('editConfirmarSenha').value.trim();
-            const permissao = document.querySelector('input[name="editTipo"]:checked').value;
-
-            if (!nome || !email) {
-                alert("Nome e email são obrigatórios!");
-                return;
-            }
-
-            if (senha && senha !== confirmarSenha) {
-                alert("As senhas não conferem!");
-                return;
-            }
-
-            // Atualiza os dados na tabela
-            linhaEditando.children[0].textContent = nome;
-            linhaEditando.children[1].textContent = email;
-            linhaEditando.children[2].textContent = permissao;
-
-            fecharModalAtualizar();
-            fecharModalConfirmarEditar();
-        });
-
-
         function fecharModalAtualizar() {
             document.getElementById('modal-editar').style.display = 'none';
-            linhaEditando = null;
+        }
+        // Variável global para controlar qual ação está sendo confirmada
+        let locatarioASerDeletado = null;
+
+        function abrirModalConfirmarEditar() {
+            document.getElementById('modal-confirmar-editar').style.display = 'flex';
         }
 
         function fecharModalConfirmarEditar() {
             document.getElementById('modal-confirmar-editar').style.display = 'none';
         }
+
+        function abrirModalConfirmarDeletar(linha) {
+            locatarioASerDeletado = linha;
+            document.getElementById('modal-confirmar-deletar').style.display = 'flex';
+        }
+
         function fecharModalConfirmarDeletar() {
             document.getElementById('modal-confirmar-deletar').style.display = 'none';
-            linhaParaDeletar = null; // opcional, limpa referência
         }
+        
 
 
     </script>
+
+
 </body>
 </html>
