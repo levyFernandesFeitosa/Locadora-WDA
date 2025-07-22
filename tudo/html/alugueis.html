@@ -115,7 +115,48 @@
     <script>
         const tipoUsuario = localStorage.getItem("tipoUsuario");
         const emailUsuario = localStorage.getItem("emailUsuario");
-        
+        window.onload = function() {
+    // Verifica se já existe algum aluguel no localStorage
+    let alugueis = JSON.parse(localStorage.getItem("alugueis"));
+
+            if (!alugueis || alugueis.length === 0) {
+                // Dados de exemplo
+                alugueis = [
+                    {
+                        locatario: "João Silva",
+                        email: "joao@example.com",
+                        tituloLivro: "O Senhor dos Anéis",
+                        autor: "J.R.R. Tolkien",
+                        editora: "HarperCollins",
+                        dataDevolucao: "2025-08-15",
+                        status: "No Prazo"
+                    },
+                    {
+                        locatario: "Maria Souza",
+                        email: "maria@example.com",
+                        tituloLivro: "Dom Casmurro",
+                        autor: "Machado de Assis",
+                        editora: "Nova Fronteira",
+                        dataDevolucao: "2025-08-05",
+                        status: "Atrasado"
+                    },
+                    {
+                        locatario: "Carlos Pereira",
+                        email: "carlos@example.com",
+                        tituloLivro: "Harry Potter e a Pedra Filosofal",
+                        autor: "J.K. Rowling",
+                        editora: "Rocco",
+                        dataDevolucao: "2025-08-10",
+                        status: "No Prazo"
+                    }
+                ];
+
+                localStorage.setItem("alugueis", JSON.stringify(alugueis));
+            }
+
+            carregarAlugueis();
+        }
+
 
         // Exibir email no topo
         document.querySelector('.emailUser').textContent = emailUsuario;

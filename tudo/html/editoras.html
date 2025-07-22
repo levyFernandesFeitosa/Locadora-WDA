@@ -109,6 +109,29 @@
         const modalOverlay = document.getElementById('modal-overlay');
 
         let editoras = JSON.parse(localStorage.getItem('editoras')) || [];
+        if (!editoras || editoras.length === 0) {
+            editoras = [
+                {
+                    nome: "Companhia das Letras",
+                    telefone: "(11) 3333-4444",
+                    email: "contato@companhia.com.br",
+                    site: "https://www.companhiadasletras.com.br"
+                },
+                {
+                    nome: "Editora Abril",
+                    telefone: "(11) 2222-3333",
+                    email: "contato@abril.com.br",
+                    site: "https://www.abril.com.br"
+                },
+                {
+                    nome: "Saraiva",
+                    telefone: "(11) 4444-5555",
+                    email: "sac@saraiva.com.br",
+                    site: "https://www.saraiva.com.br"
+                }
+            ];
+            localStorage.setItem('editoras', JSON.stringify(editoras));
+        }
         let editando = false;
         let linhaEditando = null;
 

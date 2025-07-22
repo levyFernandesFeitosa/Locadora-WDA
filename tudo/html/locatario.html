@@ -139,6 +139,48 @@
 
         let locatarios = JSON.parse(localStorage.getItem('locatarios')) || [];
 
+        if (!locatarios || locatarios.length === 0) {
+        locatarios = [
+            {
+                nome: "Levy Fernandes Feitosa",
+                telefone: "8599999999",
+                email: "levyfernandes@gmail.com",
+                cpf: "99999999999",
+                cep: "60000000",
+                uf: "CE",
+                cidade: "Fortaleza",
+                bairro: "Centro",
+                rua: "Rua das Flores",
+                numeroDaCasa: "100"
+            },
+            {
+                nome: "Maria Souza Lima",
+                telefone: "6198888888",
+                email: "maria.souza@gmail.com",
+                cpf: "88888888888",
+                cep: "70000000",
+                uf: "DF",
+                cidade: "Brasília",
+                bairro: "Asa Sul",
+                rua: "Rua dos Livros",
+                numeroDaCasa: "200"
+            },
+            {
+                nome: "João Carlos Pereira",
+                telefone: "7197777777",
+                email: "joao.pereira@gmail.com",
+                cpf: "77777777777",
+                cep: "40000000",
+                uf: "BA",
+                cidade: "Salvador",
+                bairro: "Barra",
+                rua: "Avenida Oceânica",
+                numeroDaCasa: "300"
+            }
+        ];
+        localStorage.setItem('locatarios', JSON.stringify(locatarios));
+    }
+
         const tbody = document.getElementById('tbody-locatarios');
         const botaoCadastrar = document.getElementById('button');
         const btnCadastrar = document.querySelector('.btn-cadastrar');
