@@ -19,7 +19,8 @@ img{
     height: 100%;
     border-top-right-radius: 3%;
     border-bottom-right-radius: 3%;
-    background-color: rgba(159, 250, 255, 1);
+    background: RGBA(159, 250, 255, 1);
+    background: linear-gradient(180deg,rgba(159, 250, 255, 1) 66%, rgba(10, 101, 104, 1) 100%);
 }
 .logoWDA{
     width: 20%;

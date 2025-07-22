@@ -27,7 +27,8 @@ img{
     
     flex-direction: column;
     box-shadow: 5px 0 10px rgba(0, 0, 0, 0.5); /* sombra na direita */
-    background-color: rgba(10, 101, 104, 1);
+    background: RGBA(10, 101, 104, 1);
+    background: linear-gradient(180deg,rgba(10, 101, 104, 1) 19%, rgba(159, 252, 255, 1) 100%);
 }
 .logoWDA{
     width: 37%;
@@ -79,6 +80,7 @@ a{
     font-family: 'Archivo Black', sans-serif;
     color: rgba(159, 252, 255, 1);
 }
+
 .emailUser{
     width: 15%;
     margin-left: auto;
@@ -86,6 +88,7 @@ a{
     justify-content: center; /* centraliza na horizontal */
     align-items: center;  
     display: flex;
+    font-size: 2.5vh;
     color: rgba(159, 252, 255, 1);
     /* background-color: rgb(20, 58, 58); */
 }
@@ -145,7 +148,7 @@ a{
 }
 
 .modal {
-    background-color: white;
+    background-color: #073536;
     width: 40%;
     height: 70%; 
     margin-left: 15%;
@@ -159,6 +162,8 @@ a{
 .textModal1, .textModal2{
     /* background-color: #aefcfc; */
     font-size: 5vh;
+    color: white;
+    margin-bottom: 5%;
 
 }
 .modal-form {
@@ -184,15 +189,17 @@ a{
     display: flex;
     justify-content: center;
     gap: 4vh;
-    font-size: 2.5vh;
+    font-size: 3vh;
     align-items: center;
     margin-top: 2vh;
+    color: white;
 }
 
 .tipo-usuario input[type="radio"] {
     transform: scale(1.5);
     margin-right: 1vh;
     cursor: pointer;
+    background-color: #aefcfc;
 }
 
 .modal-buttons {

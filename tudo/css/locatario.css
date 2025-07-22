@@ -27,7 +27,8 @@ img{
     
     flex-direction: column;
     box-shadow: 5px 0 10px rgba(0, 0, 0, 0.5); /* sombra na direita */
-    background-color: rgba(10, 101, 104, 1);
+    background: RGBA(10, 101, 104, 1);
+    background: linear-gradient(180deg,rgba(10, 101, 104, 1) 19%, rgba(159, 252, 255, 1) 100%);
 }
 .logoWDA{
     width: 37%;
@@ -84,7 +85,8 @@ a{
     margin-left: auto;
     height: 100%;
     justify-content: center; /* centraliza na horizontal */
-    align-items: center;  
+    align-items: center; 
+    font-size: 2.5vh; 
     display: flex;
     color: rgba(159, 252, 255, 1);
     /* background-color: rgb(20, 58, 58); */
@@ -147,7 +149,7 @@ a{
 }
 
 .modal {
-    background-color: white;
+    background-color: #073536;
     width: 70%;
     height: 70%; 
     margin-left: 15%;
@@ -160,6 +162,8 @@ a{
 
 .textModal1, .textModal2{
     /* background-color: #aefcfc; */
+    color: white;
+    margin-bottom: 5%;
     font-size: 5vh;
 
 }

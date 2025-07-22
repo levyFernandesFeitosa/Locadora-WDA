@@ -81,10 +81,13 @@
                     <div class="textModal1">Detalhes do Aluguel</div>
                     <div id="dadosVisualizacao"></div>
                     <div class="modal-buttons">
+                        <button class="btn-locatario" onclick="irParaLocatarios()">Locatário</button>
                         <button class="btn-cancelar" onclick="fecharModalVisualizar()">Fechar</button>
                     </div>
                 </div>
             </div>
+
+
             <!-- Modal Confirmação Atualizar -->
             <div id="modal-confirmar-editar" class="modal-overlay">
                 <div id="delete_edit" class="modal">
@@ -138,19 +141,6 @@
 
         // Excluir
         tbody.addEventListener('click', (e) => {
-            if (e.target.classList.contains('icone-deletar')) {
-                const linha = e.target.closest('tr');
-                abrirModalConfirmarDeletar(linha);
-            }
-            document.getElementById('btnConfirmarDeletar').addEventListener('click', () => {
-                if (locatarioASerDeletado) {
-                    locatarioASerDeletado.remove();
-                    locatarioASerDeletado = null;
-                    fecharModalConfirmarDeletar();
-                }
-                
-
-            });
             //editar
             document.getElementById('btnConfirmarEditar').addEventListener('click', () => {
                 Atualizar();
@@ -173,7 +163,6 @@
                     <input type="text" id="editAutor" value="${autor}">
                     <input type="text" id="editEditora" value="${editora}">
                     <input type="text" id="editDevolucao" value="${devolucao}">
-                    <input type="text" id="editStatus" value="${status}">
                 `;
 
                 document.getElementById('modal-editar').style.display = 'flex';
@@ -218,23 +207,40 @@
         }
         function abrirModalVisualizar(linha) {
             const locatario = linha.children[0].textContent;
-            const livro = linha.children[1].textContent;
-            const autor = linha.children[2].textContent;
-            const editora = linha.children[3].textContent;
-            const devolucao = linha.children[4].textContent;
-            const status = linha.children[5].textContent;
+            const tituloLivro = linha.children[1].textContent;
+
+            // Buscar o aluguel correspondente no localStorage
+            const alugueis = JSON.parse(localStorage.getItem("alugueis")) || [];
+
+            const aluguelSelecionado = alugueis.find(aluguel =>
+                aluguel.locatario === locatario && aluguel.tituloLivro === tituloLivro
+            );
+
+            if (!aluguelSelecionado) {
+                alert("Aluguel não encontrado!");
+                return;
+            }
 
             document.getElementById('dadosVisualizacao').innerHTML = `
-                <p><strong>Locatário:</strong> ${locatario}</p>
-                <p><strong>Livro:</strong> ${livro}</p>
-                <p><strong>Autor:</strong> ${autor}</p>
-                <p><strong>Editora:</strong> ${editora}</p>
-                <p><strong>Devolução:</strong> ${devolucao}</p>
-                <p><strong>Status:</strong> ${status}</p>
+                <div class="tituloVisualizacao">${aluguelSelecionado.tituloLivro}</div>
+
+                <label>Nome do Locatário</label>
+                <input type="text" value="${aluguelSelecionado.locatario}" readonly>
+
+                <label>Email do Locatário</label>
+                <input type="text" value="${aluguelSelecionado.email}" readonly>
+
+                <label>Data de Devolução</label>
+                <input type="text" value="${aluguelSelecionado.dataDevolucao}" readonly>
+
+                <p>Autor: ${aluguelSelecionado.autor}</p>
+                <p>Editora: ${aluguelSelecionado.editora}</p>
             `;
 
             document.getElementById('modal-visualizar').style.display = 'flex';
         }
+
+
 
         function fecharModalVisualizar() {
             document.getElementById('modal-visualizar').style.display = 'none';
@@ -282,7 +288,8 @@
                     const hojeDate = new Date();
                     const diferencaDias = Math.floor((hojeDate - dataRecebimento) / (1000 * 60 * 60 * 24));
 
-                    if (diferencaDias >= 1) {
+                    if (diferencaDias >= 0.1
+                    ) {
                         return; // Não renderiza esse aluguel na tabela
                     }
 
@@ -311,6 +318,26 @@
         }
 
         window.onload = carregarAlugueis;
+        function irParaLocatarios() {
+            window.location.href = "/tudo/html/locatario.html";
+        }
+
+        // Filtro de pesquisa na tabela
+        document.getElementById('pesquisa').addEventListener('input', function() {
+            const termoPesquisa = this.value.toLowerCase();
+            const linhas = document.querySelectorAll('#tbody-locatarios tr');
+
+            linhas.forEach(linha => {
+                const textoLinha = linha.textContent.toLowerCase();
+
+                if (textoLinha.includes(termoPesquisa)) {
+                    linha.style.display = ''; // Mostra a linha
+                } else {
+                    linha.style.display = 'none'; // Oculta a linha
+                }
+            });
+        });
+
 
 
 

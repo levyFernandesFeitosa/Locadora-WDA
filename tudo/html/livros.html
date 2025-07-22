@@ -64,6 +64,7 @@
                             <th>Alugados</th>
                             <th>Gênero</th>
                             <th>Ações</th>
+                            
                         </tr>
                     </thead>
                     <tbody id="tbody-locatarios">
@@ -167,14 +168,22 @@
             const editora = document.getElementById('inputEditora').value.trim();
             const disponivel = document.getElementById('inputEstoque').value.trim();
             const genero = document.getElementById('inputGenero').value.trim();
-            const alugados = 0; // Quando cadastra um livro novo, começa com 0 aluguéis
-            
-            
+            const alugados = 0;
 
             if (!nome || !autor || !editora || !disponivel || !genero) {
                 alert("Preencha todos os campos obrigatórios.");
                 return;
             }
+
+            // Validação da editora
+            const editorasCadastradas = JSON.parse(localStorage.getItem('editoras')) || [];
+            const existeEditora = editorasCadastradas.some(e => e.nome.toLowerCase() === editora.toLowerCase());
+
+            if (!existeEditora) {
+                alert(`A editora "${editora}" não está cadastrada. Cadastre a editora antes de cadastrar o livro.`);
+                return;
+            }
+
 
             if (editando) {
                 linhaEditando.children[0].textContent = nome;
@@ -240,10 +249,22 @@
             }
             document.getElementById('btnConfirmarDeletar').addEventListener('click', () => {
                 const nomeLivro = locatarioASerDeletado.children[0].textContent;
+                
+                // Pega os alugueis salvos
+                const alugueis = JSON.parse(localStorage.getItem("alugueis")) || [];
+                
+                // Verifica se existe aluguel com esse livro
+                const existeAluguel = alugueis.some(aluguel => aluguel.tituloLivro === nomeLivro);
+                
+                if (existeAluguel) {
+                    alert("Este livro não pode ser apagado porque possui alugueis ativos.");
+                    fecharModalConfirmarDeletar();
+                    return;
+                }
+                
+                // Se não existir aluguel, exclui o livro
                 let catalogo = JSON.parse(localStorage.getItem("catalogoLivros")) || [];
-
                 catalogo = catalogo.filter(livro => livro.nome !== nomeLivro);
-
                 localStorage.setItem("catalogoLivros", JSON.stringify(catalogo));
 
                 if (locatarioASerDeletado) {
@@ -252,6 +273,7 @@
                     fecharModalConfirmarDeletar();
                 }
             });
+
             //editar
             document.getElementById('btnConfirmarEditar').addEventListener('click', () => {
                 Atualizar();
@@ -277,7 +299,7 @@
                     <input type="text" id="editAutor" value="${autor}">
                     <input type="email" id="editEditora" value="${editora}">
                     <input type="text" id="editDisponivel" value="${disponivel}">
-                    <input type="text" id="editAluguel" value="${alugados}">
+
                     <input type="text" id="editGenero" value="${genero}">
                 `;
 
@@ -361,10 +383,10 @@
 
              // Exibir como texto
             document.getElementById('infoLivro').innerHTML = `
-                <strong>Título do Livro:</strong> ${nome}<br>
-                <strong>Gênero:</strong> ${genero} <br>
-                <strong>Autor:</strong> ${autor}<br>
-                <strong>Editora:</strong> ${editora}
+                <div class="textResposta1">Título do Livro: ${nome}</div>
+                <div class="textResposta1">Gênero: ${genero}</div>
+                <div class="textResposta1">Autor: ${autor}</div>
+                <div class="textResposta1">Editora: ${editora}</div>
             `;
 
 
@@ -386,6 +408,20 @@
                 alert("Preencha todos os campos do aluguel!");
                 return;
             }
+
+            // Verificar se o locatário está cadastrado
+            const locatarios = JSON.parse(localStorage.getItem("locatarios")) || [];
+
+            const locatarioValido = locatarios.find(l => 
+                l.nome.toLowerCase() === nomeLocatario.toLowerCase() && 
+                l.email.toLowerCase() === emailLocatario.toLowerCase()
+            );
+
+            if (!locatarioValido) {
+                alert("Locatário não cadastrado! Por favor, cadastre o locatário antes de realizar o aluguel.");
+                return;
+            }
+
 
             // Atualiza a tabela
             const disponivel = parseInt(livroSelecionadoParaAluguel.children[3].textContent);
@@ -455,12 +491,42 @@
                 tbody.appendChild(novaLinha);
             });
         });
+        // Função de filtro da tabela
+        document.getElementById('filter').addEventListener('click', function() {
+            const termo = document.getElementById('pesquisa').value.toLowerCase();
+            const linhas = document.querySelectorAll('#tbody-locatarios tr');
+
+            linhas.forEach(linha => {
+                const textoLinha = linha.textContent.toLowerCase();
+                if (textoLinha.includes(termo)) {
+                    linha.style.display = '';
+                } else {
+                    linha.style.display = 'none';
+                }
+            });
+        });
+
+        // Opcional: fazer a pesquisa enquanto digita (modo dinâmico)
+        document.getElementById('pesquisa').addEventListener('input', function() {
+            const termo = this.value.toLowerCase();
+            const linhas = document.querySelectorAll('#tbody-locatarios tr');
+
+            linhas.forEach(linha => {
+                const textoLinha = linha.textContent.toLowerCase();
+                if (textoLinha.includes(termo)) {
+                    linha.style.display = '';
+                } else {
+                    linha.style.display = 'none';
+                }
+            });
+        });
 
         
         
 
 
     </script>
+    
 
 
 </body>

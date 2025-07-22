@@ -29,7 +29,8 @@ img{
     
     flex-direction: column;
     box-shadow: 5px 0 10px rgba(0, 0, 0, 0.5); /* sombra na direita */
-    background-color: rgba(10, 101, 104, 1);
+    background: RGBA(10, 101, 104, 1);
+    background: linear-gradient(180deg,rgba(10, 101, 104, 1) 19%, rgba(159, 252, 255, 1) 100%);
 }
 a{
     text-decoration: none;
@@ -86,7 +87,8 @@ a{
     margin-left: auto;
     height: 100%;
     justify-content: center; /* centraliza na horizontal */
-    align-items: center;  
+    align-items: center;
+    font-size: 2.5vh;  
     display: flex;
     color: rgba(159, 252, 255, 1);
     /* background-color: rgb(20, 58, 58); */

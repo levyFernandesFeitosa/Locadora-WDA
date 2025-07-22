@@ -225,6 +225,37 @@
         function fecharModalConfirmarDeletar() {
             document.getElementById('modal-confirmar-deletar').style.display = 'none';
         }
+        document.getElementById('pesquisa').addEventListener('input', (e) => {
+            const texto = e.target.value.toLowerCase();
+            filtrarEditoras(texto);
+        });
+        function filtrarEditoras(filtro) {
+            tbody.innerHTML = '';
+
+            editoras.forEach((editora, index) => {
+                // Verifica se o nome, telefone, email ou site contém o texto pesquisado
+                if (
+                    editora.nome.toLowerCase().includes(filtro) ||
+                    editora.telefone.toLowerCase().includes(filtro) ||
+                    editora.email.toLowerCase().includes(filtro) ||
+                    editora.site.toLowerCase().includes(filtro)
+                ) {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${editora.nome}</td>
+                        <td>${editora.telefone}</td>
+                        <td>${editora.email}</td>
+                        <td>${editora.site}</td>
+                        <td>
+                            <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" data-index="${index}" alt="Editar">
+                            <img src="/tudo/icons/lixo.png" class="icone-deletar" data-index="${index}" alt="Deletar">
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                }
+            });
+        }
+
     </script>
 </body>
 </html>

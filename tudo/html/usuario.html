@@ -328,6 +328,22 @@
             document.getElementById('modal-confirmar-deletar').style.display = 'none';
             linhaParaDeletar = null;
         }
+
+        const inputPesquisa = document.getElementById('pesquisa');
+
+        inputPesquisa.addEventListener('input', () => {
+            const termo = inputPesquisa.value.toLowerCase();
+            const linhas = document.querySelectorAll('#tbody-locatarios tr');
+
+            linhas.forEach(linha => {
+                const textoLinha = linha.textContent.toLowerCase();
+                if (textoLinha.includes(termo)) {
+                    linha.style.display = '';
+                } else {
+                    linha.style.display = 'none';
+                }
+            });
+        });
     </script>
 
         

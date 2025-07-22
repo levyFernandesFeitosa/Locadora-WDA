@@ -68,10 +68,10 @@
                     </thead>
                     <tbody id="tbody-locatarios">
                         <tr>
-                            <td>levy</td>
-                            <td>123</td>
-                            <td>123</td>
-                            <td>123</td>
+                            <td>Levy Fernandes Feitosa</td>
+                            <td>8599999999</td>
+                            <td>levyfernandes@gmail.com</td>
+                            <td>99999999999</td>
                             <td>
                             <img src="/tudo/icons/olho.png" id="icone-visualizar" class="icone-visualizar" alt="Visualizar">
                             <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" alt="Editar">
@@ -360,6 +360,26 @@
         function fecharModalVisualizar() {
             document.getElementById('modal-visualizar').style.display = 'none';
         }
+        const campoPesquisa = document.getElementById('pesquisa');
+
+        campoPesquisa.addEventListener('input', function () {
+            const termo = this.value.toLowerCase();
+            const linhas = tbody.getElementsByTagName('tr');
+
+            for (let i = 0; i < linhas.length; i++) {
+                const linha = linhas[i];
+                const nome = linha.children[0].textContent.toLowerCase();
+                const telefone = linha.children[1].textContent.toLowerCase();
+                const email = linha.children[2].textContent.toLowerCase();
+                const cpf = linha.children[3].textContent.toLowerCase();
+
+                if (nome.includes(termo) || telefone.includes(termo) || email.includes(termo) || cpf.includes(termo)) {
+                    linha.style.display = '';
+                } else {
+                    linha.style.display = 'none';
+                }
+            }
+        });
     </script>
 
 
