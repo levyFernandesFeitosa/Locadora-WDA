@@ -7,10 +7,32 @@
     <link rel="stylesheet" href="/tudo/css/dashboard.css">
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/tudo/css/menuResponsivel.css">
+    
 
 </head>
 <body>
     <div class="TelaDashboard">
+        <header id="header-menu" class="header-menu">
+            <nav>
+            <h1 class="logo">Locadora de Livros</h1>
+            <div class="mobile-menu">
+                <div class="line1"></div>
+                <div class="line2"></div>
+                <div class="line3"></div>
+            </div>
+            <ul class="nav-list">
+                <!-- <li><a href="#">Início</a></li> -->
+                
+                <li><a id="a-menu" href="#projetos">Dashboard</a></li>
+                <li><a id="a-menu" href="verMais.html">Editora</a></li>
+                <li><a id="a-menu" href="verMais.html">Livros</a></li>
+                <li><a id="a-menu" href="verMais.html">Aluguéis</a></li>
+                <li><a id="a-menu" href="verMais.html">Usuário</a></li>
+                <li><a id="a-menu" href="verMais.html">Log out</a></li>
+            </ul>
+            </nav>
+        </header>
         <div class="containerOptions">
             <div class="logoWDA"><img src="/tudo/logo/Captura_de_Tela__3_-removebg-preview.png" alt=""></div>
             <div class="dashboardOption">Dashboard</div>
@@ -62,6 +84,7 @@
                 
         </div>
     </div>
+    <script src="/tudo/js/menu.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         const tipoUsuario = localStorage.getItem("tipoUsuario");
@@ -139,6 +162,7 @@
             }
         });
     </script>
+    
 
 </body>
 </html>

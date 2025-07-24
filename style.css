@@ -131,3 +131,78 @@ input.erro{
     display: none;
     color: rgba(161, 2, 2, 1);
 }
+
+
+
+@media (max-width: 768px) {
+  .telaLogin {
+    flex-direction: column;
+  }
+
+  .containerDivisoria {
+    width: 100%;
+    height: 30vh;
+    border-radius: 0;
+    border-bottom-left-radius: 3%;
+    border-bottom-right-radius: 3%;
+  }
+
+  .logoWDA {
+    width: 15%;
+    margin-left: 5%;
+    margin-top: 5%;
+  }
+
+  .text1 {
+    font-size: 4vh;
+    padding-left: 5%;
+    margin-top: 5%;
+  }
+
+  .text2 {
+    font-size: 6vh;
+    padding-left: 5%;
+    padding-right: 5%;
+  }
+
+  .containerDivisoriaLogin {
+    width: 100%;
+    height: 60vh;
+  }
+
+  .text3 {
+    font-size: 5vh;
+    padding-left: 5%;
+    padding-right: 5%;
+  }
+
+  .text4,
+  .containerEmail,
+  .containerSenha {
+    font-size: 3vh;
+    width: 100%;
+    padding-left: 5%;
+    padding-right: 5%;
+    
+  }
+
+  .containerButton {
+    font-size: 4vh;
+  }
+
+  .button {
+    width: 60%;
+    font-size: 4vh;
+  }
+
+  input {
+    width: 100%;
+    height: 6vh;
+    font-size: 2.5vh;
+  }
+
+  .esqueceuSenha {
+    font-size: 2.5vh;
+    padding-left: 5%;
+  }
+}
