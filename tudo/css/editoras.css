@@ -314,5 +314,195 @@ a{
     flex-direction: column;
     align-items: center;
 }
+@media (max-width: 768px) {
+  .TelaEditora {
+    flex-direction: column;
+  }
+
+  .ladoDireito {
+    width: 100%;
+  }
+
+  .containerPesquisa {
+    width: 100%;
+    flex-direction: column;
+    height: auto;
+    gap: 1vh;
+  }
+
+  #pesquisa {
+    width: 90%;
+    height: 5vh;
+  }
+
+  #button {
+    margin-top: 5%;
+    margin-bottom: 5%;;
+    width: 50%;
+    height: 6vh;
+    font-size: 2.5vh;
+  }
+
+  .titulo {
+    
+    font-size: 4vh;
+    text-align: center;
+  }
+
+  .modal {
+    width: 90%;
+    height: 60%;
+    margin-left: 0;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .textModal1, .textModal2{
+    width: 100%;
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-top: 5%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    font-size: 4.3vh;
+    /* background-color: brown; */
+  }
+
+  .modal-form input {
+    width: 90%;
+    height: 4vh;
+  }
+
+  .modal-buttons {
+    width: 100%;
+    height: 100%;
+    padding-left: 5%;
+    padding-right: 5%;
+    /* flex-direction: column; */
+    gap: 1vh;
+  }
+
+  .btn-cadastrar,
+  .btn-cancelar,
+  .btn-salvar,
+  .btn-confirmar,
+  .btn-deletar {
+    font-size: 4vh;
+    height: 40%;
+    width: 100%;
+    padding-left: 5%;
+    padding-right: 5%;
+  }
+
+  #delete_edit{
+    width: 90%;
+    height: 50%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .tabela-container {
+    width: 90%;
+    overflow-x: auto;
+  }
+
+  .tabela-locatarios {
+    font-size: 2vh;
+    min-width: 600px;
+  }
+
+  .icone-editar,
+  .icone-deletar,
+  .icone-visualizar {
+    width: 3vh;
+    height: 3vh;
+  }
+}
+
+/* ----- VISIBILIDADE BASE (DESKTOP) ----- */
+.header-menu {
+  display: none; /* Esconde o menu de celular por padrão */
+}
+
+@media screen and (max-width: 768px) {
+    .containerOptions,
+    .containerMenu {
+        display: none;
+    }
+
+    #header-menu {
+        display: block;
+        width: 100%;
+        background-color: #0a6568;
+        color: white;
+        z-index: 1000;
+    }
+
+    #header-menu nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+    }
+
+    .logo {
+        font-size: 2.5vh;
+        font-family: 'Archivo Black', sans-serif;
+    }
+
+    .mobile-menu {
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .mobile-menu div {
+        width: 25px;
+        height: 3px;
+        background: white;
+        border-radius: 2px;
+    }
+
+    .nav-list {
+        list-style: none;
+        display: none;
+        flex-direction: column;
+        background-color: #0a6568;
+        width: 100%;
+        padding: 0;
+    }
+
+    .nav-list li {
+        text-align: center;
+        padding: 15px 0;
+        border-top: 1px solid #fff;
+    }
+
+    .nav-list li a {
+        color: white;
+        font-size: 2.2vh;
+    }
+
+    /* Classe para abrir o menu (JS precisa adicionar/remover) */
+    .nav-list.active {
+        display: flex;
+    }
+
+    /* Ajustes de layout geral */
+    .TelaEditora {
+        flex-direction: column;
+    }
+
+    .ladoDireito {
+        width: 100%;
+    }
+}
 
 

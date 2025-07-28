@@ -7,10 +7,32 @@
     <link rel="stylesheet" href="/tudo/css/logOut.css">
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap" rel="stylesheet">
-    
+    <link rel="stylesheet" href="/tudo/css/menuResponsivel.css">
 </head>
 <body>
     <div class="TelaLogout">
+        <header id="header-menu" class="header-menu">
+            <nav>
+            <h1 class="logo">Locadora de Livros</h1>
+            <div class="mobile-menu">
+                <div class="line1"></div>
+                <div class="line2"></div>
+                <div class="line3"></div>
+            </div>
+            <ul class="nav-list">
+                <!-- <li><a href="#">Início</a></li> -->
+                
+                <li><img id="img-menu" src="/tudo/logo/Captura_de_Tela__3_-removebg-preview.png" alt=""></li>
+                <li><a id="a-menu" href="dashboard.html">Dashboard</a></li>
+                <li><a id="a-menu" href="locatario.html">Locatário</a></li>
+                <li><a id="a-menu" href="editoras.html">Editora</a></li>
+                <li><a id="a-menu" href="livros.html">Livros</a></li>
+                <li><a id="a-menu" href="alugueis.html">Aluguéis</a></li>
+                <li><a id="a-menu" href="usuario.html">Usuário</a></li>
+                <li><a id="a-menu" href="logOut.html">Log out</a></li>
+            </ul>
+            </nav>
+        </header>
         <div class="containerOptions">
             <div class="logoWDA"><img src="/tudo/logo/Captura_de_Tela__3_-removebg-preview.png" alt=""></div>
             <div id="options-heigh" class="dashboardOption"><a href="/tudo/html/dashboard.html">Dashboard</a></div>
@@ -42,6 +64,8 @@
                 
             </div>
         </div>
+
+        <script src="/tudo/js/menu.js"></script>
         <script>
             // Exibir o email no topo (opcional, se quiser manter isso na tela)
             const emailUsuario = localStorage.getItem("emailUsuario");

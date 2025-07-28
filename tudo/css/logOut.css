@@ -134,3 +134,114 @@ input{
     cursor: pointer;
     /* background-color: black; */
 }
+
+@media (max-width: 768px) {
+  .TelaLogout {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .containerLogOutContent {
+    font-size: 2.5vh;
+  }
+
+  .containerLog {
+    width: 90%;
+    height: auto;
+    padding: 1.5rem;
+  }
+
+  input {
+    width: 90%;
+    height: 3rem;
+    font-size: 2.5vh;
+  }
+
+}
+
+/* ----- VISIBILIDADE BASE (DESKTOP) ----- */
+.header-menu {
+  display: none; /* Esconde o menu de celular por padrão */
+}
+
+@media screen and (max-width: 768px) {
+    .containerOptions,
+    .containerMenu {
+        display: none;
+    }
+
+    #header-menu {
+        display: block;
+        width: 100%;
+        background-color: #0a6568;
+        color: white;
+        z-index: 1000;
+    }
+
+    #header-menu nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+    }
+
+    .logo {
+        font-size: 2.5vh;
+        font-family: 'Archivo Black', sans-serif;
+    }
+
+    .mobile-menu {
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .mobile-menu div {
+        width: 25px;
+        height: 3px;
+        background: white;
+        border-radius: 2px;
+    }
+
+    .nav-list {
+        list-style: none;
+        display: none;
+        flex-direction: column;
+        background-color: #0a6568;
+        width: 100%;
+        padding: 0;
+    }
+
+    .nav-list li {
+        text-align: center;
+        padding: 15px 0;
+        border-top: 1px solid #fff;
+    }
+
+    .nav-list li a {
+        color: white;
+        font-size: 2.2vh;
+    }
+
+    /* Classe para abrir o menu (JS precisa adicionar/remover) */
+    .nav-list.active {
+        display: flex;
+    }
+
+    /* Ajustes de layout geral */
+
+    .ladoDireito {
+        width: 100%;
+    }
+}
+
+
+
+
+
+
+
+

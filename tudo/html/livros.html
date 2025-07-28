@@ -7,10 +7,31 @@
     <link rel="stylesheet" href="/tudo/css/livros.css">
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap" rel="stylesheet">
-
+    <link rel="stylesheet" href="/tudo/css/menuResponsivel.css">
 </head>
 <body>
     <div class="TelaLivros">
+        <header id="header-menu" class="header-menu">
+            <nav>
+            <h1 class="logo">Locadora de Livros</h1>
+            <div class="mobile-menu">
+                <div class="line1"></div>
+                <div class="line2"></div>
+                <div class="line3"></div>
+            </div>
+            <ul class="nav-list">
+                
+                <li><img src="/tudo/logo/Captura_de_Tela__3_-removebg-preview.png" alt=""></li>
+                <li><a id="a-menu" href="dashboard.html">Dashboard</a></li>
+                <li><a id="a-menu" href="locatario.html">Locatário</a></li>
+                <li><a id="a-menu" href="editoras.html">Editora</a></li>
+                <li><a id="a-menu" href="livros.html">Livros</a></li>
+                <li><a id="a-menu" href="alugueis.html">Aluguéis</a></li>
+                <li><a id="a-menu" href="usuario.html">Usuário</a></li>
+                <li><a id="a-menu" href="logOut.html">Log out</a></li>
+            </ul>
+            </nav>
+        </header>
         <div class="containerOptions">
             <div class="logoWDA"><img src="/tudo/logo/Captura_de_Tela__3_-removebg-preview.png" alt=""></div>
             <div id="options-heigh" class="dashboardOption"><a href="/tudo/html/dashboard.html">Dashboard</a></div>
@@ -30,10 +51,10 @@
             <div class="containerPesquisa">
                 <div class="text1">Buscar Livros: </div>
                 <input type="text" name="pesquisa" id="pesquisa">
-                <button id="filter">
+                <!-- <button id="filter">
                     <span>Filtrar</span>
                     <img src="/tudo/icons/seta-para-baixo.png" alt="Filtro" class="icon">
-                </button>
+                </button> -->
                 <input type="button" value="Cadastrar" id="button">
             </div>
             <div class="titulo">Catálogo de Livros</div>
@@ -127,8 +148,8 @@
             <!-- Modal Confirmação Deletar -->
             <div id="modal-confirmar-deletar" class="modal-overlay">
                 <div id="delete_edit" class="modal">
-                    <div class="textModal1">Certeza que deseja excluir esse livro?</div>
-                    <div class="textModal2">Após essa ação não haverá retorno.</div>
+                    <div id="paraCelular" class="textModal1">Certeza que deseja excluir esse livro?</div>
+                    <div id="paraCelular" class="textModal2">Após essa ação não haverá retorno.</div>
                     <div class="modal-buttons">
                         <button class="btn-deletar" id="btnConfirmarDeletar">Excluir</button>
                         <button class="btn-cancelar" onclick="fecharModalConfirmarDeletar()">Voltar</button>
@@ -139,6 +160,7 @@
         </div>
         
     </div>
+    <script src="/tudo/js/menu.js"></script>
     <script>
         const tipoUsuario = localStorage.getItem("tipoUsuario");
         const emailUsuario = localStorage.getItem("emailUsuario");
