@@ -110,10 +110,19 @@ a{
     /* background-color: blueviolet; */
 }
 #pesquisa{
-    width: 80%;
+    width: 70%;
     height: 100%;
     border-radius: 8px;
     background-color:  rgba(242, 255, 255, 1);
+}
+#button{
+    width: 10%;
+    height: 100%;
+    border-radius: 8px;
+    font-size: 3vh;
+    background-color: #0a6568;
+    color: white;
+    cursor: pointer;
 }
 .titulo{
     width: 100%;
@@ -399,6 +408,16 @@ a{
     align-items: center;
   }
 
+  #modal_edicao {
+    width: 90%;
+    height: 60%;
+    margin-left: 0;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+  }
+
   .textModal1, .textModal2{
     width: 100%;
     padding-left: 5%;
@@ -423,15 +442,16 @@ a{
     padding-right: 5%;
     /* flex-direction: column; */
     gap: 1vh;
+    /* background-color: brown; */
   }
 
   .btn-cadastrar,
   .btn-cancelar,
   .btn-salvar,
   .btn-confirmar,
-  .btn-deletar {
+  .btn-deletar,.btn-locatario {
     font-size: 4vh;
-    height: 40%;
+    height: 70%;
     width: 100%;
     padding-left: 5%;
     padding-right: 5%;

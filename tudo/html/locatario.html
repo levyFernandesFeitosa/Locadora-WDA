@@ -36,13 +36,13 @@
         </header>
         <div class="containerOptions">
             <div class="logoWDA"><img src="/tudo/logo/Captura_de_Tela__3_-removebg-preview.png" alt=""></div>
-            <div id="options-heigh" class="dashboardOption"><a href="/tudo/html/dashboard.html">Dashboard</a></div>
+            <div id="options-heigh" class="Option"><a href="/tudo/html/dashboard.html">Dashboard</a></div>
             <div class="locatariosOption">Locatários</div>
-            <div id="options-heigh" class="editorasOption"><a href="/tudo/html/editoras.html">Editoras</a></div>
-            <div id="options-heigh" class="livrosOption"><a href="/tudo/html/livros.html">Livros</a></div>
-            <div id="options-heigh" class="alugueisOption"><a href="/tudo/html/alugueis.html">Alugueis</a></div>
-            <div id="options-heigh" class="usuarioOption"><a href="/tudo/html/usuario.html">Usuários</a></div>
-            <div id="options-heigh" class="logoutOption"><a href="/tudo/html/logOut.html">Log out</a></div>
+            <div id="options-heigh" class="Option"><a href="/tudo/html/editoras.html">Editoras</a></div>
+            <div id="options-heigh" class="Option"><a href="/tudo/html/livros.html">Livros</a></div>
+            <div id="options-heigh" class="Option"><a href="/tudo/html/alugueis.html">Alugueis</a></div>
+            <div id="options-heigh" class="Option"><a href="/tudo/html/usuario.html">Usuários</a></div>
+            <div id="options-heigh" class="Option"><a href="/tudo/html/logOut.html">Log out</a></div>
         </div>
         <div class="ladoDireito">
             <div id="containerMenu_heigh" class="containerMenu">
@@ -55,21 +55,26 @@
                 <input type="text" name="pesquisa" id="pesquisa">
                 <input type="button" value="Cadastrar" id="button">
             </div>
+
             <div class="titulo">Lista de Locatários</div>
+
             <div id="modal-overlay" class="modal-overlay">
                 <div class="modal">
                     <div class="textModal1">Cadastrar Locatário</div>
                     <div class="modal-form">
                         <input type="text" id="inputNome" placeholder="Nome do Locatário">
-                        <input type="text" id="inputTelefone" placeholder="Telefone">
-                        <input type="text" id="inputCPF" placeholder="CPF">
                         <input type="email" id="inputEmail" placeholder="Email">
-                        <input type="text" id="inputCEP" placeholder="CEP">
+                        <input type="text" id="inputTelefone" placeholder="Telefone">
+                        <input type="text" id="inputEndereco" placeholder="Endereco">
+                        <input type="text" id="inputCPF" placeholder="CPF">
+                        
+
+                        <!-- <input type="text" id="inputCEP" placeholder="CEP">
                         <input type="text" id="inputUF" placeholder="UF">
                         <input type="text" id="inputCidade" placeholder="Cidade">
                         <input type="text" id="inputBairro" placeholder="Bairro">
                         <input type="text" id="inputRua" placeholder="Rua">
-                        <input type="text" id="inputNumero" placeholder="N° Casa/Condomínio">
+                        <input type="text" id="inputNumero" placeholder="N° Casa/Condomínio"> -->
                     </div>
                     <div class="modal-buttons">
                         <button class="btn-cadastrar">Cadastrar</button>
@@ -81,28 +86,21 @@
                 <table class="tabela-locatarios">
                     <thead>
                         <tr>
+                            <th>id</th>
                             <th>Nome</th>
-                            <th>Telefone</th>
                             <th>Email</th>
+                            <th>Telefone</th>
                             <th>CPF</th>
+                            <th>Endereco</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody id="tbody-locatarios">
-                        <tr>
-                            <td>Levy Fernandes Feitosa</td>
-                            <td>8599999999</td>
-                            <td>levyfernandes@gmail.com</td>
-                            <td>99999999999</td>
-                            <td>
-                            <img src="/tudo/icons/olho.png" id="icone-visualizar" class="icone-visualizar" alt="Visualizar">
-                            <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" alt="Editar">
-                            <img src="/tudo/icons/lixo.png" class="icone-deletar" alt="Deletar">
-                        </td>
-                        </tr>
                         <!-- Novos locatários aparecerão aqui -->
                     </tbody>
                 </table>
+                <div id="pagination" style="text-align:center; margin:20px 0;"></div>
+
             </div>
             <div id="modal-visualizar" class="modal-overlay">
                 <div class="modal">
@@ -154,298 +152,7 @@
         
     </div>
     <script src="/tudo/js/menu.js"></script>
-    <script>
-        const tipoUsuario = localStorage.getItem("tipoUsuario");
-        const emailUsuario = localStorage.getItem("emailUsuario");
-
-        document.querySelector('.emailUser').textContent = emailUsuario;
-
-        let locatarios = JSON.parse(localStorage.getItem('locatarios')) || [];
-
-        if (!locatarios || locatarios.length === 0) {
-        locatarios = [
-            {
-                nome: "Levy Fernandes Feitosa",
-                telefone: "8599999999",
-                email: "levyfernandes@gmail.com",
-                cpf: "99999999999",
-                cep: "60000000",
-                uf: "CE",
-                cidade: "Fortaleza",
-                bairro: "Centro",
-                rua: "Rua das Flores",
-                numeroDaCasa: "100"
-            },
-            {
-                nome: "Maria Souza Lima",
-                telefone: "6198888888",
-                email: "maria.souza@gmail.com",
-                cpf: "88888888888",
-                cep: "70000000",
-                uf: "DF",
-                cidade: "Brasília",
-                bairro: "Asa Sul",
-                rua: "Rua dos Livros",
-                numeroDaCasa: "200"
-            },
-            {
-                nome: "João Carlos Pereira",
-                telefone: "7197777777",
-                email: "joao.pereira@gmail.com",
-                cpf: "77777777777",
-                cep: "40000000",
-                uf: "BA",
-                cidade: "Salvador",
-                bairro: "Barra",
-                rua: "Avenida Oceânica",
-                numeroDaCasa: "300"
-            }
-        ];
-        localStorage.setItem('locatarios', JSON.stringify(locatarios));
-    }
-
-        const tbody = document.getElementById('tbody-locatarios');
-        const botaoCadastrar = document.getElementById('button');
-        const btnCadastrar = document.querySelector('.btn-cadastrar');
-        const modalOverlay = document.getElementById('modal-overlay');
-
-        let editando = false;
-        let linhaEditando = null;
-
-        function salvarLocatarios() {
-            localStorage.setItem('locatarios', JSON.stringify(locatarios));
-        }
-
-        function carregarLocatarios() {
-            tbody.innerHTML = '';
-            locatarios.forEach(loc => {
-                const novaLinha = document.createElement('tr');
-                novaLinha.innerHTML = `
-                    <td>${loc.nome}</td>
-                    <td>${loc.telefone}</td>
-                    <td>${loc.email}</td>
-                    <td>${loc.cpf}</td>
-                    <td>
-                        <img src="/tudo/icons/olho.png" class="icone-visualizar" alt="Visualizar">
-                        <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" alt="Editar">
-                        <img src="/tudo/icons/lixo.png" class="icone-deletar" alt="Deletar">
-                    </td>
-                `;
-                novaLinha.dataset.cep = loc.cep;
-                novaLinha.dataset.uf = loc.uf;
-                novaLinha.dataset.cidade = loc.cidade;
-                novaLinha.dataset.bairro = loc.bairro;
-                novaLinha.dataset.rua = loc.rua;
-                novaLinha.dataset.numero = loc.numeroDaCasa;
-
-                tbody.appendChild(novaLinha);
-            });
-        }
-
-        carregarLocatarios();
-
-        botaoCadastrar.addEventListener('click', () => {
-            limparCampos();
-            editando = false;
-            abrirModal();
-        });
-
-        btnCadastrar.addEventListener('click', () => {
-            const nome = document.getElementById('inputNome').value.trim();
-            const telefone = document.getElementById('inputTelefone').value.trim();
-            const cpf = document.getElementById('inputCPF').value.trim();
-            const email = document.getElementById('inputEmail').value.trim();
-            const cep = document.getElementById('inputCEP').value.trim();
-            const uf = document.getElementById('inputUF').value.trim();
-            const cidade = document.getElementById('inputCidade').value.trim();
-            const bairro = document.getElementById('inputBairro').value.trim();
-            const rua = document.getElementById('inputRua').value.trim();
-            const numeroDaCasa = document.getElementById('inputNumero').value.trim();
-
-            if (!nome || !telefone || !cpf || !email || !cep || !uf || !cidade || !bairro || !rua || !numeroDaCasa) {
-                alert("Preencha todos os campos obrigatórios.");
-                return;
-            }
-
-            const novoLocatario = {
-                nome, telefone, cpf, email, cep, uf, cidade, bairro, rua, numeroDaCasa
-            };
-
-            locatarios.push(novoLocatario);
-            salvarLocatarios();
-            carregarLocatarios();
-
-            fecharModal();
-            limparCampos();
-        });
-
-        function abrirModal() {
-            modalOverlay.style.display = 'flex';
-        }
-
-        function fecharModal() {
-            modalOverlay.style.display = 'none';
-        }
-
-        function limparCampos() {
-            document.querySelectorAll('.modal-form input').forEach(input => input.value = '');
-        }
-
-        // Variável global para deletar
-        let locatarioASerDeletado = null;
-
-        tbody.addEventListener('click', (e) => {
-            const linha = e.target.closest('tr');
-
-            if (e.target.classList.contains('icone-deletar')) {
-                abrirModalConfirmarDeletar(linha);
-            }
-
-            if (e.target.classList.contains('icone-editar')) {
-                editarLocatario(linha);
-            }
-
-            if (e.target.classList.contains('icone-visualizar')) {
-                visualizarLocatario(linha);
-            }
-        });
-
-        function editarLocatario(linha) {
-            linhaEditando = linha;
-            editando = true;
-
-            const nome = linha.children[0].textContent;
-            const telefone = linha.children[1].textContent;
-            const email = linha.children[2].textContent;
-            const cpf = linha.children[3].textContent;
-
-            const cep = linha.dataset.cep;
-            const uf = linha.dataset.uf;
-            const cidade = linha.dataset.cidade;
-            const bairro = linha.dataset.bairro;
-            const rua = linha.dataset.rua;
-            const numero = linha.dataset.numero;
-
-            const container = document.getElementById('dadosAtualização');
-            container.innerHTML = `
-                <input type="text" id="editNome" value="${nome}">
-                <input type="text" id="editTelefone" value="${telefone}">
-                <input type="email" id="editEmail" value="${email}">
-                <input type="text" id="editCPF" value="${cpf}">
-                <input type="text" id="editCEP" value="${cep}">
-                <input type="text" id="editUF" value="${uf}">
-                <input type="text" id="editCidade" value="${cidade}">
-                <input type="text" id="editBairro" value="${bairro}">
-                <input type="text" id="editRua" value="${rua}">
-                <input type="text" id="editNumero" value="${numero}">
-            `;
-
-            document.getElementById('modal-editar').style.display = 'flex';
-
-            document.getElementById('btnConfirmarEditar').onclick = () => {
-                const nomeEdit = document.getElementById('editNome').value.trim();
-                const telefoneEdit = document.getElementById('editTelefone').value.trim();
-                const emailEdit = document.getElementById('editEmail').value.trim();
-                const cpfEdit = document.getElementById('editCPF').value.trim();
-                const cepEdit = document.getElementById('editCEP').value.trim();
-                const ufEdit = document.getElementById('editUF').value.trim();
-                const cidadeEdit = document.getElementById('editCidade').value.trim();
-                const bairroEdit = document.getElementById('editBairro').value.trim();
-                const ruaEdit = document.getElementById('editRua').value.trim();
-                const numeroEdit = document.getElementById('editNumero').value.trim();
-
-                // Atualizar array e salvar
-                const index = locatarios.findIndex(l => l.cpf === linha.children[3].textContent);
-                locatarios[index] = {
-                    nome: nomeEdit,
-                    telefone: telefoneEdit,
-                    email: emailEdit,
-                    cpf: cpfEdit,
-                    cep: cepEdit,
-                    uf: ufEdit,
-                    cidade: cidadeEdit,
-                    bairro: bairroEdit,
-                    rua: ruaEdit,
-                    numeroDaCasa: numeroEdit
-                };
-
-                salvarLocatarios();
-                carregarLocatarios();
-                fecharModalAtualizar();
-                fecharModalConfirmarEditar();
-            };
-        }
-
-        function visualizarLocatario(linha) {
-            const container = document.getElementById('dadosVisualizacao');
-            container.innerHTML = `
-                <input type="text" value="Nome: ${linha.children[0].textContent}" readonly>
-                <input type="text" value="Telefone: ${linha.children[1].textContent}" readonly>
-                <input type="text" value="Email: ${linha.children[2].textContent}" readonly>
-                <input type="text" value="CPF: ${linha.children[3].textContent}" readonly>
-                <input type="text" value="CEP: ${linha.dataset.cep}" readonly>
-                <input type="text" value="UF: ${linha.dataset.uf}" readonly>
-                <input type="text" value="Cidade: ${linha.dataset.cidade}" readonly>
-                <input type="text" value="Bairro: ${linha.dataset.bairro}" readonly>
-                <input type="text" value="Rua: ${linha.dataset.rua}" readonly>
-                <input type="text" value="Número: ${linha.dataset.numero}" readonly>
-            `;
-            document.getElementById('modal-visualizar').style.display = 'flex';
-        }
-
-        function abrirModalConfirmarDeletar(linha) {
-            locatarioASerDeletado = linha;
-            document.getElementById('modal-confirmar-deletar').style.display = 'flex';
-
-            document.getElementById('btnConfirmarDeletar').onclick = () => {
-                const cpf = linha.children[3].textContent;
-                locatarios = locatarios.filter(loc => loc.cpf !== cpf);
-                salvarLocatarios();
-                carregarLocatarios();
-                fecharModalConfirmarDeletar();
-            };
-        }
-
-        function fecharModalConfirmarDeletar() {
-            document.getElementById('modal-confirmar-deletar').style.display = 'none';
-        }
-
-        function abrirModalConfirmarEditar() {
-            document.getElementById('modal-confirmar-editar').style.display = 'flex';
-        }
-
-        function fecharModalConfirmarEditar() {
-            document.getElementById('modal-confirmar-editar').style.display = 'none';
-        }
-
-        function fecharModalAtualizar() {
-            document.getElementById('modal-editar').style.display = 'none';
-        }
-
-        function fecharModalVisualizar() {
-            document.getElementById('modal-visualizar').style.display = 'none';
-        }
-        const campoPesquisa = document.getElementById('pesquisa');
-
-        campoPesquisa.addEventListener('input', function () {
-            const termo = this.value.toLowerCase();
-            const linhas = tbody.getElementsByTagName('tr');
-
-            for (let i = 0; i < linhas.length; i++) {
-                const linha = linhas[i];
-                const nome = linha.children[0].textContent.toLowerCase();
-                const telefone = linha.children[1].textContent.toLowerCase();
-                const email = linha.children[2].textContent.toLowerCase();
-                const cpf = linha.children[3].textContent.toLowerCase();
-
-                if (nome.includes(termo) || telefone.includes(termo) || email.includes(termo) || cpf.includes(termo)) {
-                    linha.style.display = '';
-                } else {
-                    linha.style.display = 'none';
-                }
-            }
-        });
-    </script>
+    <script src="/tudo/js/locatarios.js"></script>
 
 
 

@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Locadora De Livros</title>
     <link rel="stylesheet" href="style.css">
-    
     <link href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap" rel="stylesheet">
 
 </head>
@@ -30,38 +29,16 @@
             </div>
             <div class="containerButton">
                 <input class="button" type="button" value="Logar" id="logar" onclick="logar()">
+                <div id="res">Erro ao fazer o Login. Email ou senha invalidos</div>
             </div>
-            <div id="res">Erro ao fazer o Login. Email ou senha invalidos</div>
+            
         </div>
     </div>
     
-    <script>
-        const usuarios = [
-            { email: "admin@gmail.com", senha: "12345678", tipo: "admin" },
-            { email: "editor@gmail.com", senha: "12345678", tipo: "editor" },
-            { email: "leitor@gmail.com", senha: "12345678", tipo: "leitor" }
-        ];
 
-        function logar() {
-            const emailInput = document.getElementById("email").value;
-            const senhaInput = document.getElementById("senha").value;
-            const mensagemErro = document.getElementById("res");
-
-            const usuario = usuarios.find(u => u.email === emailInput && u.senha === senhaInput);
-
-            if (usuario) {
-                // Salvar tipo do usuário no localStorage para usar em outras telas
-                localStorage.setItem("tipoUsuario", usuario.tipo);
-                localStorage.setItem("emailUsuario", usuario.email);
-                
-                window.location.href = "tudo/html/dashboard.html";
-            } else {
-                mensagemErro.style.display = "flex";
-                document.getElementById("email").classList.add("erro");
-                document.getElementById("senha").classList.add("erro");
-            }
-        }
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="tudo/js/login.js"></script>
+    
 
 </body>
 </html>

@@ -52,6 +52,7 @@
             <div class="containerPesquisa">
                 <div class="text1">Buscar Aluguel: </div>
                 <input type="text" name="pesquisa" id="pesquisa">
+                <input type="button" value="Cadastrar" id="button">
             </div>
             <div class="titulo">Lista de Alugueis</div>
             <div class="tabela-container">
@@ -87,7 +88,7 @@
                 </table>
             </div>
             <div id="modal-editar" class="modal-overlay">
-                <div class="modal">
+                <div id="modal_edicao" class="modal">
                     <div class="textModal1">Atualizar Editora</div>
                     <div class="modal-form" id="dadosAtualização">
                         <!-- Campos preenchidos via JS -->
@@ -105,6 +106,25 @@
                     <div class="modal-buttons">
                         <button class="btn-locatario" onclick="irParaLocatarios()">Locatário</button>
                         <button class="btn-cancelar" onclick="fecharModalVisualizar()">Fechar</button>
+                    </div>
+                </div>
+            </div>
+            <div id="modal-cadastrarAluguel" class="modal-overlay" style="display:none;">
+                <div class="modal">
+                    <div class="textModal1">Cadastrar Aluguel</div>
+                    <div class="modal-form" id="formAluguel">
+                        <input type="text" id="nomeLocatario" placeholder="Nome do Locatário">
+                        <input type="email" id="emailLocatario" placeholder="Email do Locatário">
+                        <input type="text" id="nomeLivro" placeholder="Título do Livro">
+                        <input type="text" id="autor" placeholder="Autor">
+                        <input type="text" id="genero" placeholder="Gênero">
+                        <input type="text" id="editora" placeholder="Editora">
+
+                        <input type="date" id="dataDevolucao">
+                    </div>
+                    <div class="modal-buttons">
+                        <button class="btn-salvar" id="btnConfirmarAluguel">Alugar</button>
+                        <button class="btn-cancelar" onclick="fecharModalAluguel()">Cancelar</button>
                     </div>
                 </div>
             </div>
@@ -222,11 +242,11 @@
 
                 const container = document.getElementById('dadosAtualização');
                 container.innerHTML = `
-                    <input type="text" id="editLocatario" value="${locatario}">
-                    <input type="text" id="editLivro" value="${livro}">
-                    <input type="text" id="editAutor" value="${autor}">
-                    <input type="text" id="editEditora" value="${editora}">
-                    <input type="text" id="editDevolucao" value="${devolucao}">
+                    <input type="text" id="editLocatario" value="Locatário: ${locatario}">
+                    <input type="text" id="editLivro" value="Livro: ${livro}">
+                    <input type="text" id="editAutor" value="Autor: ${autor}">
+                    <input type="text" id="editEditora" value="Editora: ${editora}">
+                    <input type="text" id="editDevolucao" value="Devolução: ${devolucao}">
                 `;
 
                 document.getElementById('modal-editar').style.display = 'flex';
@@ -352,7 +372,7 @@
                     const hojeDate = new Date();
                     const diferencaDias = Math.floor((hojeDate - dataRecebimento) / (1000 * 60 * 60 * 24));
 
-                    if (diferencaDias >= 0.1
+                    if (diferencaDias >= 0.01
                     ) {
                         return; // Não renderiza esse aluguel na tabela
                     }
@@ -401,6 +421,67 @@
                 }
             });
         });
+        const btnAbrirCadastro = document.getElementById('button');
+        const modalCadastrar = document.getElementById('modal-cadastrarAluguel');
+        const btnConfirmarAluguel = document.getElementById('btnConfirmarAluguel');
+
+        btnAbrirCadastro.addEventListener('click', () => {
+        modalCadastrar.style.display = 'flex';
+        limparCamposAluguel();
+        });
+
+        function fecharModalAluguel() {
+        modalCadastrar.style.display = 'none';
+        }
+
+        function limparCamposAluguel() {
+        document.getElementById('nomeLocatario').value = '';
+        document.getElementById('emailLocatario').value = '';
+        document.getElementById('nomeLivro').value = '';
+        document.getElementById('autor').value = '';
+        document.getElementById('genero').value = '';
+        document.getElementById('editora').value = '';
+        document.getElementById('dataDevolucao').value = '';
+        }
+
+        btnConfirmarAluguel.addEventListener('click', () => {
+        // Pega os valores do formulário
+        const locatario = document.getElementById('nomeLocatario').value.trim();
+        const email = document.getElementById('emailLocatario').value.trim();
+        const tituloLivro = document.getElementById('nomeLivro').value.trim();
+        const autor = document.getElementById('autor').value.trim();
+        const genero = document.getElementById('genero').value.trim();
+        const editora = document.getElementById('editora').value.trim();
+        const dataDevolucao = document.getElementById('dataDevolucao').value;
+
+        if (!locatario || !email || !tituloLivro || !autor || !editora || !dataDevolucao) {
+            alert('Por favor, preencha todos os campos obrigatórios.');
+            return;
+        }
+
+        // Cria o objeto do novo aluguel
+        const novoAluguel = {
+            locatario,
+            email,
+            tituloLivro,
+            autor,
+            genero,
+            editora,
+            dataDevolucao,
+            status: 'No Prazo' // status inicial padrão
+        };
+
+        // Busca alugueis do localStorage
+        const alugueis = JSON.parse(localStorage.getItem('alugueis')) || [];
+        alugueis.push(novoAluguel);
+        localStorage.setItem('alugueis', JSON.stringify(alugueis));
+
+        // Atualiza a tabela e fecha o modal
+        carregarAlugueis();
+        fecharModalAluguel();
+        });
+
+        
 
 
 

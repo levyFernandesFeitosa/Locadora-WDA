@@ -33,15 +33,17 @@
             </ul>
             </nav>
         </header>
+
+
         <div class="containerOptions">
             <div class="logoWDA"><img src="/tudo/logo/Captura_de_Tela__3_-removebg-preview.png" alt=""></div>
-            <div id="options-heigh" class="dashboardOption"><a href="/tudo/html/dashboard.html">Dashboard</a></div>
-            <div id="options-heigh" class="locatariosOption"><a href="/tudo/html/locatario.html">Locatários</a></div>
+            <div id="options-heigh" class="Option"><a href="/tudo/html/dashboard.html">Dashboard</a></div>
+            <div id="options-heigh" class="Option"><a href="/tudo/html/locatario.html">Locatários</a></div>
             <div class="editorasOption">Editoras</div>
-            <div id="options-heigh" class="livrosOption"><a href="/tudo/html/livros.html">Livros</a></div>
-            <div id="options-heigh" class="alugueisOption"><a href="/tudo/html/alugueis.html">Alugueis</a></div>
-            <div id="options-heigh" class="usuarioOption"><a href="/tudo/html/usuario.html">Usuários</a></div>
-            <div id="options-heigh" class="logoutOption"><a href="/tudo/html/logOut.html">Log out</a></div>
+            <div id="options-heigh" class="Option"><a href="/tudo/html/livros.html">Livros</a></div>
+            <div id="options-heigh" class="Option"><a href="/tudo/html/alugueis.html">Alugueis</a></div>
+            <div id="options-heigh" class="Option"><a href="/tudo/html/usuario.html">Usuários</a></div>
+            <div id="options-heigh" class="Option"><a href="/tudo/html/logOut.html">Log out</a></div>
         </div>
         <div class="ladoDireito">
             <div id="containerMenu_heigh" class="containerMenu">
@@ -57,14 +59,15 @@
             <div class="titulo">Lista de Editoras</div>
             <div id="modal-overlay" class="modal-overlay">
                 <div class="modal">
-                    <div class="textModal1">Cadastrar Editora</div>
+                    <div class="textCadastrar">Cadastrar Editora</div>
                     <div class="modal-form">
+                        
                         <input type="text" id="inputNomeEditora" placeholder="Nome da Editora">
                         <input type="email" id="inputEmailEditora" placeholder="Email da Editora">
                         <input type="text" id="inputTelefoneEditora" placeholder="Telefone">
                         <input type="text" id="inputSiteEditora" placeholder="Site da Editora">
                     </div>
-                    <div class="modal-buttons">
+                    <div class="modal-buttons-Cadastrar">
                         <button class="btn-cadastrar">Cadastrar</button>
                         <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
                     </div>
@@ -74,6 +77,7 @@
                 <table class="tabela-locatarios">
                     <thead>
                         <tr>
+                            <th>id</th>
                             <th>Nome da Editora</th>
                             <th>Telefone</th>
                             <th>Email</th>
@@ -85,6 +89,7 @@
                         <!-- Dados dinâmicos -->
                     </tbody>
                 </table>
+                <div id="pagination" style="text-align:center; margin:20px 0;"></div>
             </div>
 
             <div id="modal-editar" class="modal-overlay">
@@ -93,215 +98,36 @@
                     <div class="modal-form" id="dadosAtualizacao"></div>
                     <div class="modal-buttons">
                         <button class="btn-salvar" onclick="abrirModalConfirmarEditar()">Atualizar</button>
-                        <button class="btn-cancelar" onclick="fecharModalAtualizar()">Fechar</button>
+                        <button class="btn-cancelar" onclick="fecharModalAtualizar()">Cancelar</button>
                     </div>
                 </div>
             </div>
 
             <div id="modal-confirmar-editar" class="modal-overlay">
-                <div id="delete_edit" class="modal">
+                <div class="modal-Edit">
                     <div class="textModal1">Certeza que deseja atualizar essa Editora?</div>
-                    <div class="modal-buttons">
+                    <div class="modal-buttons-edit">
                         <button class="btn-confirmar" id="btnConfirmarEditar">Atualizar</button>
-                        <button class="btn-cancelar" onclick="fecharModalConfirmarEditar()">Voltar</button>
+                        <button class="btn-cancelar-edit" onclick="fecharModalConfirmarEditar()">Voltar</button>
                     </div>
                 </div>
             </div>
 
             <div id="modal-confirmar-deletar" class="modal-overlay">
-                <div id="delete_edit" class="modal">
+                <div  class="modal-delet">
                     <div class="textModal1">Certeza que deseja excluir essa Editora?</div>
                     <div class="textModal2">Após essa ação não haverá retorno.</div>
-                    <div class="modal-buttons">
+                    <div class="modal-buttons-delet">
                         <button class="btn-deletar" id="btnConfirmarDeletar">Excluir</button>
-                        <button class="btn-cancelar" onclick="fecharModalConfirmarDeletar()">Voltar</button>
+                        <button class="btn-cancelar-delet" onclick="fecharModalConfirmarDeletar()">Voltar</button>
                     </div>
                 </div>
             </div>
 
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/tudo/js/menu.js"></script>
-    <script>
-        const emailUsuario = localStorage.getItem("emailUsuario");
-        document.querySelector('.emailUser').textContent = emailUsuario;
-
-        const btnCadastrar = document.querySelector('.btn-cadastrar');
-        const tbody = document.getElementById('tbody-locatarios');
-        const botaoCadastrar = document.getElementById('button');
-        const modalOverlay = document.getElementById('modal-overlay');
-
-        let editoras = JSON.parse(localStorage.getItem('editoras')) || [];
-        if (!editoras || editoras.length === 0) {
-            editoras = [
-                {
-                    nome: "Companhia das Letras",
-                    telefone: "(11) 3333-4444",
-                    email: "contato@companhia.com.br",
-                    site: "https://www.companhiadasletras.com.br"
-                },
-                {
-                    nome: "Editora Abril",
-                    telefone: "(11) 2222-3333",
-                    email: "contato@abril.com.br",
-                    site: "https://www.abril.com.br"
-                },
-                {
-                    nome: "Saraiva",
-                    telefone: "(11) 4444-5555",
-                    email: "sac@saraiva.com.br",
-                    site: "https://www.saraiva.com.br"
-                }
-            ];
-            localStorage.setItem('editoras', JSON.stringify(editoras));
-        }
-        let editando = false;
-        let linhaEditando = null;
-
-        function salvarEditoras() {
-            localStorage.setItem('editoras', JSON.stringify(editoras));
-        }
-
-        function carregarEditoras() {
-            tbody.innerHTML = '';
-            editoras.forEach((editora, index) => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${editora.nome}</td>
-                    <td>${editora.telefone}</td>
-                    <td>${editora.email}</td>
-                    <td>${editora.site}</td>
-                    <td>
-                        <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" data-index="${index}" alt="Editar">
-                        <img src="/tudo/icons/lixo.png" class="icone-deletar" data-index="${index}" alt="Deletar">
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        carregarEditoras();
-
-        botaoCadastrar.addEventListener('click', () => {
-            limparCampos();
-            abrirModal();
-        });
-
-        btnCadastrar.addEventListener('click', () => {
-            const nome = document.getElementById('inputNomeEditora').value.trim();
-            const telefone = document.getElementById('inputTelefoneEditora').value.trim();
-            const email = document.getElementById('inputEmailEditora').value.trim();
-            const site = document.getElementById('inputSiteEditora').value.trim();
-
-            if (!nome || !telefone || !email || !site) {
-                alert("Preencha todos os campos.");
-                return;
-            }
-
-            const novaEditora = { nome, telefone, email, site };
-            editoras.push(novaEditora);
-            salvarEditoras();
-            carregarEditoras();
-            fecharModal();
-        });
-
-        tbody.addEventListener('click', (e) => {
-            const index = e.target.dataset.index;
-
-            if (e.target.classList.contains('icone-editar')) {
-                linhaEditando = index;
-                const editora = editoras[index];
-
-                document.getElementById('dadosAtualizacao').innerHTML = `
-                    <input type="text" id="editNome" value="${editora.nome}">
-                    <input type="text" id="editTelefone" value="${editora.telefone}">
-                    <input type="email" id="editEmail" value="${editora.email}">
-                    <input type="text" id="editSite" value="${editora.site}">
-                `;
-
-                document.getElementById('modal-editar').style.display = 'flex';
-            }
-
-            if (e.target.classList.contains('icone-deletar')) {
-                abrirModalConfirmarDeletar(index);
-            }
-        });
-
-        document.getElementById('btnConfirmarEditar').addEventListener('click', () => {
-            const nome = document.getElementById('editNome').value.trim();
-            const telefone = document.getElementById('editTelefone').value.trim();
-            const email = document.getElementById('editEmail').value.trim();
-            const site = document.getElementById('editSite').value.trim();
-
-            if (!nome || !telefone || !email || !site) {
-                alert("Preencha todos os campos.");
-                return;
-            }
-
-            editoras[linhaEditando] = { nome, telefone, email, site };
-            salvarEditoras();
-            carregarEditoras();
-            fecharModalAtualizar();
-            fecharModalConfirmarEditar();
-        });
-
-        function abrirModal() { modalOverlay.style.display = 'flex'; }
-        function fecharModal() { modalOverlay.style.display = 'none'; }
-        function limparCampos() { document.querySelectorAll('.modal-form input').forEach(input => input.value = ''); }
-
-        function abrirModalConfirmarEditar() {
-            document.getElementById('modal-confirmar-editar').style.display = 'flex';
-        }
-        function fecharModalConfirmarEditar() {
-            document.getElementById('modal-confirmar-editar').style.display = 'none';
-        }
-        function fecharModalAtualizar() {
-            document.getElementById('modal-editar').style.display = 'none';
-        }
-
-        function abrirModalConfirmarDeletar(index) {
-            document.getElementById('modal-confirmar-deletar').style.display = 'flex';
-            document.getElementById('btnConfirmarDeletar').onclick = () => {
-                editoras.splice(index, 1);
-                salvarEditoras();
-                carregarEditoras();
-                fecharModalConfirmarDeletar();
-            };
-        }
-        function fecharModalConfirmarDeletar() {
-            document.getElementById('modal-confirmar-deletar').style.display = 'none';
-        }
-        document.getElementById('pesquisa').addEventListener('input', (e) => {
-            const texto = e.target.value.toLowerCase();
-            filtrarEditoras(texto);
-        });
-        function filtrarEditoras(filtro) {
-            tbody.innerHTML = '';
-
-            editoras.forEach((editora, index) => {
-                // Verifica se o nome, telefone, email ou site contém o texto pesquisado
-                if (
-                    editora.nome.toLowerCase().includes(filtro) ||
-                    editora.telefone.toLowerCase().includes(filtro) ||
-                    editora.email.toLowerCase().includes(filtro) ||
-                    editora.site.toLowerCase().includes(filtro)
-                ) {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${editora.nome}</td>
-                        <td>${editora.telefone}</td>
-                        <td>${editora.email}</td>
-                        <td>${editora.site}</td>
-                        <td>
-                            <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" data-index="${index}" alt="Editar">
-                            <img src="/tudo/icons/lixo.png" class="icone-deletar" data-index="${index}" alt="Deletar">
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                }
-            });
-        }
-
-    </script>
+    <script src="/tudo/js/editora.js"></script>
 </body>
 </html>

@@ -123,13 +123,14 @@ input.erro{
 }
 
 #res{
-    margin-top: 2%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    width: 100%; /* ocupa a largura toda do container */
+    display: none; /* fica oculto até dar erro */
+    justify-content: center; /* centraliza no flex */
     align-items: center;
-    display: none;
+    margin-top: 2%;
     color: rgba(161, 2, 2, 1);
+    font-size: 2.5vh;
+    text-align: center; 
 }
 
 

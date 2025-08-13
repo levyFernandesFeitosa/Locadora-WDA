@@ -151,18 +151,11 @@
     <!-- Script -->
     <script src="/tudo/js/menu.js"></script>
     <script>
-        const tipoUsuario = localStorage.getItem("tipoUsuario");
-        const emailUsuario = localStorage.getItem("emailUsuario");
-        document.querySelector('.emailUser').textContent = emailUsuario;
 
         const btnCadastrar = document.querySelector('.btn-cadastrar');
         const tbody = document.getElementById('tbody-locatarios');
         const botaoCadastrar = document.getElementById('button');
         const modalOverlay = document.getElementById('modal-overlay');
-
-        if (tipoUsuario !== "admin") {
-            botaoCadastrar.style.display = "none";
-        }
 
         // Carregar usuários salvos
         window.addEventListener('DOMContentLoaded', () => {

@@ -22,13 +22,16 @@ img{
 .containerOptions{
     width: 15%;
     height: 100vh;
-    font-size: 3vh;
+    font-size: 2.2vh;
     display: flex;
     
     flex-direction: column;
     box-shadow: 5px 0 10px rgba(0, 0, 0, 0.5); /* sombra na direita */
     background: RGBA(10, 101, 104, 1);
     background: linear-gradient(180deg,rgba(10, 101, 104, 1) 19%, rgba(159, 252, 255, 1) 100%);
+}
+.Option{
+    color: white;
 }
 .logoWDA{
     width: 37%;
@@ -128,7 +131,7 @@ a{
 .titulo{
     width: 100%;
     margin-top: 1%;
-    font-size: 5vh;
+    font-size: 4vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -148,9 +151,9 @@ a{
 }
 
 .modal {
-    background-color: #073536;
+    background-color: #007375;
     width: 40%;
-    height: 70%; 
+    height: 60%; 
     margin-left: 15%;
     display: flex;
     justify-content: center;
@@ -159,11 +162,56 @@ a{
     border-radius: 3vh;
 }
 
+.modal-Edit{
+    background-color: rgba(68, 68, 68, 1);
+    width: 30%;
+    height: 40%; 
+    margin-left: 15%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 3vh;
+}
+
+.modal-delet{
+    background-color: rgba(68, 68, 68, 1);
+    width: 30%;
+    height: 40%; 
+    margin-left: 15%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 3vh;
+}
+.modal-form label {
+    display: block;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+.modal-form{
+    width: 100%;
+    height: 50%;
+}
+
+.modal-form input {
+    width: 100%;
+    height: 1vh;
+    padding: 8px;
+    box-sizing: border-box;
+}
+.textCadastrar{
+    color: white;
+    margin-bottom: 2%;
+    font-size: 3vh;
+}
 .textModal1, .textModal2{
     /* background-color: #aefcfc; */
     color: white;
     margin-bottom: 5%;
-    font-size: 5vh;
+    font-size: 2.5vh;
     
 
 }
@@ -184,10 +232,33 @@ a{
     border: 1px solid #ccc;
     border-radius: 8px;
 }
-
-.modal-buttons {
-    width: 40%;
+.modal-buttons-Cadastrar{
+    width: 100%;
     height: 10%;
+    padding-left: 20%;
+    padding-right: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1vh;
+}
+.modal-buttons {
+    width: 100%;
+    height: 10%;
+    padding-left: 20%;
+    padding-right: 20%;
+    margin-top: 2%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1vh;
+    
+} 
+.modal-buttons-edit, .modal-buttons-delet {
+    width: 100%;
+    height: 15%;
+    padding-left: 20%;
+    padding-right: 20%;
     margin-top: 5%;
     display: flex;
     justify-content: center;
@@ -196,7 +267,17 @@ a{
     
 } 
 
-.btn-cadastrar, .btn-cancelar, .btn-salvar {
+.btn-cadastrar, .btn-cancelar, .btn-cancelar-edit{
+    width: 100%;
+    height: 100%;
+    padding-left: 5%;
+    padding-right: 5%;
+    font-size: 4vh;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.btn-salvar, .btn-cancelar-delet, .btn-cancelar-edit {
     width: 100%;
     height: 100%;
     padding-left: 5%;
@@ -212,8 +293,12 @@ a{
     color: black;
 }
 
-.btn-cancelar {
-    background-color: #0a6568;
+.btn-cancelar, .btn-cancelar-edit {
+    background-color: #004a4d;
+    color: white;
+}
+.btn-cancelar-delet {
+    background-color: limegreen;
     color: white;
 }
 .tabela-container {
@@ -276,6 +361,10 @@ a{
     color: black;
 }
 
+#tbody-locatarios{
+    font-size: 2vh;
+}
+
 .btn-confirmar {
     width: 100%;
     height: 100%;
@@ -314,6 +403,44 @@ a{
     flex-direction: column;
     align-items: center;
 }
+td:last-child {
+    display: flex;
+    gap: 8px; /* espaço entre ícones */
+    align-items: center;
+}
+td:last-child img {
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+}
+
+/* Container para label + input lado a lado */
+.modal-form .form-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0; /* Espaço entre label e input */
+    width: 100%;
+    height: 20%;
+}
+
+/* Label reduzida para caber ao lado do input */
+.modal-form .form-group label {
+    padding-left: 2%;
+    width: 25%; /* Ajuste conforme necessário */
+    font-weight: bold;
+    color: white;
+    font-size: 2vh;
+    margin-bottom: 0; /* Remove margem para ficar alinhado com input */
+}
+
+/* Input reduzido para caber ao lado do label */
+.modal-form .form-group input {
+    width: 70%; /* Ajuste conforme necessário */
+    font-size: 2vh;
+}
+
+
 @media (max-width: 768px) {
   .TelaEditora {
     flex-direction: column;
