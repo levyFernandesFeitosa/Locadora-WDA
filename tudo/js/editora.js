@@ -90,9 +90,6 @@ function getEditoras() {
     });
 }
 
-const emailUsuario = localStorage.getItem("emailUsuario");
-document.querySelector('.emailUser').textContent = emailUsuario;
-
 const btnCadastrar = document.querySelector('.btn-cadastrar');
 const tbody = document.getElementById('tbody-locatarios');
 const botaoCadastrar = document.getElementById('button');
@@ -113,7 +110,7 @@ if (!editoras || editoras.length === 0) {
 }
 
 let currentPage = 1;
-const rowsPerPage = 10;
+const rowsPerPage = 7;
 let linhaEditando = null;
 
 function salvarEditoras() {

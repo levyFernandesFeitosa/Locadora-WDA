@@ -162,19 +162,7 @@ a{
     border-radius: 3vh;
 }
 
-.modal-Edit{
-    background-color: rgba(68, 68, 68, 1);
-    width: 30%;
-    height: 40%; 
-    margin-left: 15%;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-    border-radius: 3vh;
-}
-
-.modal-delet{
+.modal-Edit, .modal-delet{
     background-color: rgba(68, 68, 68, 1);
     width: 30%;
     height: 40%; 

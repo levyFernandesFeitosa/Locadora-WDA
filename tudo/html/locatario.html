@@ -65,8 +65,8 @@
                         <input type="text" id="inputNome" placeholder="Nome do Locatário">
                         <input type="email" id="inputEmail" placeholder="Email">
                         <input type="text" id="inputTelefone" placeholder="Telefone">
-                        <input type="text" id="inputEndereco" placeholder="Endereco">
                         <input type="text" id="inputCPF" placeholder="CPF">
+                        <input type="text" id="inputEndereco" placeholder="Endereco">
                         
 
                         <!-- <input type="text" id="inputCEP" placeholder="CEP">
@@ -91,7 +91,7 @@
                             <th>Email</th>
                             <th>Telefone</th>
                             <th>CPF</th>
-                            <th>Endereco</th>
+                            <!-- <th>Endereco</th> -->
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -127,9 +127,9 @@
             </div>
             <!-- Modal Confirmação Atualizar -->
             <div id="modal-confirmar-editar" class="modal-overlay">
-                <div id="delete_edit" class="modal">
+                <div class="modal-Edit">
                     <div class="textModal1">Certeza que deseja atualizar esse locatário?</div>
-                    <div class="modal-buttons">
+                    <div class="modal-buttons-edit">
                         <button class="btn-confirmar" id="btnConfirmarEditar">Atualizar</button>
                         <button class="btn-cancelar" onclick="fecharModalConfirmarEditar()">Voltar</button>
                     </div>
@@ -138,12 +138,12 @@
 
             <!-- Modal Confirmação Deletar -->
             <div id="modal-confirmar-deletar" class="modal-overlay">
-                <div id="delete_edit" class="modal">
+                <div class="modal-delet">
                     <div class="textModal1">Certeza que deseja excluir esse locatário?</div>
                     <div class="textModal2">Após essa ação não haverá retorno.</div>
-                    <div class="modal-buttons">
+                    <div class="modal-buttons-delet">
                         <button class="btn-deletar" id="btnConfirmarDeletar">Excluir</button>
-                        <button class="btn-cancelar" onclick="fecharModalConfirmarDeletar()">Voltar</button>
+                        <button class="btn-cancelar-delet" onclick="fecharModalConfirmarDeletar()">Voltar</button>
                     </div>
                 </div>
             </div>
@@ -151,6 +151,8 @@
         </div>
         
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/tudo/js/menu.js"></script>
     <script src="/tudo/js/locatarios.js"></script>
 

@@ -38,7 +38,7 @@ function listaTabela() {
     td_email.innerText = arrayLocatarios[i].email;
     td_telefone.innerText = arrayLocatarios[i].telephone;
     td_CPF.innerText = arrayLocatarios[i].cpf;
-    td_endereco.innerText = arrayLocatarios[i].endereco;
+    td_endereco.innerText = arrayLocatarios[i].address;
 
     td_id.setAttribute('data-label', 'Id:');
     td_nome.setAttribute('data-label', 'Nome:');
@@ -48,43 +48,49 @@ function listaTabela() {
     td_endereco.setAttribute('data-label', 'endereco:');
     td_acoes.setAttribute('data-label', 'Ações:');
 
+    let imgVisu = document.createElement('img');
+    imgVisu.src = "/tudo/icons/olho.png";
+    imgVisu.className = 'icone-visualizar';
+    imgVisu.setAttribute("onclick", "preparaLocatario(" + JSON.stringify(arrayLocatarios[i]) + ")");
+    td_acoes.appendChild(imgVisu);
+
     let imgEdit = document.createElement('img');
-    imgEdit.className = 'fas fa-edit';
+    imgEdit.src = "/tudo/icons/ferramenta-lapis.png";
+    imgEdit.className = 'icone-editar';
+    imgEdit.setAttribute("onclick", "preparaLocatario(" + JSON.stringify(arrayLocatarios[i]) + ")");
     td_acoes.appendChild(imgEdit);
-    imgEdit.setAttribute("onclick", "preparaEditar(" + JSON.stringify(arrayEditoras[i]) + ")");
 
     let imgExcluir = document.createElement('img');
-    imgEdit.src = "/tudo/icons/ferramenta-lapis.png"
-    td_acoes.appendChild(imgEdit);
+    imgExcluir.src = "/tudo/icons/lixo.png";
+    imgExcluir.className = 'icone-deletar';
     td_acoes.appendChild(imgExcluir);
-    imgExcluir.src = "/tudo/icons/lixo.png"
   }
   atualizarPaginacao();
 }
 
-const arrayEditoras = []
+const arrayLocatarios = []
 
-function getEditoras() {
+function getLocatarios() {
   if (!token) {
     console.error("Não foi possível fazer a requisição: token ausente.");
     return;
   }
 
-  api.get('/publisher')
+  api.get('/renter')
     .then(response => {
       console.log(response.data);
-      let dadosLocadora = response.data;
-
+      let dadosLocatarios = response.data;
+      locatarios = response.data; // ou ajuste conforme o formato da API
       // Limpar o array antes de inserir os dados
-      arrayEditoras.length = 0;
+      arrayLocatarios.length = 0;
 
-      if (Array.isArray(dadosEditora)) {
-        arrayEditoras.push(...dadosEditora);
+      if (Array.isArray(dadosLocatarios)) {
+        arrayLocatarios.push(...dadosLocatarios);
       } else {
-        arrayEditoras.push(dadosEditora);
+        arrayLocatarios.push(dadosLocatarios);
       }
 
-      carregarEditoras(currentPage);
+      carregarLocatarios(currentPage);
     })
     .catch(e => {
       console.error('Erro:', e.response?.data || e.message);
@@ -115,54 +121,51 @@ const campoPesquisa = document.getElementById('pesquisa');
 let editando = false;
 let linhaEditando = null;
 let currentPage = 1;
-const rowsPerPage = 5;
+const rowsPerPage = 7;
 
 function salvarLocatarios() {
-    localStorage.setItem('locatarios', JSON.stringify(locatarios));
+    localStorage.setItem('', JSON.stringify(locatarios));
 }
 
-function carregarLocatarios(pagina = 1) {
+function carregarLocatarios(page = 1) {
     tbody.innerHTML = '';
 
-    // Filtra locatarios conforme pesquisa
+    const campoPesquisa = document.getElementById('pesquisa');
     const termo = campoPesquisa.value.toLowerCase();
-    const locatariosFiltrados = locatarios.filter(loc => {
+
+    const locatariosFiltradas = arrayLocatarios.filter(locatarios => {
         return (
-            loc.nome.toLowerCase().includes(termo) ||
-            loc.telefone.toLowerCase().includes(termo) ||
-            loc.email.toLowerCase().includes(termo) ||
-            loc.cpf.toLowerCase().includes(termo)
+            locatarios.name.toLowerCase().includes(termo) ||
+            locatarios.email.toLowerCase().includes(termo) ||
+            locatarios.telephone.toLowerCase().includes(termo) ||
+            locatarios.cpf.toLowerCase().includes(termo) ||
+            locatarios.address.toLowerCase().includes(termo)
         );
     });
 
-    const start = (pagina - 1) * rowsPerPage;
-    const end = start + rowsPerPage;
-    const locatariosPagina = locatariosFiltrados.slice(start, end);
+    let start = (page - 1) * rowsPerPage;
+    let end = start + rowsPerPage;
+    let paginatedItems = locatariosFiltradas.slice(start, end);
 
-    locatariosPagina.forEach(loc => {
-        const novaLinha = document.createElement('tr');
-        novaLinha.innerHTML = `
-            <td>${loc.nome}</td>
-            <td>${loc.telefone}</td>
-            <td>${loc.email}</td>
-            <td>${loc.cpf}</td>
+    paginatedItems.forEach((locatarios, index) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${locatarios.id}</td>
+            <td>${locatarios.name}</td>
+            <td>${locatarios.email}</td>
+            <td>${locatarios.telephone}</td>
+            <td>${locatarios.cpf}</td>
+            
             <td>
-                <img src="/tudo/icons/olho.png" class="icone-visualizar" alt="Visualizar">
-                <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" alt="Editar">
-                <img src="/tudo/icons/lixo.png" class="icone-deletar" alt="Deletar">
+                <img src="/tudo/icons/olho.png" class="icone-visualizar" data-index="${start + index}" alt="Visualizar">
+                <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" data-index="${start + index}" alt="Editar">
+                <img src="/tudo/icons/lixo.png" class="icone-deletar" data-index="${start + index}" alt="Deletar">
             </td>
         `;
-        novaLinha.dataset.cep = loc.cep;
-        novaLinha.dataset.uf = loc.uf;
-        novaLinha.dataset.cidade = loc.cidade;
-        novaLinha.dataset.bairro = loc.bairro;
-        novaLinha.dataset.rua = loc.rua;
-        novaLinha.dataset.numero = loc.numeroDaCasa;
-
-        tbody.appendChild(novaLinha);
+        tbody.appendChild(tr);
     });
 
-    criarBotoesPaginacao(locatariosFiltrados.length, pagina);
+    criarBotoesPaginacao(locatariosFiltradas.length, page);
 }
 
 function criarBotoesPaginacao(totalItems, paginaAtual) {
@@ -199,8 +202,8 @@ btnCadastrar.addEventListener('click', () => {
     const nome = document.getElementById('inputNome').value.trim();
     const email = document.getElementById('inputEmail').value.trim();
     const telefone = document.getElementById('inputTelefone').value.trim();
-    const endereco = document.getElementById('inputEndereco').value.trim();
     const cpf = document.getElementById('inputCPF').value.trim();
+    const endereco = document.getElementById('inputEndereco').value.trim();
     
     // const cep = document.getElementById('inputCEP').value.trim();
     // const uf = document.getElementById('inputUF').value.trim();
@@ -213,16 +216,22 @@ btnCadastrar.addEventListener('click', () => {
         alert("Preencha todos os campos obrigatórios.");
         return;
     }
+    api.post('/renter', {
+        name: nome,
+        email,
+        telephone: telefone,
+        cpf,
+        address: endereco
+    })
+    .then(res => {
+        getLocatarios(); // Recarrega a lista da API
+        fecharModal();
+    })
+    .catch(err => {
+        console.error(err.response?.data || err.message);
+        alert("Erro ao cadastrar editora.");
+    });
 
-    const novoLocatario = {
-        nome, email, telefone, cpf, endereco
-    };
-
-    locatarios.push(novoLocatario);
-    salvarLocatarios();
-    carregarLocatarios(currentPage);
-    fecharModal();
-    limparCampos();
 });
 
 function abrirModal() {
@@ -255,86 +264,63 @@ tbody.addEventListener('click', (e) => {
     }
 });
 
+function visualizarLocatario(linha) {
+    const index = linha.querySelector('.icone-visualizar').dataset.index;
+    const locatario = arrayLocatarios[index];
+
+    const container = document.getElementById('dadosVisualizacao');
+    container.innerHTML = `
+        <input type="text" value="Nome: ${locatario.name}" readonly>
+        <input type="email" value="Email: ${locatario.email}" readonly>
+        <input type="text" value="Telefone: ${locatario.telephone}" readonly>
+        <input type="text" value="CPF: ${locatario.cpf}" readonly>
+        <input type="text" value="Endereco: ${locatario.address}" readonly>
+    `;
+
+    document.getElementById('modal-visualizar').style.display = 'flex';
+}
+
 function editarLocatario(linha) {
-    linhaEditando = linha;
+    const index = linha.querySelector('.icone-editar').dataset.index;
+    const locatario = arrayLocatarios[index];
+
+    linhaEditando = index;
     editando = true;
-
-    const nome = linha.children[0].textContent;
-    const telefone = linha.children[1].textContent;
-    const email = linha.children[2].textContent;
-    const cpf = linha.children[3].textContent;
-
-    const cep = linha.dataset.cep;
-    const uf = linha.dataset.uf;
-    const cidade = linha.dataset.cidade;
-    const bairro = linha.dataset.bairro;
-    const rua = linha.dataset.rua;
-    const numero = linha.dataset.numero;
 
     const container = document.getElementById('dadosAtualização');
     container.innerHTML = `
-                <input type="text" id="editNome" value="${nome}">
-                <input type="text" id="editTelefone" value="${telefone}">
-                <input type="email" id="editEmail" value="${email}">
-                <input type="text" id="editCPF" value="${cpf}">
-                <input type="text" id="editCEP" value="${cep}">
-                <input type="text" id="editUF" value="${uf}">
-                <input type="text" id="editCidade" value="${cidade}">
-                <input type="text" id="editBairro" value="${bairro}">
-                <input type="text" id="editRua" value="${rua}">
-                <input type="text" id="editNumero" value="${numero}">
-            `;
+        <input type="text" id="editNome" value="${locatario.name}">
+        <input type="email" id="editEmail" value="${locatario.email}">
+        <input type="text" id="editTelefone" value="${locatario.telephone}">
+        <input type="text" id="editCPF" value="${locatario.cpf}">
+        <input type="text" id="editEndereco" value="${locatario.address}">
+    `;
 
     document.getElementById('modal-editar').style.display = 'flex';
 
     document.getElementById('btnConfirmarEditar').onclick = () => {
-        const nomeEdit = document.getElementById('editNome').value.trim();
-        const telefoneEdit = document.getElementById('editTelefone').value.trim();
-        const emailEdit = document.getElementById('editEmail').value.trim();
-        const cpfEdit = document.getElementById('editCPF').value.trim();
-        const cepEdit = document.getElementById('editCEP').value.trim();
-        const ufEdit = document.getElementById('editUF').value.trim();
-        const cidadeEdit = document.getElementById('editCidade').value.trim();
-        const bairroEdit = document.getElementById('editBairro').value.trim();
-        const ruaEdit = document.getElementById('editRua').value.trim();
-        const numeroEdit = document.getElementById('editNumero').value.trim();
+       const locatario = arrayLocatarios[linhaEditando];
 
-        const index = locatarios.findIndex(l => l.cpf === linha.children[3].textContent);
-        locatarios[index] = {
-            nome: nomeEdit,
-            telefone: telefoneEdit,
-            email: emailEdit,
-            cpf: cpfEdit,
-            cep: cepEdit,
-            uf: ufEdit,
-            cidade: cidadeEdit,
-            bairro: bairroEdit,
-            rua: ruaEdit,
-            numeroDaCasa: numeroEdit
+        const dadosAtualizados = {
+            name: document.getElementById('editNome').value.trim(),
+            email: document.getElementById('editEmail').value.trim(),
+            telephone: document.getElementById('editTelefone').value.trim(),
+            cpf: document.getElementById('editCPF').value.trim(),
+            address: document.getElementById('editEndereco').value.trim()
         };
 
-        salvarLocatarios();
-        carregarLocatarios(currentPage);
-        fecharModalAtualizar();
-        fecharModalConfirmarEditar();
+        api.put(`/renter/${locatario.id}`, dadosAtualizados)
+        .then(response => {
+            arrayLocatarios[linhaEditando] = response.data; // atualiza array local
+            carregarLocatarios(currentPage);
+            fecharModalAtualizar();
+            fecharModalConfirmarEditar();
+        })
+        .catch(err => {
+            console.error('Erro ao atualizar locatário:', err.response?.data || err.message);
+            alert('Não foi possível atualizar o locatário.');
+        });
     };
-}
-
-function visualizarLocatario(linha) {
-    const container = document.getElementById('dadosVisualizacao');
-    container.innerHTML = `
-                <input type="text" value="Nome: ${linha.children[0].textContent}" readonly>
-                <input type="text" value="Telefone: ${linha.children[1].textContent}" readonly>
-                <input type="text" value="Email: ${linha.children[2].textContent}" readonly>
-                <input type="text" value="CPF: ${linha.children[3].textContent}" readonly>
-                <input type="text" value="CEP: ${linha.dataset.cep}" readonly>
-                <input type="text" value="UF: ${linha.dataset.uf}" readonly>
-                <input type="text" value="Cidade: ${linha.dataset.cidade}" readonly>
-                <input type="text" value="Bairro: ${linha.dataset.bairro}" readonly>
-                <input type="text" value="Rua: ${linha.dataset.rua}" readonly>
-                <input type="text" value="Número: ${linha.dataset.numero}" readonly>
-            `;
-    document.getElementById('modal-visualizar').style.display = 'flex';
 }
 
 function abrirModalConfirmarDeletar(linha) {
@@ -342,14 +328,22 @@ function abrirModalConfirmarDeletar(linha) {
     document.getElementById('modal-confirmar-deletar').style.display = 'flex';
 
     document.getElementById('btnConfirmarDeletar').onclick = () => {
-        const cpf = linha.children[3].textContent;
-        locatarios = locatarios.filter(loc => loc.cpf !== cpf);
-        salvarLocatarios();
-        // Ajusta currentPage se deletar última linha da última página
-        const maxPage = Math.ceil(locatarios.length / rowsPerPage);
-        if (currentPage > maxPage) currentPage = maxPage > 0 ? maxPage : 1;
-        carregarLocatarios(currentPage);
-        fecharModalConfirmarDeletar();
+        document.getElementById('btnConfirmarDeletar').onclick = () => {
+            const index = locatarioASerDeletado.rowIndex - 1; // ajusta para índice do array
+            const locatario = arrayLocatarios[index];
+
+            api.delete(`/renter/${locatario.id}`)
+            .then(() => {
+                arrayLocatarios.splice(index, 1);
+                carregarLocatarios(currentPage);
+                fecharModalConfirmarDeletar();
+            })
+            .catch(err => {
+                console.error('Erro ao deletar locatário:', err.response?.data || err.message);
+                alert('Não foi possível deletar o locatário.');
+            });
+        };
+
     };
 }
 
