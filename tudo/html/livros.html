@@ -34,13 +34,13 @@
         </header>
         <div class="containerOptions">
             <div class="logoWDA"><img src="/tudo/logo/Captura_de_Tela__3_-removebg-preview.png" alt=""></div>
-            <div id="options-heigh" class="dashboardOption"><a href="/tudo/html/dashboard.html">Dashboard</a></div>
-            <div id="options-heigh" class="locatariosOption"><a href="/tudo/html/locatario.html">Locatários</a></div>
-            <div id="options-heigh" class="editorasOption"><a href="/tudo/html/editoras.html">Editoras</a></div>
+            <div id="options-heigh" class="Option"><a href="/tudo/html/dashboard.html">Dashboard</a></div>
+            <div id="options-heigh" class="Option"><a href="/tudo/html/locatario.html">Locatários</a></div>
+            <div id="options-heigh" class="Option"><a href="/tudo/html/editoras.html">Editoras</a></div>
             <div class="livrosOption">Livros</div>
-            <div id="options-heigh" class="alugueisOption"><a href="/tudo/html/alugueis.html">Alugueis</a></div>
-            <div id="options-heigh" class="usuarioOption"><a href="/tudo/html/usuario.html">Usuários</a></div>
-            <div id="options-heigh" class="logoutOption"><a href="/tudo/html/logOut.html">Log out</a></div>
+            <div id="options-heigh" class="Option"><a href="/tudo/html/alugueis.html">Alugueis</a></div>
+            <div id="options-heigh" class="Option"><a href="/tudo/html/usuario.html">Usuários</a></div>
+            <div id="options-heigh" class="Option"><a href="/tudo/html/logOut.html">Log out</a></div>
         </div>
         <div class="ladoDireito">
             <div id="containerMenu_heigh" class="containerMenu">
@@ -64,7 +64,7 @@
                     <div class="modal-form">
                         <input type="text" id="inputNome" placeholder="Nome do Livro">
                         <input type="text" id="inputAutor" placeholder="Autor">
-                        <input type="text" id="inputDataLancada" placeholder="Data Lançada">
+                        <input type="date" id="inputDataLancada" placeholder="Data Lançada">
                         <input type="text" id="inputEstoque" placeholder="Estoque">
                         <input type="text" id="inputEditora" placeholder="Editora">
                         
@@ -92,25 +92,12 @@
                         </tr>
                     </thead>
                     <tbody id="tbody-locatarios">
-                        <tr>
-                            <td>Assim Que Acaba</td>
-                            <td>Collen Houver</td>
-                            <td>Saraiva</td>
-                            <td>99</td>
-                            <td>1</td>
-                            <th>Romance</th>
-                            <td>
-                            <img src="/tudo/icons/livro-de-capa-preta-fechado.png" class="icone-cadastrarAluguel" alt="Aluguel">
-                            <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" alt="Editar">
-                            <img src="/tudo/icons/lixo.png" class="icone-deletar" alt="Deletar">
-                        </td>
-                        </tr>
                         <!-- Novos locatários aparecerão aqui -->
                     </tbody>
                 </table>
             </div>
             <div id="modal-editar" class="modal-overlay">
-                <div class="modal" id="modal-idit">
+                <div class="modal">
                     <div class="textModal1">Atualizar Livro</div>
                     <div class="modal-form" id="dadosAtualização">
                         <!-- Campos preenchidos via JS -->
@@ -122,7 +109,7 @@
                 </div>
             </div>
             <div id="modal-cadastrarAluguel" class="modal-overlay">
-                <div class="modal">
+                <div class="modal-cadAluguel">
                     <div class="textModal1">Cadastrar Aluguel</div>
                     <div class="modal-form" id="formAluguel">
                         <input type="text" id="nomeLocatario" placeholder="Nome do Locatário">
@@ -139,9 +126,9 @@
             </div>
             <!-- Modal Confirmação Atualizar -->
             <div id="modal-confirmar-editar" class="modal-overlay">
-                <div id="delete_edit" class="modal">
+                <div class="modal-Edit">
                     <div class="textModal1">Certeza que deseja atualizar esse livro?</div>
-                    <div class="modal-buttons">
+                    <div class="modal-buttons-edit">
                         <button class="btn-confirmar" id="btnConfirmarEditar">Atualizar</button>
                         <button class="btn-cancelar" onclick="fecharModalConfirmarEditar()">Voltar</button>
                     </div>
@@ -150,12 +137,12 @@
 
             <!-- Modal Confirmação Deletar -->
             <div id="modal-confirmar-deletar" class="modal-overlay">
-                <div id="delete_edit" class="modal">
-                    <div id="paraCelular" class="textModal1">Certeza que deseja excluir esse livro?</div>
-                    <div id="paraCelular" class="textModal2">Após essa ação não haverá retorno.</div>
-                    <div class="modal-buttons">
+                <div class="modal-delet">
+                    <div class="textModal1">Certeza que deseja excluir esse livro?</div>
+                    <div class="textModal2">Após essa ação não haverá retorno.</div>
+                    <div class="modal-buttons-delet">
                         <button class="btn-deletar" id="btnConfirmarDeletar">Excluir</button>
-                        <button class="btn-cancelar" onclick="fecharModalConfirmarDeletar()">Voltar</button>
+                        <button class="btn-cancelar-delet" onclick="fecharModalConfirmarDeletar()">Voltar</button>
                     </div>
                 </div>
             </div>

@@ -187,25 +187,30 @@ function criarBotoesPaginacao(totalItems, paginaAtual) {
         pagination.appendChild(btn);
     }
 }
+let editorasMap = {};
+
 async function carregarEditoras() {
   try {
-    const response = await api.get("/publisher"); // <-- confere se o endpoint é /publisher
+    const response = await api.get("/publisher");
     const editoras = response.data;
-
     const select = document.getElementById("inputEditora");
     select.innerHTML = "";
 
-    editoras.forEach(editora => {
+    editoras.forEach(ed => {
       const option = document.createElement("option");
-      option.value = editora.id;
-      option.textContent = editora.name; // ou editora.nome, depende da API
+      option.value = ed.id;
+      option.textContent = ed.name;
       select.appendChild(option);
+
+      // guarda a relação nome -> id
+      editorasMap[ed.name] = ed.id;
     });
 
   } catch (error) {
     console.error("Erro ao carregar editoras:", error.response?.data || error.message);
   }
 }
+
 
 botaoCadastrar.addEventListener('click', () => {
     limparCampos();
@@ -261,48 +266,19 @@ function limparCampos() {
     document.querySelectorAll('.modal-form input').forEach(input => input.value = '');
 }
 
-// Excluir
+
 tbody.addEventListener('click', (e) => {
+    // Excluir
     if (e.target.classList.contains('icone-deletar')) {
-        const linha = e.target.closest('tr');
-        abrirModalConfirmarDeletar(linha);
-    }
-    document.getElementById('btnConfirmarDeletar').addEventListener('click', () => {
-        const nomeLivro = locatarioASerDeletado.children[0].textContent;
+    const linha = e.target.closest('tr');
+    abrirModalConfirmarDeletar(linha); // abre o modal customizado
+}
 
-        // Pega os alugueis salvos
-        const alugueis = JSON.parse(localStorage.getItem("alugueis")) || [];
 
-        // Verifica se existe aluguel com esse livro
-        const existeAluguel = alugueis.some(aluguel => aluguel.tituloLivro === nomeLivro);
+});
 
-        if (existeAluguel) {
-            alert("Este livro não pode ser apagado porque possui alugueis ativos.");
-            fecharModalConfirmarDeletar();
-            return;
-        }
 
-        // Se não existir aluguel, exclui o livro
-        let catalogo = JSON.parse(localStorage.getItem("catalogoLivros")) || [];
-        catalogo = catalogo.filter(livro => livro.nome !== nomeLivro);
-        localStorage.setItem("catalogoLivros", JSON.stringify(catalogo));
-
-        if (locatarioASerDeletado) {
-            locatarioASerDeletado.remove();
-            locatarioASerDeletado = null;
-            fecharModalConfirmarDeletar();
-        }
-    });
-
-    //editar
-    document.getElementById('btnConfirmarEditar').addEventListener('click', () => {
-        Atualizar();
-        fecharModalConfirmarEditar();
-    });
-    if (e.target.classList.contains('icone-cadastrarAluguel')) {
-        const linha = e.target.closest('tr');
-        abrirModalAluguel(linha);
-    }
+tbody.addEventListener('click', (e) => {
     if (e.target.classList.contains('icone-editar')) {
         linhaEditando = e.target.closest('tr');
 
@@ -310,64 +286,103 @@ tbody.addEventListener('click', (e) => {
         const autor = linhaEditando.children[2].textContent;
         const datalancada = linhaEditando.children[3].textContent;
         const disponivel = linhaEditando.children[4].textContent;
-
         const alugados = linhaEditando.children[5].textContent;
         const editora = linhaEditando.children[6].textContent;
+
         const container = document.getElementById('dadosAtualização');
         container.innerHTML = `
-                    <input type="text" id="editNome" placeholder="Nome do Livro" value="${nome}">
-                    <input type="text" id="editAutor" placeholder="Autor" value="${autor}">
-                    <input type="text" id="editGenero" placeholder="Gênero" value="${datalancada}">
-                    <input type="text" id="editDisponivel" placeholder="Disponivel" value="${disponivel}">
-                    <input type="email" id="editEditora" placeholder="Editora" value="${editora}">
-                    
-
-                    
-                `;
+            <input type="text" id="editNome" placeholder="Nome do Livro" value="${nome}">
+            <input type="text" id="editAutor" placeholder="Autor" value="${autor}">
+            <input type="date" id="editDataLancada" placeholder="Data de Lançamento" value="${datalancada}">
+            <input type="text" id="editDisponivel" placeholder="Disponível" value="${disponivel}">
+            <input type="text" id="editAlugados" placeholder="Alugados" value="${alugados}">
+            <input type="text" id="editEditora" placeholder="Editora" value="${editora}">
+        `;
 
         document.getElementById('modal-editar').style.display = 'flex';
     }
-    const nomeOriginal = linhaEditando.children[0].getAttribute("data-nome") || linhaEditando.children[0].textContent;
-
-    let catalogo = JSON.parse(localStorage.getItem("catalogoLivros")) || [];
-
-    catalogo = catalogo.map(livro => {
-        if (livro.nome === nomeOriginal) {
-            return { nome, autor, datalancada, disponivel, alugados, editora };
-        }
-        return livro;
-    });
-
-    localStorage.setItem("catalogoLivros", JSON.stringify(catalogo));
-
-
 });
 
+
 function Atualizar() {
+    if (!linhaEditando) {
+        alert("Nenhuma linha selecionada para edição.");
+        return;
+    }
+
+    const idLivro = linhaEditando.children[0].textContent; // pega o ID do livro
     const nome = document.getElementById('editNome').value.trim();
     const autor = document.getElementById('editAutor').value.trim();
     const datalancada = document.getElementById('editDataLancada').value.trim();
     const disponivel = document.getElementById('editDisponivel').value.trim();
-    const alugados = document.getElementById('editAluguel').value.trim();
-    const editora = document.getElementById('editEditora').value.trim();
-    
+    const nomeEditora = document.getElementById('editEditora').value.trim(); // nome da editora
+    const alugados = linhaEditando.children[5].textContent;
 
-    if (!nome || !autor || !editora || !disponivel || !alugados || !datalancada) {
+    if (!nome || !autor || !nomeEditora || !disponivel || !datalancada) {
         alert("Preencha todos os campos!");
         return;
     }
 
-    // Atualiza a linha na tabela
-    linhaEditando.children[1].textContent = nome;
-    linhaEditando.children[2].textContent = autor;
-    linhaEditando.children[3].textContent = datalancada;
-    linhaEditando.children[4].textContent = disponivel;
-    linhaEditando.children[5].textContent = alugados;
-    linhaEditando.children[6].textContent = editora;
-    
+    // Pega o ID da editora pelo nome usando o editorasMap
+    const idEditora = editorasMap[nomeEditora];
+    if (!idEditora) {
+        alert("Editora inválida! Verifique o nome da editora.");
+        return;
+    }
 
-    fecharModalAtualizar();
+    // Chamada PUT na API
+    api.put(`/book/${idLivro}`, {
+        name: nome,
+        author: autor,
+        launchDate: datalancada,
+        totalQuantity: parseInt(disponivel),
+        totalInUse: parseInt(alugados),
+        publisherId: parseInt(idEditora) // envia o ID correto
+    })
+    .then(() => {   
+        fecharModalAtualizar();
+        fecharModalConfirmarEditar()
+        // Atualiza os valores na tabela
+        linhaEditando.children[1].textContent = nome;
+        linhaEditando.children[2].textContent = autor;
+        linhaEditando.children[3].textContent = datalancada;
+        linhaEditando.children[4].textContent = disponivel;
+        linhaEditando.children[5].textContent = alugados;
+        linhaEditando.children[6].textContent = nomeEditora; // mostra o nome
+
+        
+    })
+    .catch(error => {
+        console.error("Erro ao atualizar livro:", error.response?.data || error.message);
+        alert("Erro ao atualizar livro!");
+    });
 }
+
+document.getElementById('btnConfirmarEditar').addEventListener('click', () => {
+    Atualizar();
+    fecharModalConfirmarEditar();
+});
+document.getElementById('btnConfirmarDeletar').addEventListener('click', () => {
+    if (!locatarioASerDeletado) return;
+
+    const idLivro = locatarioASerDeletado.children[0].textContent;
+    console.log('Tentando deletar livro ID:', idLivro);
+
+    api.delete(`/book/${idLivro}`)
+        .then(() => {
+            locatarioASerDeletado.remove();
+            fecharModalConfirmarDeletar();
+            alert("Livro excluído com sucesso!");
+        })
+        .catch(error => {
+            console.error("Erro ao excluir livro:", error.response?.data || error.message);
+            alert("Erro ao excluir livro!");
+        });
+});
+
+
+
+
 function fecharModalAtualizar() {
     document.getElementById('modal-editar').style.display = 'none';
 }
@@ -389,6 +404,8 @@ function abrirModalConfirmarDeletar(linha) {
 
 function fecharModalConfirmarDeletar() {
     document.getElementById('modal-confirmar-deletar').style.display = 'none';
+    document.getElementById('btnCancelarDeletar').addEventListener('click', fecharModalConfirmarDeletar);
+
 }
 let livroSelecionadoParaAluguel = null;
 

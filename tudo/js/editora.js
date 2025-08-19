@@ -240,7 +240,7 @@ document.getElementById('btnConfirmarEditar').addEventListener('click', () => {
     const email = document.getElementById('editEmail').value.trim();
     const site = document.getElementById('editSite').value.trim();
 
-    if (!nome || !telefone || !email || !site) {
+    if (!nome || !telefone || !email) {
         alert("Preencha todos os campos.");
         return;
     }
@@ -256,6 +256,7 @@ document.getElementById('btnConfirmarEditar').addEventListener('click', () => {
     .then(res => {
         getEditoras();
         fecharModalAtualizar();
+        fecharModalConfirmarEditar()
     })
     .catch(err => {
         console.error(err.response?.data || err.message);

@@ -375,25 +375,6 @@ a{
 }
 
 #delete_edit{
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-}
-.btn-deletar {
-    width: 100%;
-    height: 100%;
-    font-size: 4vh;
-    padding-left: 5%;
-    padding-right: 5%;
-    background-color: red;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-#delete_edit{
     width: 60%;
     display: flex;
     justify-content: center;
