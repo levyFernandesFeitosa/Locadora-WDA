@@ -35,13 +35,13 @@
         </header>
         <div class="containerOptions">
             <div class="logoWDA"><img src="/tudo/logo/Captura_de_Tela__3_-removebg-preview.png" alt=""></div>
-            <div id="options-heigh" class="dashboardOption"><a href="/tudo/html/dashboard.html">Dashboard</a></div>
-            <div id="options-heigh" class="locatariosOption"><a href="/tudo/html/locatario.html">Locatários</a></div>
-            <div id="options-heigh" class="editorasOption"><a href="/tudo/html/editoras.html">Editoras</a></div>
-            <div id="options-heigh" class="livrosOption"><a href="/tudo/html/livros.html">Livros</a></div>
-            <div id="options-heigh" class="alugueisOption"><a href="/tudo/html/alugueis.html">Alugueis</a></div>
+            <div id="options-heigh" class="Option"><a href="/tudo/html/dashboard.html">Dashboard</a></div>
+            <div id="options-heigh" class="Option"><a href="/tudo/html/locatario.html">Locatários</a></div>
+            <div id="options-heigh" class="Option"><a href="/tudo/html/editoras.html">Editoras</a></div>
+            <div id="options-heigh" class="Option"><a href="/tudo/html/livros.html">Livros</a></div>
+            <div id="options-heigh" class="Option"><a href="/tudo/html/alugueis.html">Alugueis</a></div>
             <div class="usuarioOption">Usuários</div>
-            <div id="options-heigh" class="logoutOption"><a href="/tudo/html/logOut.html">Log out</a></div>
+            <div id="options-heigh" class="Option"><a href="/tudo/html/logOut.html">Log out</a></div>
         </div>
         <div class="ladoDireito">
             <div id="containerMenu_heigh" class="containerMenu">
@@ -78,27 +78,18 @@
                 <table class="tabela-locatarios">
                     <thead>
                         <tr>
+                            <th>Id</th>
                             <th>Nome do Usuário</th>
                             <th>Email</th>
-                            
                             <th>Permições</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody id="tbody-locatarios">
-                        <tr>
-                            <td>Ryan</td>
-                            <td>ryanzito@gmail.com</td>
-                            
-                            <td>Editor</td>
-                            <td>
-                            <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" alt="Editar">
-                            <img src="/tudo/icons/lixo.png" class="icone-deletar" alt="Deletar">
-                        </td>
-                        </tr>
                         <!-- Novos locatários aparecerão aqui -->
                     </tbody>
                 </table>
+                <div id="pagination" style="text-align:center; margin:20px 0;"></div>
             </div>
             <div id="modal-editar" class="modal-overlay">
                 <div class="modal">
@@ -149,218 +140,9 @@
 
 
     <!-- Script -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/tudo/js/menu.js"></script>
-    <script>
-
-        const btnCadastrar = document.querySelector('.btn-cadastrar');
-        const tbody = document.getElementById('tbody-locatarios');
-        const botaoCadastrar = document.getElementById('button');
-        const modalOverlay = document.getElementById('modal-overlay');
-
-        // Carregar usuários salvos
-        window.addEventListener('DOMContentLoaded', () => {
-            const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
-
-            usuarios.forEach(usuario => {
-                const novaLinha = document.createElement('tr');
-                novaLinha.innerHTML = `
-                    <td>${usuario.nome}</td>
-                    <td>${usuario.email}</td>
-                    <td>${usuario.permissao}</td>
-                    <td>
-                        <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" alt="Editar">
-                        <img src="/tudo/icons/lixo.png" class="icone-deletar" alt="Deletar">
-                    </td>
-                `;
-                tbody.appendChild(novaLinha);
-            });
-        });
-
-        botaoCadastrar.addEventListener('click', () => {
-            limparCampos();
-            abrirModal();
-        });
-
-        btnCadastrar.addEventListener('click', () => {
-            const nome = document.getElementById('inputNomeUsuario').value.trim();
-            const email = document.getElementById('inputEmailUsuario').value.trim();
-            const senha = document.getElementById('inputSenhaUsuario').value.trim();
-            const confirmarSenha = document.getElementById('inputConfirmarSenha').value.trim();
-            const permissao = document.querySelector('input[name="tipo"]:checked').value;
-
-            if (!nome || !email || !senha || !confirmarSenha) {
-                alert("Preencha todos os campos!");
-                return;
-            }
-
-            if (senha !== confirmarSenha) {
-                alert("As senhas não conferem!");
-                return;
-            }
-
-            const novaLinha = document.createElement('tr');
-            novaLinha.innerHTML = `
-                <td>${nome}</td>
-                <td>${email}</td>
-                <td>${permissao}</td>
-                <td>
-                    <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" alt="Editar">
-                    <img src="/tudo/icons/lixo.png" class="icone-deletar" alt="Deletar">
-                </td>
-            `;
-
-            tbody.appendChild(novaLinha);
-
-            // Salvar no LocalStorage
-            const novoUsuario = { nome, email, permissao };
-            let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
-            usuarios.push(novoUsuario);
-            localStorage.setItem('usuarios', JSON.stringify(usuarios));
-
-            fecharModal();
-            limparCampos();
-        });
-
-        tbody.addEventListener('click', (e) => {
-            const linha = e.target.closest('tr');
-
-            if (e.target.classList.contains('icone-editar')) {
-                if (tipoUsuario !== "admin") {
-                    alert("Você não tem permissão para editar.");
-                    return;
-                }
-                linhaEditando = linha;
-                abrirModalEditar(linha);
-            }
-
-            if (e.target.classList.contains('icone-deletar')) {
-                if (tipoUsuario !== "admin") {
-                    alert("Você não tem permissão para deletar.");
-                    return;
-                }
-                abrirModalConfirmarDeletar(linha);
-            }
-        });
-
-        function abrirModal() {
-            modalOverlay.style.display = 'flex';
-        }
-
-        function fecharModal() {
-            modalOverlay.style.display = 'none';
-        }
-
-        function limparCampos() {
-            document.querySelectorAll('.modal-form input').forEach(input => input.value = '');
-        }
-
-        function abrirModalEditar(linha) {
-            document.getElementById('modal-editar').style.display = 'flex';
-
-            document.getElementById('editNome').value = linha.children[0].textContent;
-            document.getElementById('editEmail').value = linha.children[1].textContent;
-
-            const permissao = linha.children[2].textContent;
-            document.querySelectorAll('input[name="editTipo"]').forEach(radio => {
-                radio.checked = (radio.value === permissao);
-            });
-        }
-
-        document.getElementById('btnConfirmarEditar').addEventListener('click', () => {
-            const nome = document.getElementById('editNome').value.trim();
-            const email = document.getElementById('editEmail').value.trim();
-            const senha = document.getElementById('editSenha').value.trim();
-            const confirmarSenha = document.getElementById('editConfirmarSenha').value.trim();
-            const permissao = document.querySelector('input[name="editTipo"]:checked').value;
-
-            if (!nome || !email) {
-                alert("Nome e email são obrigatórios!");
-                return;
-            }
-
-            if (senha && senha !== confirmarSenha) {
-                alert("As senhas não conferem!");
-                return;
-            }
-
-            // Atualizar na tabela
-            const emailAntigo = linhaEditando.children[1].textContent;
-            linhaEditando.children[0].textContent = nome;
-            linhaEditando.children[1].textContent = email;
-            linhaEditando.children[2].textContent = permissao;
-
-            // Atualizar no LocalStorage
-            let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
-            usuarios = usuarios.map(u => {
-                if (u.email === emailAntigo) {
-                    return { nome, email, permissao };
-                }
-                return u;
-            });
-
-            localStorage.setItem('usuarios', JSON.stringify(usuarios));
-
-            fecharModalAtualizar();
-            fecharModalConfirmarEditar();
-        });
-
-        function abrirModalConfirmarDeletar(linha) {
-            linhaParaDeletar = linha;
-            document.getElementById('modal-confirmar-deletar').style.display = 'flex';
-        }
-
-        document.getElementById('btnConfirmarDeletar').addEventListener('click', () => {
-            if (linhaParaDeletar) {
-                const emailDeletado = linhaParaDeletar.children[1].textContent;
-
-                let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
-                usuarios = usuarios.filter(u => u.email !== emailDeletado);
-                localStorage.setItem('usuarios', JSON.stringify(usuarios));
-
-                linhaParaDeletar.remove();
-                linhaParaDeletar = null;
-                document.getElementById('modal-confirmar-deletar').style.display = 'none';
-            }
-        });
-
-        // Variáveis globais
-        let linhaEditando = null;
-        let linhaParaDeletar = null;
-
-        function abrirModalConfirmarEditar() {
-            document.getElementById('modal-confirmar-editar').style.display = 'flex';
-        }
-
-        function fecharModalAtualizar() {
-            document.getElementById('modal-editar').style.display = 'none';
-            linhaEditando = null;
-        }
-
-        function fecharModalConfirmarEditar() {
-            document.getElementById('modal-confirmar-editar').style.display = 'none';
-        }
-
-        function fecharModalConfirmarDeletar() {
-            document.getElementById('modal-confirmar-deletar').style.display = 'none';
-            linhaParaDeletar = null;
-        }
-
-        const inputPesquisa = document.getElementById('pesquisa');
-
-        inputPesquisa.addEventListener('input', () => {
-            const termo = inputPesquisa.value.toLowerCase();
-            const linhas = document.querySelectorAll('#tbody-locatarios tr');
-
-            linhas.forEach(linha => {
-                const textoLinha = linha.textContent.toLowerCase();
-                if (textoLinha.includes(termo)) {
-                    linha.style.display = '';
-                } else {
-                    linha.style.display = 'none';
-                }
-            });
-        });
-    </script>
+    <script src="/tudo/js/usuario.js"></script>
 
         
 </body>

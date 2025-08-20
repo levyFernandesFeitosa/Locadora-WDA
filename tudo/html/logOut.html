@@ -35,12 +35,12 @@
         </header>
         <div class="containerOptions">
             <div class="logoWDA"><img src="/tudo/logo/Captura_de_Tela__3_-removebg-preview.png" alt=""></div>
-            <div id="options-heigh" class="dashboardOption"><a href="/tudo/html/dashboard.html">Dashboard</a></div>
-            <div id="options-heigh" class="locatariosOption"><a href="/tudo/html/locatario.html">Locatários</a></div>
-            <div id="options-heigh" class="editorasOption"><a href="/tudo/html/editoras.html">Editoras</a></div>
-            <div id="options-heigh" class="livrosOption"><a href="/tudo/html/livros.html">Livros</a></div>
-            <div id="options-heigh" class="alugueisOption"><a href="/tudo/html/alugueis.html">Alugueis</a></div>
-            <div id="options-heigh" class="usuarioOption"><a href="/tudo/html/usuario.html">Usuários</a></div>
+            <div id="options-heigh" class="Option"><a href="/tudo/html/dashboard.html">Dashboard</a></div>
+            <div id="options-heigh" class="Option"><a href="/tudo/html/locatario.html">Locatários</a></div>
+            <div id="options-heigh" class="Option"><a href="/tudo/html/editoras.html">Editoras</a></div>
+            <div id="options-heigh" class="Option"><a href="/tudo/html/livros.html">Livros</a></div>
+            <div id="options-heigh" class="Option"><a href="/tudo/html/alugueis.html">Alugueis</a></div>
+            <div id="options-heigh" class="Option"><a href="/tudo/html/usuario.html">Usuários</a></div>
             <div class="logoutOption">Log out</div>
         </div>
             <div class="ladoDireito">
@@ -67,22 +67,7 @@
 
         <script src="/tudo/js/menu.js"></script>
         <script>
-            // Exibir o email no topo (opcional, se quiser manter isso na tela)
-            const emailUsuario = localStorage.getItem("emailUsuario");
-            document.querySelector('.emailUser').textContent = emailUsuario;
-
-            // Evento do botão de logout
-            document.getElementById('btnLogout').addEventListener('click', () => {
-                // Limpar o localStorage (remove email e tipo de usuário)
-                localStorage.removeItem("emailUsuario");
-                localStorage.removeItem("tipoUsuario");
-
-                // Ou se quiser limpar tudo do localStorage:
-                // localStorage.clear();
-
-                // Redirecionar para a tela de login
-                window.location.href = "/index.html"; // Ajuste o caminho se for diferente
-            });
+            
         </script>
 
         

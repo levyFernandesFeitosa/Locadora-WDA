@@ -180,7 +180,17 @@ a{
     align-items: center;
     border-radius: 3vh;
 }
-
+.modal-cadAluguel{
+    background-color: #007375;
+    width: 30%;
+    height: 60%; 
+    margin-left: 15%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 3vh;
+}
 .modal-Edit, .modal-delet{
     background-color: rgba(68, 68, 68, 1);
     width: 30%;
@@ -220,13 +230,16 @@ a{
     padding-right: 5%;
 }
 
-.modal-form input {
+.modal-form input, .modal-form select {
     width: 100%;  /* Faz input ocupar toda a largura do container */
     height: 40px; /* Altura ajustada para inputs */
     padding: 8px 10px;
     font-size: 2vh;
     border: 1px solid #ccc;
     border-radius: 8px;
+}
+option{
+    height: 10vh;
 }
 
 .modal-buttons {

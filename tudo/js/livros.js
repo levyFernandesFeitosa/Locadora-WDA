@@ -190,25 +190,27 @@ function criarBotoesPaginacao(totalItems, paginaAtual) {
 let editorasMap = {};
 
 async function carregarEditoras() {
-  try {
-    const response = await api.get("/publisher");
-    const editoras = response.data;
-    const select = document.getElementById("inputEditora");
-    select.innerHTML = "";
+    try {
+        const response = await api.get("/publisher");
+        const editoras = response.data;
+        const select = document.getElementById("inputEditora");
+        
+        // Limpa as opções existentes para evitar duplicatas
+        select.innerHTML = '<option value="">Selecione a Editora</option>';
 
-    editoras.forEach(ed => {
-      const option = document.createElement("option");
-      option.value = ed.id;
-      option.textContent = ed.name;
-      select.appendChild(option);
+        editoras.forEach(ed => {
+            const option = document.createElement("option");
+            option.value = ed.id; // Define o valor como o ID
+            option.textContent = ed.name; // Define o texto visível como o nome
+            select.appendChild(option);
 
-      // guarda a relação nome -> id
-      editorasMap[ed.name] = ed.id;
-    });
+            // guarda a relação nome -> id para o caso de edição
+            editorasMap[ed.name] = ed.id;
+        });
 
-  } catch (error) {
-    console.error("Erro ao carregar editoras:", error.response?.data || error.message);
-  }
+    } catch (error) {
+        console.error("Erro ao carregar editoras:", error.response?.data || error.message);
+    }
 }
 
 
@@ -241,7 +243,6 @@ btnCadastrar.addEventListener('click', () => {
             publisherId: parseInt(editora)
         });
 
-        alert("Livro cadastrado com sucesso!");
         fecharModal();
         limparCampos();
         getLivros(); // recarrega a tabela
@@ -268,15 +269,20 @@ function limparCampos() {
 
 
 tbody.addEventListener('click', (e) => {
-    // Excluir
+    // Lógica para deletar livro
     if (e.target.classList.contains('icone-deletar')) {
-    const linha = e.target.closest('tr');
-    abrirModalConfirmarDeletar(linha); // abre o modal customizado
-}
-
-
+        const linha = e.target.closest('tr');
+        const idLivro = linha.children[0].textContent; // Pega o ID do livro
+        
+        // Abre o modal de confirmação de exclusão
+        abrirModalConfirmarDeletar(idLivro);
+    }
+    // Lógica para alugar livro
+    if (e.target.classList.contains('icone-cadastrarAluguel')) {
+        const linha = e.target.closest('tr');
+        abrirModalAluguel(linha);
+    }
 });
-
 
 tbody.addEventListener('click', (e) => {
     if (e.target.classList.contains('icone-editar')) {
@@ -362,32 +368,10 @@ document.getElementById('btnConfirmarEditar').addEventListener('click', () => {
     Atualizar();
     fecharModalConfirmarEditar();
 });
-document.getElementById('btnConfirmarDeletar').addEventListener('click', () => {
-    if (!locatarioASerDeletado) return;
-
-    const idLivro = locatarioASerDeletado.children[0].textContent;
-    console.log('Tentando deletar livro ID:', idLivro);
-
-    api.delete(`/book/${idLivro}`)
-        .then(() => {
-            locatarioASerDeletado.remove();
-            fecharModalConfirmarDeletar();
-            alert("Livro excluído com sucesso!");
-        })
-        .catch(error => {
-            console.error("Erro ao excluir livro:", error.response?.data || error.message);
-            alert("Erro ao excluir livro!");
-        });
-});
-
-
-
 
 function fecharModalAtualizar() {
     document.getElementById('modal-editar').style.display = 'none';
 }
-// Variável global para controlar qual ação está sendo confirmada
-let locatarioASerDeletado = null;
 
 function abrirModalConfirmarEditar() {
     document.getElementById('modal-confirmar-editar').style.display = 'flex';
@@ -397,16 +381,46 @@ function fecharModalConfirmarEditar() {
     document.getElementById('modal-confirmar-editar').style.display = 'none';
 }
 
-function abrirModalConfirmarDeletar(linha) {
-    locatarioASerDeletado = linha;
+
+// Variável para armazenar o ID do livro a ser deletado
+let idLivroParaDeletar = null;
+
+function abrirModalConfirmarDeletar(id) {
+    idLivroParaDeletar = id;
     document.getElementById('modal-confirmar-deletar').style.display = 'flex';
 }
 
 function fecharModalConfirmarDeletar() {
     document.getElementById('modal-confirmar-deletar').style.display = 'none';
-    document.getElementById('btnCancelarDeletar').addEventListener('click', fecharModalConfirmarDeletar);
-
+    idLivroParaDeletar = null; // Limpa o ID após fechar
 }
+
+document.getElementById('btnConfirmarDeletar').addEventListener('click', () => {
+    if (idLivroParaDeletar) {
+        deletarLivro(idLivroParaDeletar);
+    }
+});
+
+// Função para deletar um livro via API
+function deletarLivro(id) {
+    if (!token) {
+        console.error("Não foi possível fazer a requisição: token ausente.");
+        return;
+    }
+
+    api.delete(`/book/${id}`)
+        .then(() => {
+            fecharModalConfirmarDeletar();
+            getLivros(); // Recarrega a lista de livros para atualizar a tabela
+        })
+        .catch(e => {
+            console.error('Erro ao deletar livro:', e.response?.data || e.message);
+            alert("Erro ao deletar livro!");
+            fecharModalConfirmarDeletar();
+        });
+}
+
+
 let livroSelecionadoParaAluguel = null;
 
 // Função para abrir modal de aluguel com os dados preenchidos
