@@ -1,170 +1,139 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Locadora de Livros</title>
-    <link rel="stylesheet" href="/tudo/css/dashboard.css">
-    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/tudo/css/menuResponsivel.css">
-    
-
-</head>
-<body>
+    <link rel="stylesheet" href="/tudo/css/dashboard.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/tudo/css/menuResponsivel.css" />
+  </head>
+  <body>
     <div class="TelaDashboard">
-        <header id="header-menu" class="header-menu">
-            <nav>
-            <h1 class="logo">Locadora de Livros</h1>
-            <div class="mobile-menu">
-                <div class="line1"></div>
-                <div class="line2"></div>
-                <div class="line3"></div>
-            </div>
-            <ul class="nav-list">
-                <!-- <li><a href="#">Início</a></li> -->
-                
-                <li><img id="img-menu" src="/tudo/logo/Captura_de_Tela__3_-removebg-preview.png" alt=""></li>
-                <li><a id="a-menu" href="dashboard.html">Dashboard</a></li>
-                <li><a id="a-menu" href="locatario.html">Locatário</a></li>
-                <li><a id="a-menu" href="editoras.html">Editora</a></li>
-                <li><a id="a-menu" href="livros.html">Livros</a></li>
-                <li><a id="a-menu" href="alugueis.html">Aluguéis</a></li>
-                <li><a id="a-menu" href="usuario.html">Usuário</a></li>
-                <li><a id="a-menu" href="logOut.html">Log out</a></li>
-            </ul>
-            </nav>
-        </header>
-        <div class="containerOptions">
-            <div class="logoWDA"><img src="/tudo/logo/Captura_de_Tela__3_-removebg-preview.png" alt=""></div>
-            <div class="dashboardOption">Dashboard</div>
-            <div id="options-heigh" class="locatariosOption"><a href="/tudo/html/locatario.html">Locatários</a></div>
-            <div id="options-heigh" class="editorasOption"><a href="/tudo/html/editoras.html">Editoras</a></div>
-            <div id="options-heigh" class="livrosOption"><a href="/tudo/html/livros.html">Livros</a></div>
-            <div id="options-heigh" class="alugueisOption"><a href="/tudo/html/alugueis.html">Alugueis</a></div>
-            <div id="options-heigh" class="usuarioOption"><a href="/tudo/html/usuario.html">Usuários</a></div>
-            <div id="options-heigh" class="logoutOption"><a href="/tudo/html/logOut.html">Log out</a></div>
+      <header id="header-menu" class="header-menu">
+        <nav>
+          <h1 class="logo">Locadora de Livros</h1>
+          <div class="mobile-menu">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+          </div>
+          <ul class="nav-list">
+            <!-- <li><a href="#">Início</a></li> -->
+
+            <li>
+              <img
+                id="img-menu"
+                src="/tudo/logo/Captura_de_Tela__3_-removebg-preview.png"
+                alt=""
+              />
+            </li>
+            <li><a id="a-menu" href="dashboard.html">Dashboard</a></li>
+            <li><a id="a-menu" href="locatario.html">Locatário</a></li>
+            <li><a id="a-menu" href="editoras.html">Editora</a></li>
+            <li><a id="a-menu" href="livros.html">Livros</a></li>
+            <li><a id="a-menu" href="alugueis.html">Aluguéis</a></li>
+            <li><a id="a-menu" href="usuario.html">Usuário</a></li>
+            <li><a id="a-menu" href="logOut.html">Log out</a></li>
+          </ul>
+        </nav>
+      </header>
+      <div class="containerOptions">
+        <div class="logoWDA">
+          <img
+            src="/tudo/logo/Captura_de_Tela__3_-removebg-preview.png"
+            alt=""
+          />
         </div>
-        <div class="ladoDireito">
-            <div id="containerMenu_heigh" class="containerMenu">
-                <div class="Name">Locadora de Livros</div>
-                <div class="emailUser">test@gmail.com</div>
-                <div class="logoUser"><img src="/tudo/logo/user.png" alt=""></div>
-            </div>
-            <div class="containerDashboard">
-                <div class="cardsResumo">
-                    <div class="cardAlugueis">
-                        <h3>Aluguéis (Mensal)</h3>
-                        <canvas id="graficoPizza"></canvas>
-                    </div>
-
-                    <div class="cardTopLivros">
-                        <h3>Top 3 Livros</h3>
-                        <canvas id="graficoTopLivros"></canvas>
-                    </div>
-
-                    <div class="cardEstoques">
-                        <h3>Estoques</h3>
-                        <canvas id="graficoEstoques"></canvas>
-                    </div>
-                </div>
-
-                <div class="graficosInferiores">
-                    <div class="graficoLocatarios">
-                        <h3>Taxa de Locatários Cadastrados (Jan - Jul)</h3>
-                        <canvas id="graficoLinha"></canvas>
-                    </div>
-
-                    <div class="graficoAtrasos">
-                        <h3>Livros Atrasados (Jan - Jul)</h3>
-                        <canvas id="graficoBarras"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            
-                
+        <div class="dashboardOption">Dashboard</div>
+        <div id="options-heigh" class="locatariosOption">
+          <a href="/tudo/html/locatario.html">Locatários</a>
         </div>
+        <div id="options-heigh" class="editorasOption">
+          <a href="/tudo/html/editoras.html">Editoras</a>
+        </div>
+        <div id="options-heigh" class="livrosOption">
+          <a href="/tudo/html/livros.html">Livros</a>
+        </div>
+        <div id="options-heigh" class="alugueisOption">
+          <a href="/tudo/html/alugueis.html">Alugueis</a>
+        </div>
+        <div id="options-heigh" class="usuarioOption">
+          <a href="/tudo/html/usuario.html">Usuários</a>
+        </div>
+        <div id="options-heigh" class="logoutOption">
+          <a href="/tudo/html/logOut.html">Log out</a>
+        </div>
+      </div>
+      <div class="ladoDireito">
+        <div id="containerMenu_heigh" class="containerMenu">
+          <div class="Name">Locadora de Livros</div>
+          <div class="emailUser">test@gmail.com</div>
+          <div class="logoUser"><img src="/tudo/logo/user.png" alt="" /></div>
+        </div>
+        <div class="containerDashboard">
+          <!-- Filtros -->
+          <div class="filtros">
+            <label for="filtroMeses">Meses:</label>
+            <select id="filtroMeses">
+              <option value="3">Últimos 3</option>
+              <option value="6">Últimos 6</option>
+              <option value="12" selected>Últimos 12</option>
+            </select>
+
+            <label for="filtroAno">Ano:</label>
+            <select id="filtroAno">
+              <!-- JS vai preencher -->
+            </select>
+          </div>
+
+          <!-- Gráfico 1 -->
+          <div class="card">
+            <h3>Aluguéis x Devoluções</h3>
+            <canvas id="graficoAlugueis"></canvas>
+          </div>
+
+          <!-- Gráfico 2 -->
+          <div class="card">
+            <h3>Top 3 Livros Mais Alugados</h3>
+            <canvas id="graficoTopLivros"></canvas>
+          </div>
+
+          <!-- Tabela -->
+          <div class="card">
+            <h3>Locatários e Empréstimos</h3>
+            <table id="tabelaLocatarios">
+              <thead>
+                <tr>
+                  <th>Locatário</th>
+                  <th>Total Empréstimos</th>
+                  <th>Aluguéis Ativos</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+            <div id="paginacao"></div>
+          </div>
+
+          <!-- Gráfico 3 -->
+          <div class="card">
+            <h3>Meses Sem Aluguel</h3>
+            <canvas id="graficoSemAluguel"></canvas>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/tudo/js/menu.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        const tipoUsuario = localStorage.getItem("tipoUsuario");
-        const emailUsuario = localStorage.getItem("emailUsuario");
-        
-
-        // Exibir email no topo
-        document.querySelector('.emailUser').textContent = emailUsuario;
-
-        // Gráfico de Pizza - Aluguéis Mensal
-        new Chart(document.getElementById('graficoPizza'), {
-            type: 'doughnut',
-            data: {
-                labels: ['Alugados', 'Em Alerta', 'Atrasados'],
-                datasets: [{
-                    data: [30, 10, 5],
-                    backgroundColor: ['#9ffcff', '#0a6568', '#8B0000']
-                }]
-            }
-        });
-
-        // Gráfico de Barras - Top 3 Livros
-        new Chart(document.getElementById('graficoTopLivros'), {
-            type: 'bar',
-            data: {
-                labels: ['Livro 1', 'Livro 2', 'Livro 3'],
-                datasets: [{
-                    label: 'Quantidade',
-                    data: [50, 35, 20],
-                    backgroundColor: ['#9ffcff', '#0a6568', '#04595b']
-                }]
-            },
-            options: {
-                indexAxis: 'y'
-            }
-        });
-
-        // Gráfico de Barras - Estoques
-        new Chart(document.getElementById('graficoEstoques'), {
-            type: 'bar',
-            data: {
-                labels: ['Alugados', 'Disponíveis'],
-                datasets: [{
-                    label: 'Quantidade',
-                    data: [120, 80],
-                    backgroundColor: ['#0a6568', '#9ffcff']
-                }]
-            }
-        });
-
-        // Gráfico de Linha - Locatários Cadastrados
-        new Chart(document.getElementById('graficoLinha'), {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul'],
-                datasets: [{
-                    label: 'Locatários Cadastrados',
-                    data: [5, 10, 15, 20, 25, 30, 35],
-                    borderColor: '#0a6568',
-                    fill: false
-                }]
-            }
-        });
-
-        // Gráfico de Barras - Livros Atrasados
-        new Chart(document.getElementById('graficoBarras'), {
-            type: 'bar',
-            data: {
-                labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul'],
-                datasets: [{
-                    label: 'Livros Atrasados',
-                    data: [2, 3, 6, 4, 5, 3, 2],
-                    backgroundColor: '#04595b'
-                }]
-            }
-        });
-    </script>
-    
-
-</body>
+    <script src="/tudo/js/dashBoard.js"></script>
+  </body>
 </html>

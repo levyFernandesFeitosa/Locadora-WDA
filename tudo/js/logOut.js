@@ -1,16 +1,11 @@
-// Exibir o email no topo (opcional, se quiser manter isso na tela)
-            const emailUsuario = localStorage.getItem("emailUsuario");
-            document.querySelector('.emailUser').textContent = emailUsuario;
+function logout() {
+    // Remove o token do localStorage
+    localStorage.removeItem('authToken');
 
-            // Evento do botão de logout
-            document.getElementById('btnLogout').addEventListener('click', () => {
-                // Limpar o localStorage (remove email e tipo de usuário)
-                localStorage.removeItem("emailUsuario");
-                localStorage.removeItem("tipoUsuario");
+    // (Opcional) Remove qualquer outro dado sensível armazenado
+    localStorage.removeItem('usuario');
 
-                // Ou se quiser limpar tudo do localStorage:
-                // localStorage.clear();
-
-                // Redirecionar para a tela de login
-                window.location.href = "/index.html"; // Ajuste o caminho se for diferente
-            });
+    // Redireciona para a tela de login
+    window.location.href = '/index.html';
+}
+document.getElementById('btnLogout').addEventListener('click', logout);

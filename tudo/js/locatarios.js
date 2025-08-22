@@ -100,16 +100,6 @@ function getLocatarios() {
     });
 }
 
-
-
-
-
-
-const tipoUsuario = localStorage.getItem("tipoUsuario");
-const emailUsuario = localStorage.getItem("emailUsuario");
-
-document.querySelector('.emailUser').textContent = emailUsuario;
-
 let locatarios = JSON.parse(localStorage.getItem('locatarios')) || [];
 
 const tbody = document.getElementById('tbody-locatarios');
@@ -121,7 +111,7 @@ const campoPesquisa = document.getElementById('pesquisa');
 let editando = false;
 let linhaEditando = null;
 let currentPage = 1;
-const rowsPerPage = 7;
+const rowsPerPage = 6;
 
 function salvarLocatarios() {
     localStorage.setItem('', JSON.stringify(locatarios));

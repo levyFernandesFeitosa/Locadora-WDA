@@ -107,46 +107,50 @@ a{
     gap: 3vh;
 }
 
-.cardsResumo {
+.containerDashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.card h3 {
+    margin-bottom: 15px;
+    font-family: "Merriweather", serif;
+    font-size: 18px;
+}
+
+.filtros {
+    grid-column: 1 / -1;
     display: flex;
-    justify-content: space-around;
+    gap: 20px;
+    margin-bottom: 20px;
+    align-items: center;
 }
 
-.cardAlugueis, .cardTopLivros, .cardEstoques {
-    background-color: #f0f0f0;               
-    border-radius: 10px;
-    width: 25%; 
-    height: 100%;                 
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-}
-#graficoPizza{
-    width: 80%;
-    height: 80%;
-    margin: 0 auto;
-    display: block;
+#tabelaLocatarios {
+    width: 100%;
+    border-collapse: collapse;
 }
 
-.graficosInferiores {
-    display: flex;
-    justify-content: space-around;
-    gap: 2vw;
+#tabelaLocatarios th, #tabelaLocatarios td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
 }
 
-.graficoLocatarios, .graficoAtrasos {
-    
-    padding: 1.5%;              
-    border-radius: 10px;
-    width: 40%;
-    
+#paginacao {
+    margin-top: 10px;
+    text-align: center;
 }
 
-
-canvas {
-    canvas {
-    width: 100% !important;
-    height: 1vh !important;  /* Menor altura, mais compacto */
-}
-}
 /* Menu responsivo oculto por padrão */
 #header-menu {
     display: none;

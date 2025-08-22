@@ -1,3 +1,4 @@
+
 const api = axios.create({
     baseURL: "https://locadora-ryan-back.altislabtech.com.br",
     headers: {
@@ -28,6 +29,8 @@ function listaTabela() {
     let td_nome = tr.insertCell();
     let td_email = tr.insertCell();
     let td_role = tr.insertCell();
+    let td_acoes = tr.insertCell();
+
 
     td_id.innerText = arrayUsuario[i].id;
     td_nome.innerText = arrayUsuario[i].name;
@@ -39,17 +42,12 @@ function listaTabela() {
     td_nome.setAttribute('data-label', 'Nome:');
     td_email.setAttribute('data-label', 'E-mail:');
     td_role.setAttribute('data-label', 'Permição:');
-
-    let imgVisu = document.createElement('img');
-    imgVisu.src = "/tudo/icons/olho.png";
-    imgVisu.className = 'icone-visualizar';
-    imgVisu.setAttribute("onclick", "preparaLocatario(" + JSON.stringify(arrayLocatarios[i]) + ")");
-    td_acoes.appendChild(imgVisu);
+    td_acoes.setAttribute('data-label', 'Ações:');
 
     let imgEdit = document.createElement('img');
     imgEdit.src = "/tudo/icons/ferramenta-lapis.png";
     imgEdit.className = 'icone-editar';
-    imgEdit.setAttribute("onclick", "preparaLocatario(" + JSON.stringify(arrayLocatarios[i]) + ")");
+    imgEdit.setAttribute("onclick", "preparaUsuario(" + JSON.stringify(arrayUsuario[i]) + ")");
     td_acoes.appendChild(imgEdit);
 
     let imgExcluir = document.createElement('img');
@@ -101,7 +99,7 @@ const botaoCadastrar = document.getElementById('button');
 const modalOverlay = document.getElementById('modal-overlay');
 
 let currentPage = 1;
-const rowsPerPage = 7;
+const rowsPerPage = 6;
 
 function salvarUsuario() {
     localStorage.setItem('usuario', JSON.stringify(usuario));
@@ -116,8 +114,8 @@ function carregarUsuario(page = 1) {
     const usuarioFiltradas = arrayUsuario.filter(usuario => {
         return (
             usuario.name.toLowerCase().includes(termo) ||
-            editora.email.toLowerCase().includes(termo) ||
-            editora.role.toLowerCase().includes(termo)
+            usuario.email.toLowerCase().includes(termo) ||
+            usuario.role.toLowerCase().includes(termo)
         );
     });
 
@@ -177,7 +175,7 @@ btnCadastrar.addEventListener('click', () => {
     const email = document.getElementById('inputEmailUsuario').value.trim();
     const senha = document.getElementById('inputSenhaUsuario').value.trim();
     const confirmarSenha = document.getElementById('inputConfirmarSenha').value.trim();
-    const permissao = document.querySelector('input[name="tipo"]:checked').value;
+    const permissao = document.getElementById('selectTipoUsuario').value;
 
     if (!nome || !email || !senha || !confirmarSenha) {
         alert("Preencha todos os campos!");
@@ -188,29 +186,29 @@ btnCadastrar.addEventListener('click', () => {
         alert("As senhas não conferem!");
         return;
     }
+    api.post('/user', {
+        name: nome,
+        email: email,
+        password: senha,
+        role: permissao
+    })
+    .then(response => {
+        alert("Usuário cadastrado com sucesso!");
+        console.log("Novo usuário:", response.data);
 
-    const novaLinha = document.createElement('tr');
-    novaLinha.innerHTML = `
-                <td>${nome}</td>
-                <td>${email}</td>
-                <td>${permissao}</td>
-                <td>
-                    <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" alt="Editar">
-                    <img src="/tudo/icons/lixo.png" class="icone-deletar" alt="Deletar">
-                </td>
-            `;
+        // Atualiza tabela com o novo usuário
+        getUsuario();
 
-    tbody.appendChild(novaLinha);
-
-    // Salvar no LocalStorage
-    const novoUsuario = { nome, email, permissao };
-    let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
-    usuarios.push(novoUsuario);
-    localStorage.setItem('usuarios', JSON.stringify(usuarios));
-
-    fecharModal();
-    limparCampos();
+        fecharModal();
+        limparCampos();
+    })
+    .catch(error => {
+        console.error("Erro ao cadastrar:", error.response?.data || error.message);
+        alert("Erro ao cadastrar usuário!");
+    });
 });
+
+let tipoUsuario = "admin";
 
 tbody.addEventListener('click', (e) => {
     const linha = e.target.closest('tr');
@@ -246,23 +244,54 @@ function limparCampos() {
 }
 
 function abrirModalEditar(linha) {
+    linhaEditando = linha;
+
     document.getElementById('modal-editar').style.display = 'flex';
+    document.getElementById('editNome').value = linha.children[1].textContent;
+    document.getElementById('editEmail').value = linha.children[2].textContent;
 
-    document.getElementById('editNome').value = linha.children[0].textContent;
-    document.getElementById('editEmail').value = linha.children[1].textContent;
-
-    const permissao = linha.children[2].textContent;
-    document.querySelectorAll('input[name="editTipo"]').forEach(radio => {
-        radio.checked = (radio.value === permissao);
-    });
+    // Sincroniza o select com o role do usuário
+    const selectRole = document.getElementById('selectTipoUsuarioEditar');
+    selectRole.value = linha.children[3].textContent; // role da tabela
 }
 
-document.getElementById('btnConfirmarEditar').addEventListener('click', () => {
+
+// Abrir modal de edição com dados da linha
+function abrirModalEditar(linha) {
+    linhaEditando = linha;
+
+    document.getElementById('modal-editar').style.display = 'flex';
+    document.getElementById('editNome').value = linha.children[1].textContent;
+    document.getElementById('editEmail').value = linha.children[2].textContent;
+
+    const selectRole = document.getElementById('selectTipoUsuarioEditar');
+    selectRole.value = linha.children[3].textContent;
+}
+
+// Fechar modal de edição
+function fecharModalAtualizar() {
+    document.getElementById('modal-editar').style.display = 'none';
+    linhaEditando = null;
+    limparCamposEditar();
+}
+
+// Limpar campos do modal de edição
+function limparCamposEditar() {
+    document.getElementById('editNome').value = '';
+    document.getElementById('editEmail').value = '';
+    document.getElementById('editSenha').value = '';
+    document.getElementById('editConfirmarSenha').value = '';
+}
+
+// Função de atualização do usuário
+function atualizarUsuario() {
+    if (!linhaEditando) return;
+
     const nome = document.getElementById('editNome').value.trim();
     const email = document.getElementById('editEmail').value.trim();
     const senha = document.getElementById('editSenha').value.trim();
     const confirmarSenha = document.getElementById('editConfirmarSenha').value.trim();
-    const permissao = document.querySelector('input[name="editTipo"]:checked').value;
+    const permissao = document.getElementById('selectTipoUsuarioEditar').value;
 
     if (!nome || !email) {
         alert("Nome e email são obrigatórios!");
@@ -274,26 +303,39 @@ document.getElementById('btnConfirmarEditar').addEventListener('click', () => {
         return;
     }
 
-    // Atualizar na tabela
-    const emailAntigo = linhaEditando.children[1].textContent;
-    linhaEditando.children[0].textContent = nome;
-    linhaEditando.children[1].textContent = email;
-    linhaEditando.children[2].textContent = permissao;
+    const idUsuario = linhaEditando.children[0].textContent;
 
-    // Atualizar no LocalStorage
-    let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
-    usuarios = usuarios.map(u => {
-        if (u.email === emailAntigo) {
-            return { nome, email, permissao };
-        }
-        return u;
-    });
+    const dadosAtualizados = { name: nome, email: email, role: permissao };
+    if (senha) dadosAtualizados.password = senha;
 
-    localStorage.setItem('usuarios', JSON.stringify(usuarios));
+    api.put(`/user/${idUsuario}`, dadosAtualizados)
+       .then(res => {
 
-    fecharModalAtualizar();
-    fecharModalConfirmarEditar();
-});
+           // Atualiza linha na tabela
+           linhaEditando.children[1].textContent = nome;
+           linhaEditando.children[2].textContent = email;
+           linhaEditando.children[3].textContent = permissao;
+
+           // Atualiza arrayUsuario
+           const index = arrayUsuario.findIndex(u => u.id == idUsuario);
+           if (index !== -1) {
+               arrayUsuario[index] = { ...arrayUsuario[index], ...dadosAtualizados };
+           }
+
+           fecharModalAtualizar();
+           fecharModalConfirmarEditar();
+       })
+       .catch(err => {
+           console.error("Erro ao atualizar:", err.response?.data || err.message);
+           alert("Não foi possível atualizar o usuário.");
+       });
+}
+
+// Listener do botão de confirmar edição
+document.getElementById('btnConfirmarEditar').addEventListener('click', atualizarUsuario);
+
+
+
 
 function abrirModalConfirmarDeletar(linha) {
     linhaParaDeletar = linha;
@@ -301,18 +343,24 @@ function abrirModalConfirmarDeletar(linha) {
 }
 
 document.getElementById('btnConfirmarDeletar').addEventListener('click', () => {
-    if (linhaParaDeletar) {
-        const emailDeletado = linhaParaDeletar.children[1].textContent;
+    if (!linhaParaDeletar) return;
 
-        let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
-        usuarios = usuarios.filter(u => u.email !== emailDeletado);
-        localStorage.setItem('usuarios', JSON.stringify(usuarios));
+    const idUsuario = linhaParaDeletar.children[0].textContent;
 
-        linhaParaDeletar.remove();
-        linhaParaDeletar = null;
-        document.getElementById('modal-confirmar-deletar').style.display = 'none';
-    }
+    api.delete(`/user/${idUsuario}`)
+       .then(res => {
+           alert("Usuário deletado com sucesso!");
+           linhaParaDeletar.remove();
+           linhaParaDeletar = null;
+           fecharModalConfirmarDeletar();
+       })
+       .catch(err => {
+           console.error("Erro ao deletar:", err.response?.data || err.message);
+           alert("Não foi possível deletar o usuário.");
+       });
 });
+
+
 
 // Variáveis globais
 let linhaEditando = null;

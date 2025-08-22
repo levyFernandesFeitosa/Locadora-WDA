@@ -51,12 +51,6 @@ function listaTabela() {
     td_editor.setAttribute('data-label', 'Editor:');
     td_acoes.setAttribute('data-label', 'Ações:');
 
-    let imgCad = document.createElement('img');
-    imgCad.src = "/tudo/icons/livro-de-capa-preta-fechado.png";
-    imgCad.className = 'icone-cadastrarAluguel';
-    imgCad.setAttribute("onclick", "preparaLocatario(" + JSON.stringify(arrayLocatarios[i]) + ")");
-    td_acoes.appendChild(imgCad);
-
     let imgEdit = document.createElement('img');
     imgEdit.src = "/tudo/icons/ferramenta-lapis.png";
     imgEdit.className = 'icone-editar';
@@ -114,7 +108,7 @@ const campoPesquisa = document.getElementById('pesquisa');
 let editando = false;
 let linhaEditando = null;
 let currentPage = 1;
-const rowsPerPage = 7;
+const rowsPerPage = 6;
 
 function salvarLivros() {
     localStorage.setItem('livros', JSON.stringify(livros));
@@ -153,7 +147,6 @@ function carregarLivros(page = 1) {
             <td>${livros.publisher.name}</td>
             
             <td>
-                <img src="/tudo/icons/livro-de-capa-preta-fechado.png" class="icone-cadastrarAluguel" data-index="${start + index}" alt="Aluguel">
                 <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" data-index="${start + index}" alt="Editar">
                 <img src="/tudo/icons/lixo.png" class="icone-deletar" data-index="${start + index}" alt="Deletar">
             </td>
@@ -181,7 +174,7 @@ function criarBotoesPaginacao(totalItems, paginaAtual) {
 
         btn.addEventListener('click', () => {
             currentPage = i;
-            carregarLocatarios(currentPage);
+            carregarLivros(currentPage);
         });
 
         pagination.appendChild(btn);
@@ -419,164 +412,6 @@ function deletarLivro(id) {
             fecharModalConfirmarDeletar();
         });
 }
-
-
-let livroSelecionadoParaAluguel = null;
-
-// Função para abrir modal de aluguel com os dados preenchidos
-function abrirModalAluguel(linha) {
-    livroSelecionadoParaAluguel = linha;
-
-    const nome = linha.children[1].textContent;
-    const autor = linha.children[2].textContent;
-    const editora = linha.children[6].textContent;
-    const datalancada = linha.children[3].textContent;
-
-    // Preencher data de devolução com hoje
-    const hoje = new Date().toISOString().split('T')[0];
-    document.getElementById('dataDevolucao').value = hoje;
-
-    // Exibir como texto
-    document.getElementById('infoLivro').innerHTML = `
-                <div class="textResposta1">Título do Livro: ${nome}</div>
-                <div class="textResposta1">Data Lançada: ${datalancada}</div>
-                <div class="textResposta1">Autor: ${autor}</div>
-                <div class="textResposta1">Editora: ${editora}</div>
-            `;
-
-
-    document.getElementById('modal-cadastrarAluguel').style.display = 'flex';
-}
-
-// Fechar modal de aluguel
-function fecharModalAluguel() {
-    document.getElementById('modal-cadastrarAluguel').style.display = 'none';
-}
-
-// Confirmação do aluguel
-document.getElementById('btnConfirmarAluguel').addEventListener('click', () => {
-    const nomeLocatario = document.getElementById('nomeLocatario').value.trim();
-    const emailLocatario = document.getElementById('emailLocatario').value.trim();
-    const dataDevolucao = document.getElementById('dataDevolucao').value;
-
-    if (!nomeLocatario || !emailLocatario || !dataDevolucao) {
-        alert("Preencha todos os campos do aluguel!");
-        return;
-    }
-
-    // Verificar se o locatário está cadastrado
-    const locatarios = JSON.parse(localStorage.getItem("locatarios")) || [];
-
-    const locatarioValido = locatarios.find(l =>
-        l.nome.toLowerCase() === nomeLocatario.toLowerCase() &&
-        l.email.toLowerCase() === emailLocatario.toLowerCase()
-    );
-
-    if (!locatarioValido) {
-        alert("Locatário não cadastrado! Por favor, cadastre o locatário antes de realizar o aluguel.");
-        return;
-    }
-
-
-    // Atualiza a tabela
-    const disponivel = parseInt(livroSelecionadoParaAluguel.children[4].textContent);
-    const alugados = parseInt(livroSelecionadoParaAluguel.children[5].textContent);
-    if (disponivel <= 0) {
-        alert("Este livro não está disponível para aluguel.");
-        return;
-    }
-
-    // Atualiza a tabela de livros (reduz estoque e aumenta alugados)
-    livroSelecionadoParaAluguel.children[3].textContent = disponivel - 1;
-    livroSelecionadoParaAluguel.children[4].textContent = alugados + 1;
-
-    // Pega os dados do livro
-    const tituloLivro = livroSelecionadoParaAluguel.children[1].textContent;
-    const autor = livroSelecionadoParaAluguel.children[2].textContent;
-    const editora = livroSelecionadoParaAluguel.children[6].textContent;
-
-    // Calcula o status 
-    const hoje = new Date().toISOString().split('T')[0];
-    const status = dataDevolucao >= hoje ? "No Prazo" : "Atrasado";
-
-    // Salva no localStorage o aluguel
-    const alugueis = JSON.parse(localStorage.getItem("alugueis")) || [];
-    alugueis.push({
-        locatario: nomeLocatario,
-        email: emailLocatario,
-        tituloLivro,
-        autor,
-        editora,
-        dataDevolucao,
-        status
-    });
-    localStorage.setItem("alugueis", JSON.stringify(alugueis));
-
-    if (disponivel <= 0) {
-        alert("Este livro não está disponível para aluguel.");
-        return;
-    }
-
-    livroSelecionadoParaAluguel.children[3].textContent = disponivel - 1;
-    livroSelecionadoParaAluguel.children[4].textContent = alugados + 1;
-
-    fecharModalAluguel();
-    alert("Aluguel cadastrado com sucesso!");
-
-    // Opcional: Pode guardar as informações do aluguel em uma lista se quiser exibir depois.
-});
-window.addEventListener('load', () => {
-    const catalogo = JSON.parse(localStorage.getItem("catalogoLivros")) || [];
-
-    catalogo.forEach(livro => {
-        const novaLinha = document.createElement('tr');
-        novaLinha.innerHTML = `
-                    <td>${livro.nome}</td>
-                    <td>${livro.autor}</td>
-                    <td>${livro.datalancada}</td>
-                    <td>${livro.disponivel}</td>
-                    <td>${livro.alugados}</td>
-                    <td>${livro.editora}</td>
-                    
-                    <td>
-                        <img src="/tudo/icons/livro-de-capa-preta-fechado.png" class="icone-cadastrarAluguel" alt="Aluguel">
-                        <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" alt="Editar">
-                        <img src="/tudo/icons/lixo.png" class="icone-deletar" alt="Deletar">
-                    </td>
-                `;
-        tbody.appendChild(novaLinha);
-    });
-});
-// Função de filtro da tabela
-document.getElementById('filter').addEventListener('click', function () {
-    const termo = document.getElementById('pesquisa').value.toLowerCase();
-    const linhas = document.querySelectorAll('#tbody-locatarios tr');
-
-    linhas.forEach(linha => {
-        const textoLinha = linha.textContent.toLowerCase();
-        if (textoLinha.includes(termo)) {
-            linha.style.display = '';
-        } else {
-            linha.style.display = 'none';
-        }
-    });
-});
-
-// Opcional: fazer a pesquisa enquanto digita (modo dinâmico)
-document.getElementById('pesquisa').addEventListener('input', function () {
-    const termo = this.value.toLowerCase();
-    const linhas = document.querySelectorAll('#tbody-locatarios tr');
-
-    linhas.forEach(linha => {
-        const textoLinha = linha.textContent.toLowerCase();
-        if (textoLinha.includes(termo)) {
-            linha.style.display = '';
-        } else {
-            linha.style.display = 'none';
-        }
-    });
-});
-
 
 
 

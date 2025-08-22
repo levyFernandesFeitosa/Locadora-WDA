@@ -1,163 +1,178 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Locadora de Livros</title>
-    <link rel="stylesheet" href="/tudo/css/alugueis.css">
-    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/tudo/css/menuResponsivel.css">
-</head>
-<body>
+    <link rel="stylesheet" href="/tudo/css/alugueis.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/tudo/css/menuResponsivel.css" />
+  </head>
+  <body>
     <div class="TelaAlugueis">
-        <header id="header-menu" class="header-menu">
-            <nav>
-            <h1 class="logo">Locadora de Livros</h1>
-            <div class="mobile-menu">
-                <div class="line1"></div>
-                <div class="line2"></div>
-                <div class="line3"></div>
-            </div>
-            <ul class="nav-list">
-                <!-- <li><a href="#">Início</a></li> -->
-                
-                <li><img id="img-menu" src="/tudo/logo/Captura_de_Tela__3_-removebg-preview.png" alt=""></li>
-                <li><a id="a-menu" href="dashboard.html">Dashboard</a></li>
-                <li><a id="a-menu" href="locatario.html">Locatário</a></li>
-                <li><a id="a-menu" href="editoras.html">Editora</a></li>
-                <li><a id="a-menu" href="livros.html">Livros</a></li>
-                <li><a id="a-menu" href="alugueis.html">Aluguéis</a></li>
-                <li><a id="a-menu" href="usuario.html">Usuário</a></li>
-                <li><a id="a-menu" href="logOut.html">Log out</a></li>
-            </ul>
-            </nav>
-        </header>
-        <div class="containerOptions">
-            <div class="logoWDA"><img src="/tudo/logo/Captura_de_Tela__3_-removebg-preview.png" alt=""></div>
-            <div id="options-heigh" class="dashboardOption"><a href="/tudo/html/dashboard.html">Dashboard</a></div>
-            <div id="options-heigh" class="locatariosOption"><a href="/tudo/html/locatario.html">Locatários</a></div>
-            <div id="options-heigh" class="editorasOption"><a href="/tudo/html/editoras.html">Editoras</a></div>
-            <div id="options-heigh" class="livrosOption"><a href="/tudo/html/livros.html">Livros</a></div>
-            <div class="alugueisOption">Alugueis</div>
-            <div id="options-heigh" class="usuarioOption"><a href="/tudo/html/usuario.html">Usuários</a></div>
-            <div id="options-heigh" class="logoutOption"><a href="/tudo/html/logOut.html">Log out</a></div>
+      <header id="header-menu" class="header-menu">
+        <nav>
+          <h1 class="logo">Locadora de Livros</h1>
+          <div class="mobile-menu">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+          </div>
+          <ul class="nav-list">
+            <!-- <li><a href="#">Início</a></li> -->
+
+            <li>
+              <img
+                id="img-menu"
+                src="/tudo/logo/Captura_de_Tela__3_-removebg-preview.png"
+                alt=""
+              />
+            </li>
+            <li><a id="a-menu" href="dashboard.html">Dashboard</a></li>
+            <li><a id="a-menu" href="locatario.html">Locatário</a></li>
+            <li><a id="a-menu" href="editoras.html">Editora</a></li>
+            <li><a id="a-menu" href="livros.html">Livros</a></li>
+            <li><a id="a-menu" href="alugueis.html">Aluguéis</a></li>
+            <li><a id="a-menu" href="usuario.html">Usuário</a></li>
+            <li><a id="a-menu" href="logOut.html">Log out</a></li>
+          </ul>
+        </nav>
+      </header>
+      <div class="containerOptions">
+        <div class="logoWDA">
+          <img
+            src="/tudo/logo/Captura_de_Tela__3_-removebg-preview.png"
+            alt=""
+          />
         </div>
-        <div class="ladoDireito">
-            <div id="containerMenu_heigh" class="containerMenu">
-                <div class="Name">Locadora de Livros</div>
-                <div class="emailUser">test@gmail.com</div>
-                <div class="logoUser"><img src="/tudo/logo/user.png" alt=""></div>
-            </div>
-            <div class="containerPesquisa">
-                <div class="text1">Buscar Aluguel: </div>
-                <input type="text" name="pesquisa" id="pesquisa">
-                <input type="button" value="Cadastrar" id="button">
-            </div>
-            <div class="titulo">Lista de Alugueis</div>
-            <div class="tabela-container">
-                <table class="tabela-locatarios">
-                    <thead>
-                        <tr>
-                            <th>Locatário</th>
-                            <th>Título do Livro</th>
-                            <th>Autor</th>
-                            <th>Editora</th>
-                            <th>Devolução</th>
-                            <th>Status</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tbody-locatarios">
-                        <tr>
-                            <td>levy</td>
-                            <td>123</td>
-                            <td>123</td>
-                            <td>123</td>
-                            <td>123</td>
-                            <td>123</td>
-                            <td>
-                            <img src="/tudo/icons/gostar.png" class="icone-recebido" alt="Marcar como Recebido">
-                            <img src="/tudo/icons/olho.png" class="icone-visualizar" alt="Visualizar">
-                            <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" alt="Editar">
-                            
-                        </td>
-                        </tr>
-                        <!-- Novos locatários aparecerão aqui -->
-                    </tbody>
-                </table>
-            </div>
-            <div id="modal-editar" class="modal-overlay">
-                <div id="modal_edicao" class="modal">
-                    <div class="textModal1">Atualizar Editora</div>
-                    <div class="modal-form" id="dadosAtualização">
-                        <!-- Campos preenchidos via JS -->
-                    </div>
-                    <div class="modal-buttons">
-                        <button class="btn-salvar" onclick="abrirModalConfirmarEditar()">Atualizar</button>
-                        <button class="btn-cancelar" onclick="fecharModalAtualizar()">Fechar</button>
-                    </div>
-                </div>
-            </div>
-            <div id="modal-visualizar" class="modal-overlay">
-                <div class="modal">
-                    <div class="textModal1">Detalhes do Aluguel</div>
-                    <div id="dadosVisualizacao"></div>
-                    <div class="modal-buttons">
-                        <button class="btn-locatario" onclick="irParaLocatarios()">Locatário</button>
-                        <button class="btn-cancelar" onclick="fecharModalVisualizar()">Fechar</button>
-                    </div>
-                </div>
-            </div>
-            <div id="modal-cadastrarAluguel" class="modal-overlay" style="display:none;">
-                <div class="modal">
-                    <div class="textModal1">Cadastrar Aluguel</div>
-                    <div class="modal-form" id="formAluguel">
-                        <input type="text" id="nomeLocatario" placeholder="Nome do Locatário">
-                        <input type="email" id="emailLocatario" placeholder="Email do Locatário">
-                        <input type="text" id="nomeLivro" placeholder="Título do Livro">
-                        <input type="text" id="autor" placeholder="Autor">
-                        <input type="text" id="genero" placeholder="Gênero">
-                        <input type="text" id="editora" placeholder="Editora">
-
-                        <input type="date" id="dataDevolucao">
-                    </div>
-                    <div class="modal-buttons">
-                        <button class="btn-salvar" id="btnConfirmarAluguel">Alugar</button>
-                        <button class="btn-cancelar" onclick="fecharModalAluguel()">Cancelar</button>
-                    </div>
-                </div>
-            </div>
-
-
-            <!-- Modal Confirmação Atualizar -->
-            <div id="modal-confirmar-editar" class="modal-overlay">
-                <div id="delete_edit" class="modal">
-                    <div class="textModal1">Certeza que deseja atualizar essa Editora?</div>
-                    <div class="modal-buttons">
-                        <button class="btn-confirmar" id="btnConfirmarEditar">Atualizar</button>
-                        <button class="btn-cancelar" onclick="fecharModalConfirmarEditar()">Voltar</button>
-                    </div>
-                </div>
-            </div>
-            <div id="modal-confirmar-deletar" class="modal-overlay">
-                <div id="delete_edit" class="modal">
-                    <div class="textModal1">Certeza que deseja excluir esse locatário?</div>
-                    <div class="textModal2">Após essa ação não haverá retorno.</div>
-                    <div class="modal-buttons">
-                        <button class="btn-deletar" id="btnConfirmarDeletar">Excluir</button>
-                        <button class="btn-cancelar" onclick="fecharModalConfirmarDeletar()">Voltar</button>
-                    </div>
-                </div>
-            </div>
-
+        <div id="options-heigh" class="Option">
+          <a href="/tudo/html/dashboard.html">Dashboard</a>
         </div>
-        
+        <div id="options-heigh" class="Option">
+          <a href="/tudo/html/locatario.html">Locatários</a>
+        </div>
+        <div id="options-heigh" class="Option">
+          <a href="/tudo/html/editoras.html">Editoras</a>
+        </div>
+        <div id="options-heigh" class="Option">
+          <a href="/tudo/html/livros.html">Livros</a>
+        </div>
+        <div class="alugueisOption">Alugueis</div>
+        <div id="options-heigh" class="Option">
+          <a href="/tudo/html/usuario.html">Usuários</a>
+        </div>
+        <div id="options-heigh" class="Option">
+          <a href="/tudo/html/logOut.html">Log out</a>
+        </div>
+      </div>
+      <div class="ladoDireito">
+        <div id="containerMenu_heigh" class="containerMenu">
+          <div class="Name">Locadora de Livros</div>
+          <div class="emailUser">test@gmail.com</div>
+          <div class="logoUser"><img src="/tudo/logo/user.png" alt="" /></div>
+        </div>
+        <div class="containerPesquisa">
+          <div class="text1">Buscar Aluguel:</div>
+          <input type="text" name="pesquisa" id="pesquisa" />
+          <input type="button" value="Cadastrar" id="button" />
+        </div>
+        <div class="titulo">Lista de Alugueis</div>
+        <div class="tabela-container">
+          <table class="tabela-locatarios">
+            <thead>
+              <tr>
+                <th>Id</th>
+                <th>Locatário</th>
+                <th>Livro</th>
+                <th>Prazo</th>
+                <th>alugado</th>
+                <th>Devolução</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-locatarios">
+              <!-- Novos locatários aparecerão aqui -->
+            </tbody>
+          </table>
+          <div id="pagination" style="text-align: center; margin: 20px 0"></div>
+        </div>
+        <div id="modal-editar" class="modal-overlay">
+          <div class="modal">
+            <div class="textModal1">Atualizar Editora</div>
+            <div class="modal-form" id="dadosAtualização">
+              <!-- Campos preenchidos via JS -->
+            </div>
+            <div class="modal-buttons">
+              <button class="btn-salvar" onclick="abrirModalConfirmarEditar()">
+                Atualizar
+              </button>
+              <button class="btn-cancelar" onclick="fecharModalAtualizar()">
+                Fechar
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          id="modal-cadastrarAluguel"
+          class="modal-overlay"
+          style="display: none"
+        >
+          <div class="modal">
+            <div class="textCadastrar">Cadastrar Aluguel</div>
+            <div class="modal-form" id="formAluguel">
+              <select id="nomeLocatario">
+                <option value="hhh">Selecione um locatário</option>
+              </select>
+
+              <select id="livro">
+                <option value="">Selecione um livro</option>
+              </select>
+
+              <input type="number" id="tempo" placeholder="Dias de aluguel" />
+            </div>
+            <div class="modal-buttons">
+              <button class="btn-salvar" id="btnConfirmarAluguel">
+                Alugar
+              </button>
+              <button class="btn-cancelar" onclick="fecharModalAluguel()">
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Confirmação Atualizar -->
+        <div id="modal-confirmar-editar" class="modal-overlay">
+          <div class="modal-Edit">
+            <div class="textModal1">
+              Certeza que deseja atualizar essa Editora?
+            </div>
+            <div class="modal-buttons-edit">
+              <button class="btn-confirmar" id="btnConfirmarEditar">
+                Atualizar
+              </button>
+              <button
+                class="btn-cancelar"
+                onclick="fecharModalConfirmarEditar()"
+              >
+                Voltar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/tudo/js/menu.js"></script>
     <script src="/tudo/js/alugueis.js"></script>
-
-</body>
+  </body>
 </html>

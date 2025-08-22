@@ -65,8 +65,11 @@
                         <input type="password" id="inputConfirmarSenha" placeholder="Confirmar Senha">
                     </div>
                     <div class="tipo-usuario">
-                        <label><input type="radio" name="tipo" value="editor" checked> Editor</label>
-                        <label><input type="radio" name="tipo" value="leitor"> Leitor</label>
+                        <label for="selectTipoUsuario">Tipo de Usuário:</label>
+                        <select id="selectTipoUsuario">
+                            <option value="USER" selected>USER</option>
+                            <option value="ADMIN">ADMIN</option>
+                        </select>
                     </div>
                     <div class="modal-buttons">
                         <button class="btn-cadastrar">Cadastrar</button>
@@ -101,8 +104,11 @@
                         <input type="password" id="editConfirmarSenha" placeholder="Confirmar Nova Senha">
                     </div>
                     <div class="tipo-usuario">
-                        <label><input type="radio" name="editTipo" value="editor"> Editor</label>
-                        <label><input type="radio" name="editTipo" value="leitor"> Leitor</label>
+                        <label for="selectTipoUsuario">Tipo de Usuário:</label>
+                        <select id="selectTipoUsuarioEditar">
+                            <option value="USER" selected>USER</option>
+                            <option value="ADMIN">ADMIN</option>
+                        </select>
                     </div>
                     <div class="modal-buttons">
                         <button class="btn-salvar" onclick="abrirModalConfirmarEditar()">Atualizar</button>
@@ -113,23 +119,23 @@
 
             <!-- Modal Confirmação Atualizar -->
             <div id="modal-confirmar-editar" class="modal-overlay">
-                <div id="delete_edit" class="modal">
+                <div class="modal-Edit">
                     <div class="textModal1">Certeza que deseja atualizar esse Usuário?</div>
-                    <div class="modal-buttons">
-                        <button class="btn-salvar" id="btnConfirmarEditar">Atualizar</button>
-                        <button class="btn-cancelar" onclick="fecharModalConfirmarEditar()">Voltar</button>
+                    <div class="modal-buttons-edit">
+                        <button class="btn-salvar-edit" id="btnConfirmarEditar">Atualizar</button>
+                        <button class="btn-cancelar-edit" onclick="fecharModalConfirmarEditar()">Voltar</button>
                     </div>
                 </div>
             </div>
 
             <!-- Modal Confirmação Deletar -->
             <div id="modal-confirmar-deletar" class="modal-overlay">
-                <div id="delete_edit" class="modal">
+                <div class="modal-delet">
                     <div class="textModal1">Certeza que deseja excluir esse Usário?</div>
                     <div class="textModal2">Após essa ação não haverá retorno.</div>
-                    <div class="modal-buttons">
+                    <div class="modal-buttons-delet">
                         <button class="btn-deletar" id="btnConfirmarDeletar">Excluir</button>
-                        <button class="btn-cancelar" onclick="fecharModalConfirmarDeletar()">Voltar</button>
+                        <button class="btn-cancelar-delet" onclick="fecharModalConfirmarDeletar()">Voltar</button>
                     </div>
                 </div>
             </div>

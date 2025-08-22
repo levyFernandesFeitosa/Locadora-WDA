@@ -7,7 +7,7 @@ const api = axios.create({
 
 const token = localStorage.getItem('authToken');
 if (token) {
-    console.log('Token encontrado:', token);
+        
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 } else {
     alert("Token não encontrado. Por favor, faça login.");
@@ -110,7 +110,7 @@ if (!editoras || editoras.length === 0) {
 }
 
 let currentPage = 1;
-const rowsPerPage = 7;
+const rowsPerPage = 6;
 let linhaEditando = null;
 
 function salvarEditoras() {
