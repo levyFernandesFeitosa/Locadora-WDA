@@ -172,18 +172,7 @@ a{
 .modal {
     background-color: #007375;
     width: 40%;
-    height: 60%; 
-    margin-left: 15%;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-    border-radius: 3vh;
-}
-.modal-cadAluguel{
-    background-color: #007375;
-    width: 30%;
-    height: 60%; 
+    height: 70%; 
     margin-left: 15%;
     display: flex;
     justify-content: center;
@@ -202,10 +191,10 @@ a{
     align-items: center;
     border-radius: 3vh;
 }
-#modal-idit{
-    
-    width: 50%;
-    height: 90%; 
+.modal-editar{
+    background-color: #007375;
+    width: 40%;
+    height: 80%; 
     margin-left: 15%;
     display: flex;
     justify-content: center;
