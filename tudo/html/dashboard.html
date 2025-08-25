@@ -78,58 +78,37 @@
           <div class="emailUser">test@gmail.com</div>
           <div class="logoUser"><img src="/tudo/logo/user.png" alt="" /></div>
         </div>
+
         <div class="containerDashboard">
-          <!-- Filtros -->
-          <div class="filtros">
-            <label for="filtroMeses">Meses:</label>
-            <select id="filtroMeses">
-              <option value="3">Últimos 3</option>
-              <option value="6">Últimos 6</option>
-              <option value="12" selected>Últimos 12</option>
-            </select>
-
-            <label for="filtroAno">Ano:</label>
-            <select id="filtroAno">
-              <!-- JS vai preencher -->
-            </select>
+          <!-- Gráficos -->
+          <div class="graficos">
+            <div class="card">
+              <canvas id="grafico-relacoes"></canvas>
+            </div>
+            <div class="card">
+              <canvas id="grafico-top3"></canvas>
+            </div>
           </div>
 
-          <!-- Gráfico 1 -->
-          <div class="card">
-            <h3>Aluguéis x Devoluções</h3>
-            <canvas id="graficoAlugueis"></canvas>
-          </div>
-
-          <!-- Gráfico 2 -->
-          <div class="card">
-            <h3>Top 3 Livros Mais Alugados</h3>
-            <canvas id="graficoTopLivros"></canvas>
-          </div>
-
-          <!-- Tabela -->
-          <div class="card">
-            <h3>Locatários e Empréstimos</h3>
-            <table id="tabelaLocatarios">
-              <thead>
-                <tr>
-                  <th>Locatário</th>
-                  <th>Total Empréstimos</th>
-                  <th>Aluguéis Ativos</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
-            <div id="paginacao"></div>
-          </div>
-
-          <!-- Gráfico 3 -->
-          <div class="card">
-            <h3>Meses Sem Aluguel</h3>
-            <canvas id="graficoSemAluguel"></canvas>
+          <!-- Tabela de locatários -->
+          <div class="tabela-locadores card">
+            <h2>Relação de locatários e empréstimos</h2>
+            <div class="table-wrapper">
+              <table id="tabela-locadores">
+                <thead>
+                  <tr>
+                    <th>Locatário</th>
+                    <th>Total de empréstimos</th>
+                    <th>Aluguéis ativos</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/tudo/js/menu.js"></script>

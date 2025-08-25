@@ -1,181 +1,163 @@
-// =========================
-// Axios Config
-// =========================
 const api = axios.create({
     baseURL: "https://locadora-ryan-back.altislabtech.com.br",
     headers: { "Content-Type": "application/json" }
 });
 
-// === TOKEN AUTH ===
 const token = localStorage.getItem('authToken');
 if (token) {
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 } else {
-    console.warn("Token não encontrado. Redirecionando para login...");
-    window.location.href = "login.html";
+    alert("Token não encontrado. Por favor, faça login.");
 }
 
-// =========================
-// Funções de Input Seguro
-// =========================
-function getMesesInput(id, defaultValue = 12) {
-    const input = document.getElementById(id);
-    if (!input) return defaultValue;
-    const valor = Number(input.value);
-    return isNaN(valor) || valor <= 0 ? defaultValue : valor;
-}
+// --- Funções auxiliares ---
+function createHorizontalBarChart(canvasId, labels, data, bgColor) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return; // protege contra null
+    const ctx = canvas.getContext('2d');
+    if (window[canvasId + 'Instance']) window[canvasId + 'Instance'].destroy();
 
-// =========================
-// Gráfico 1 - Aluguéis x Devoluções
-// =========================
-async function carregarAlugueis() {
-    const meses = getMesesInput('mesesAlugueis');
-    console.log("Carregando alugueis com meses =", meses);
-
-    let rentsLate = 0, deliveredDelay = 0, deliveredTime = 0, rents = 0;
-
-    try { rentsLate = (await api.get(`/dashboard/rentsLateQuantity?months=${meses}`)).data; } 
-    catch(e){ console.error("RentsLate:", e); }
-
-    try { deliveredDelay = (await api.get(`/dashboard/deliveredWithDelayQuantity?months=${meses}`)).data; } 
-    catch(e){ console.error("DeliveredDelay:", e); }
-
-    try { deliveredTime = (await api.get(`/dashboard/deliveredInTimeQuantity?months=${meses}`)).data; } 
-    catch(e){ console.error("DeliveredTime:", e); }
-
-    try { rents = (await api.get(`/dashboard/rentsQuantity?months=${meses}`)).data; } 
-    catch(e){ console.error("Rents:", e); }
-
-    new Chart(document.getElementById("graficoAlugueis"), {
-        type: "bar",
-        data: {
-            labels: ["Alugados", "Atrasados", "Devolvidos no Prazo", "Devolvidos com Atraso"],
-            datasets: [{
-                label: "Quantidade",
-                data: [rents || 0, rentsLate || 0, deliveredTime || 0, deliveredDelay || 0],
-                backgroundColor: ["#36A2EB","#FF6384","#4CAF50","#FFC107"]
-            }]
+    window[canvasId + 'Instance'] = new Chart(ctx, {
+        type: 'bar',
+        data: { labels, datasets: [{ label: "", data, backgroundColor: bgColor, borderRadius: 5 }] },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: { x: { beginAtZero: true } }
         }
     });
+
+    // garante que o canvas esteja visível
+    canvas.style.display = 'block';
+
+    // remove mensagem de "Nenhum dado" se existir
+    const container = canvas.parentElement;
+    const p = container.querySelector("p");
+    if (p) container.removeChild(p);
 }
 
-// =========================
-// Gráfico 2 - Top 3 Livros
-// =========================
-async function carregarTopLivros() {
-    const meses = getMesesInput('mesesTopLivros');
-    console.log("Carregando top livros com meses =", meses);
-
-    try {
-        const { data } = await api.get(`/dashboard/bookMoreRented?months=${meses}`);
-        if (!Array.isArray(data)) { console.error("Resposta inesperada:", data); return; }
-
-        new Chart(document.getElementById("graficoTopLivros"), {
-            type: "bar",
-            data: {
-                labels: data.map(l => l.bookTitle),
-                datasets: [{ label: "Aluguéis", data: data.map(l => l.totalRents), backgroundColor: "#36A2EB" }]
-            },
-            options: { indexAxis: "y" }
-        });
-
-    } catch (err) { console.error("Erro API Top Livros:", err); }
-}
-
-// =========================
-// Tabela Locatários + Paginação
-// =========================
-let dadosLocatarios = [], paginaAtual = 1;
-const itensPorPagina = 3;
-
-async function carregarTabela() {
-    console.log("Carregando tabela de locatários...");
-    try {
-        const { data } = await api.get("/dashboard/rentsPerRenter");
-        dadosLocatarios = Array.isArray(data) ? data : [];
-    } catch (err) {
-        console.error("Erro API Locatários:", err);
-        dadosLocatarios = []; // fallback vazio
+function showNoDataMessage(canvasId, message) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    canvas.style.display = 'none'; // oculta canvas
+    const container = canvas.parentElement;
+    // evita duplicar a mensagem
+    if (!container.querySelector("p")) {
+        const p = document.createElement("p");
+        p.style.textAlign = "center";
+        p.textContent = message;
+        container.appendChild(p);
     }
-    renderTabela();
 }
 
-function renderTabela() {
-    const tbody = document.querySelector("#tabelaLocatarios tbody");
+function populateRenterTable(rentsPerRenter) {
+    const tbody = document.querySelector("#tabela-locadores tbody");
     tbody.innerHTML = "";
 
-    const inicio = (paginaAtual - 1) * itensPorPagina;
-    const fim = inicio + itensPorPagina;
-    const paginaDados = dadosLocatarios.slice(inicio, fim);
+    if (!rentsPerRenter.length) {
+        tbody.innerHTML = "<tr><td colspan='3' style='text-align:center'>Nenhum locatário encontrado</td></tr>";
+        return;
+    }
 
-    paginaDados.forEach(l => {
+    rentsPerRenter.forEach(renter => {
         const tr = document.createElement("tr");
-        tr.innerHTML = `<td>${l.renterName}</td><td>${l.totalRents}</td><td>${l.activeRents}</td>`;
+        tr.innerHTML = `
+            <td>${renter.name || renter.locatario || "-"}</td>
+            <td>${renter.totalRents || renter.total || renter.qtd || 0}</td>
+            <td>${renter.activeRents || renter.active || 0}</td>
+        `;
         tbody.appendChild(tr);
     });
-
-    renderPaginacao();
 }
 
-function renderPaginacao() {
-    const totalPaginas = Math.ceil(dadosLocatarios.length / itensPorPagina);
-    const paginacao = document.getElementById("paginacao");
-    paginacao.innerHTML = "";
+// --- Função principal ---
+async function initDashboard() {
+    const numberOfMonths = 12;
 
-    const btnAnterior = document.createElement("button");
-    btnAnterior.textContent = "Anterior";
-    btnAnterior.disabled = paginaAtual === 1;
-    btnAnterior.onclick = () => { paginaAtual--; renderTabela(); };
-    paginacao.appendChild(btnAnterior);
-
-    const span = document.createElement("span");
-    span.textContent = ` Página ${paginaAtual} de ${totalPaginas} `;
-    paginacao.appendChild(span);
-
-    const btnProximo = document.createElement("button");
-    btnProximo.textContent = "Próximo";
-    btnProximo.disabled = paginaAtual === totalPaginas;
-    btnProximo.onclick = () => { paginaAtual++; renderTabela(); };
-    paginacao.appendChild(btnProximo);
-}
-
-// =========================
-// Gráfico 3 - Meses sem aluguel
-// =========================
-async function carregarSemAluguel() {
-    const ano = getAnoInput('anoSemAluguel');
-    console.log("Carregando meses sem aluguel para ano =", ano);
+    const endpoints = {
+        moreRented: '/dashboard/bookMoreRented',
+        deliveredInTime: '/dashboard/deliveredInTimeQuantity',
+        deliveredWithDelay: '/dashboard/deliveredWithDelayQuantity',
+        rentsLate: '/dashboard/rentsLateQuantity',
+        rentsPerRenter: '/dashboard/rentsPerRenter'
+    };
 
     try {
-        const { data } = await api.get(`/dashboard/rentsQuantity?year=${ano}`);
-        const meses = ["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"];
-        const alugueis = meses.map((_, i) => data[i] || 0);
+        const [
+            moreRentedRes,
+            deliveredInTimeRes,
+            deliveredWithDelayRes,
+            rentsLateRes,
+            rentsPerRenterRes
+        ] = await Promise.all([
+            api.get(endpoints.moreRented, { params: { numberOfMonths } }),
+            api.get(endpoints.deliveredInTime, { params: { numberOfMonths } }),
+            api.get(endpoints.deliveredWithDelay, { params: { numberOfMonths } }),
+            api.get(endpoints.rentsLate, { params: { numberOfMonths } }),
+            api.get(endpoints.rentsPerRenter, { params: { numberOfMonths } })
+        ]);
 
-        new Chart(document.getElementById("graficoSemAluguel"), {
-            type: "bar",
-            data: {
-                labels: meses,
-                datasets: [{
-                    label: "Aluguéis",
-                    data: alugueis,
-                    backgroundColor: alugueis.map(qtd => qtd === 0 ? "#FF6384" : "#4CAF50")
-                }]
+        // --- Preparar dados ---
+        const moreRented = Array.isArray(moreRentedRes.data) ? moreRentedRes.data : moreRentedRes.data?.data || [];
+        const deliveredInTime = deliveredInTimeRes.data?.quantity || deliveredInTimeRes.data?.total || 0;
+        const deliveredWithDelay = deliveredWithDelayRes.data?.quantity || deliveredWithDelayRes.data?.total || 0;
+        const rentsLate = rentsLateRes.data?.quantity || rentsLateRes.data?.total || 0;
+        const rentsPerRenter = Array.isArray(rentsPerRenterRes.data) ? rentsPerRenterRes.data : rentsPerRenterRes.data?.data || [];
+
+        console.log("Dados da API:", { moreRented, deliveredInTime, deliveredWithDelay, rentsLate, rentsPerRenter });
+
+        // --- Gráfico: Livros mais alugados ---
+        if (moreRented.length) {
+            const labels = moreRented.map(item => item.title || item.name || "Livro");
+            const values = moreRented.map(item => item.totalRents || item.total || item.qtd || 0);
+            if (values.some(v => v > 0)) {
+                createHorizontalBarChart("grafico-livros", labels, values, "rgba(10, 101, 104, 0.7)");
+            } else {
+                showNoDataMessage("grafico-livros", "Nenhum dado de livros disponível");
             }
-        });
-    } catch (err) { console.error("Erro API Sem Aluguel:", err); }
+        } else {
+            showNoDataMessage("grafico-livros", "Nenhum dado de livros disponível");
+        }
+
+        // --- Gráfico: Relações de aluguéis ---
+        const relacoesValues = [deliveredInTime, deliveredWithDelay, rentsLate];
+        if (relacoesValues.some(v => v > 0)) {
+            createHorizontalBarChart(
+                "grafico-relacoes",
+                ["Entregues no prazo", "Entregues com atraso", "Aluguéis atrasados"],
+                relacoesValues,
+                ["#0a6568", "#9ffcff", "#ff6b6b"]
+            );
+        } else {
+            showNoDataMessage("grafico-relacoes", "Nenhum dado de aluguéis disponível");
+        }
+
+        // --- Gráfico: Top 3 livros ---
+        const top3 = moreRented.slice(0, 3);
+        if (top3.length) {
+            const labels = top3.map(item => item.title || item.name || "Livro");
+            const values = top3.map(item => item.totalRents || 0);
+            if (values.some(v => v > 0)) {
+                createHorizontalBarChart("grafico-top3", labels, values, ["#88B6EE", "#4B6B92", "#404668"]);
+            } else {
+                showNoDataMessage("grafico-top3", "Nenhum dado disponível");
+            }
+        } else {
+            showNoDataMessage("grafico-top3", "Nenhum dado disponível");
+        }
+
+        // --- Tabela: Locatários ---
+        populateRenterTable(rentsPerRenter);
+
+    } catch (error) {
+        console.error("Erro ao buscar dados do dashboard:", error);
+        showNoDataMessage("grafico-livros", "Erro ao carregar dados de livros");
+        showNoDataMessage("grafico-relacoes", "Erro ao carregar dados de aluguéis");
+        showNoDataMessage("grafico-top3", "Erro ao carregar relação de livros");
+        populateRenterTable([]);
+    }
 }
 
-// =========================
-// Event Listeners - Atualização Dinâmica
-// =========================
-document.getElementById('mesesAlugueis')?.addEventListener('input', carregarAlugueis);
-document.getElementById('mesesTopLivros')?.addEventListener('input', carregarTopLivros);
-document.getElementById('anoSemAluguel')?.addEventListener('input', carregarSemAluguel);
-
-// =========================
-// Inicialização
-// =========================
-carregarAlugueis();
-carregarTopLivros();
-carregarTabela();
-carregarSemAluguel();
+// --- Executar apenas quando o DOM estiver pronto ---
+document.addEventListener("DOMContentLoaded", initDashboard);

@@ -219,11 +219,26 @@ tbody.addEventListener('click', (e) => {
     if (e.target.classList.contains('icone-editar')) {
         linhaEditando = index;
         const editora = arrayEditoras[index]; // <<< antes usava editoras[index]
-        document.getElementById('dadosAtualizacao').innerHTML = `
-            <input type="text" id="editNome" placeholder="Nome da Editora" value="${editora.name}">
-            <input type="text" id="editTelefone" placeholder="Numero de Telefone da Editora" value="${editora.telephone}">
-            <input type="email" id="editEmail" placeholder="Email da Editora" value="${editora.email}">
-            <input type="text" id="editSite" placeholder="Site da Editora" value="${editora.site}">
+        document.getElementById('dadosAtualizacao').innerHTML = ` 
+            <div class="input-group">
+                <input type="text" id="editNome" value="${editora.name}" required>
+                <label for="editNome">Nome da Editora</label>
+            </div>
+
+            <div class="input-group">
+                <input type="text" id="editTelefone" value="${editora.telephone}" required>
+                <label for="editTelefone">Número de Telefone da Editora</label>
+            </div>
+
+            <div class="input-group">
+                <input type="email" id="editEmail" value="${editora.email}" required>
+                <label for="editEmail">Email da Editora</label>
+            </div>
+
+            <div class="input-group">
+                <input type="text" id="editSite" value="${editora.site}" required>
+                <label for="editSite">Site da Editora</label>
+            </div>
         `;
         document.getElementById('modal-editar').style.display = 'flex';
     }

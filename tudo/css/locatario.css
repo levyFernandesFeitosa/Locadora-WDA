@@ -417,6 +417,47 @@ td:last-child img {
     width: 70%; /* Ajuste conforme necessário */
     font-size: 2vh;
 }
+
+.input-group {
+  position: relative;
+  height: 20%;
+  width: 100%;
+}
+
+.input-group input {
+  width: 100%;
+  height: 5vh;
+  padding-top: 2vh;
+  font-size: 2vh;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  background: transparent;
+  outline: none;
+  background-color: white;
+}
+
+.input-group label {
+  position: absolute;
+  left: 8px;
+  top: 0.1vh;
+  color: #777;
+  font-size: 16px;
+  pointer-events: none;
+  transition: 0.3s ease;
+  /* background-color: blueviolet; */
+}
+
+/* efeito do "label flutuante" */
+.input-group input:focus ~ label,
+.input-group input:valid ~ label {
+  top: -0.8vh;
+  left: 5px;
+  font-size: 1vh;
+  color: #002658; /* azul Google */
+  
+  padding: 0 4px;
+}
+
 @media (max-width: 768px) {
   .TelaLocatario {
     flex-direction: column;

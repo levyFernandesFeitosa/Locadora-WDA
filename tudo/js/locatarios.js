@@ -279,12 +279,32 @@ function editarLocatario(linha) {
 
     const container = document.getElementById('dadosAtualização');
     container.innerHTML = `
-        <input type="text" id="editNome" value="${locatario.name}">
-        <input type="email" id="editEmail" value="${locatario.email}">
-        <input type="text" id="editTelefone" value="${locatario.telephone}">
-        <input type="text" id="editCPF" value="${locatario.cpf}">
-        <input type="text" id="editEndereco" value="${locatario.address}">
+        <div class="input-group">
+            <input type="text" id="editNome" value="${locatario.name}" required>
+            <label for="editNome">Nome do Locatário</label>
+        </div>
+
+        <div class="input-group">
+            <input type="email" id="editEmail" value="${locatario.email}" required>
+            <label for="editEmail">Email</label>
+        </div>
+
+        <div class="input-group">
+            <input type="text" id="editTelefone" value="${locatario.telephone}" required>
+            <label for="editTelefone">Telefone</label>
+        </div>
+
+        <div class="input-group">
+            <input type="text" id="editCPF" value="${locatario.cpf}" required>
+            <label for="editCPF">CPF</label>
+        </div>
+
+        <div class="input-group">
+            <input type="text" id="editEndereco" value="${locatario.address}" required>
+            <label for="editEndereco">Endereço</label>
+        </div>
     `;
+
 
     document.getElementById('modal-editar').style.display = 'flex';
 
