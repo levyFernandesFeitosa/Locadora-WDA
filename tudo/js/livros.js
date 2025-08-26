@@ -290,12 +290,30 @@ tbody.addEventListener('click', (e) => {
 
         const container = document.getElementById('dadosAtualização');
         container.innerHTML = `
-            <input type="text" id="editNome" placeholder="Nome do Livro" value="${nome}">
-            <input type="text" id="editAutor" placeholder="Autor" value="${autor}">
-            <input type="date" id="editDataLancada" placeholder="Data de Lançamento" value="${datalancada}">
-            <input type="text" id="editDisponivel" placeholder="Disponível" value="${disponivel}">
-            <input type="text" id="editAlugados" placeholder="Alugados" value="${alugados}">
-            <input type="text" id="editEditora" placeholder="Editora" value="${editora}">
+            <div class="input-group">
+                <input type="text" id="editNome" value="${nome}" required>
+                <label for="editNome">Nome do Livro</label>
+            </div>
+
+            <div class="input-group">
+                <input type="text" id="editTelefone" value="${autor}" required>
+                <label for="editTelefone">Nome do Autor</label>
+            </div>
+
+            <div class="input-group">
+                <input type="date" id="editEmail" value="${datalancada}" required>
+                <label for="editEmail">Data Lançada</label>
+            </div>
+
+            <div class="input-group">
+                <input type="text" id="editSite" value="${disponivel}" required>
+                <label for="editSite">Disponivel</label>
+            </div>
+            <div class="input-group">
+                <input type="text" id="editSite" value="${editora}" required>
+                <label for="editSite">Editora</label>
+            </div>
+            
         `;
 
         document.getElementById('modal-editar').style.display = 'flex';

@@ -288,9 +288,15 @@ async function preparaAluguel(aluguel) {
         <select id="editarLivro">
             <option value="">Selecione um livro</option>
         </select>
-
-        <input type="date" id="editarPrazo" placeholder="Prazo em dias" value="${aluguel.deadLine}">
-        <input type="date" id="editarDataAluguel" value="${aluguel.rentDate}">
+        <div class="input-group">
+            <input type="date" id="editarPrazo" value="${aluguel.deadLine}" required>
+            <label for="editarPrazo">Prazo</label>
+        </div>
+        <div class="input-group">
+            <input type="date" id="editarDataAluguel" value="${aluguel.rentDate}" required>
+            <label for="editarDataAluguel">Aluguel</label>
+        </div>
+        
     `;
 
     await carregarLocatariosELivrosEdicao();

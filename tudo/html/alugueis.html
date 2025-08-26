@@ -16,6 +16,65 @@
     <link rel="stylesheet" href="/tudo/css/menuResponsivel.css" />
   </head>
   <body>
+    <div id="modal-editar" class="modal-overlay">
+      <div class="modal">
+        <div class="textCadastrar">Atualizar Editora</div>
+        <div class="modal-form" id="dadosAtualização">
+          <!-- Campos preenchidos via JS -->
+        </div>
+        <div class="modal-buttons">
+          <button class="btn-salvar" onclick="abrirModalConfirmarEditar()">
+            Atualizar
+          </button>
+          <button class="btn-cancelar" onclick="fecharModalAtualizar()">
+            Fechar
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      id="modal-cadastrarAluguel"
+      class="modal-overlay"
+      style="display: none"
+    >
+      <div class="modal">
+        <div class="textCadastrar">Cadastrar Aluguel</div>
+        <div class="modal-form" id="formAluguel">
+          <select id="nomeLocatario">
+            <option value="">Selecione um locatário</option>
+          </select>
+
+          <select id="livro">
+            <option value="">Selecione um livro</option>
+          </select>
+          <div class="input-group">
+            <input type="date" id="tempo" required />
+            <label for="tempo">Dias de Aluguel</label>
+          </div>
+        </div>
+        <div class="modal-buttons">
+          <button class="btn-salvar" id="btnConfirmarAluguel">Alugar</button>
+          <button class="btn-cancelar" onclick="fecharModalAluguel()">
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Confirmação Atualizar -->
+    <div id="modal-confirmar-editar" class="modal-overlay">
+      <div class="modal-Edit">
+        <div class="textModal1">Certeza que deseja atualizar essa Editora?</div>
+        <div class="modal-buttons-edit">
+          <button class="btn-confirmar" id="btnConfirmarEditar">
+            Atualizar
+          </button>
+          <button class="btn-cancelar" onclick="fecharModalConfirmarEditar()">
+            Voltar
+          </button>
+        </div>
+      </div>
+    </div>
     <div class="TelaAlugueis">
       <header id="header-menu" class="header-menu">
         <nav>
@@ -103,70 +162,6 @@
             </tbody>
           </table>
           <div id="pagination" style="text-align: center; margin: 20px 0"></div>
-        </div>
-        <div id="modal-editar" class="modal-overlay">
-          <div class="modal">
-            <div class="textCadastrar">Atualizar Editora</div>
-            <div class="modal-form" id="dadosAtualização">
-              <!-- Campos preenchidos via JS -->
-            </div>
-            <div class="modal-buttons">
-              <button class="btn-salvar" onclick="abrirModalConfirmarEditar()">
-                Atualizar
-              </button>
-              <button class="btn-cancelar" onclick="fecharModalAtualizar()">
-                Fechar
-              </button>
-            </div>
-          </div>
-        </div>
-        <div
-          id="modal-cadastrarAluguel"
-          class="modal-overlay"
-          style="display: none"
-        >
-          <div class="modal">
-            <div class="textCadastrar">Cadastrar Aluguel</div>
-            <div class="modal-form" id="formAluguel">
-              <select id="nomeLocatario">
-                <option value="">Selecione um locatário</option>
-              </select>
-
-              <select id="livro">
-                <option value="">Selecione um livro</option>
-              </select>
-
-              <input type="date" id="tempo" placeholder="Dias de aluguel" />
-            </div>
-            <div class="modal-buttons">
-              <button class="btn-salvar" id="btnConfirmarAluguel">
-                Alugar
-              </button>
-              <button class="btn-cancelar" onclick="fecharModalAluguel()">
-                Cancelar
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Modal Confirmação Atualizar -->
-        <div id="modal-confirmar-editar" class="modal-overlay">
-          <div class="modal-Edit">
-            <div class="textModal1">
-              Certeza que deseja atualizar essa Editora?
-            </div>
-            <div class="modal-buttons-edit">
-              <button class="btn-confirmar" id="btnConfirmarEditar">
-                Atualizar
-              </button>
-              <button
-                class="btn-cancelar"
-                onclick="fecharModalConfirmarEditar()"
-              >
-                Voltar
-              </button>
-            </div>
-          </div>
         </div>
       </div>
     </div>
