@@ -260,13 +260,31 @@ function visualizarLocatario(linha) {
 
     const container = document.getElementById('dadosVisualizacao');
     container.innerHTML = `
-        <input type="text" value="Nome: ${locatario.name}" readonly>
-        <input type="email" value="Email: ${locatario.email}" readonly>
-        <input type="text" value="Telefone: ${locatario.telephone}" readonly>
-        <input type="text" value="CPF: ${locatario.cpf}" readonly>
-        <input type="text" value="Endereco: ${locatario.address}" readonly>
-    `;
+       <div class="input-group">
+            <input type="text" id="editNome" value="${locatario.name}" required>
+            <label for="editNome">Nome do Locatário</label>
+        </div>
 
+        <div class="input-group">
+            <input type="email" id="editEmail" value="${locatario.email}" required>
+            <label for="editEmail">Email</label>
+        </div>
+
+        <div class="input-group">
+            <input type="text" id="editTelefone" value="${locatario.telephone}" required>
+            <label for="editTelefone">Telefone</label>
+        </div>
+
+        <div class="input-group">
+            <input type="text" id="editCPF" value="${locatario.cpf}" required>
+            <label for="editCPF">CPF</label>
+        </div>
+
+        <div class="input-group">
+            <input type="text" id="editEndereco" value="${locatario.address}" required>
+            <label for="editEndereco">Endereço</label>
+        </div>
+    `;
     document.getElementById('modal-visualizar').style.display = 'flex';
 }
 

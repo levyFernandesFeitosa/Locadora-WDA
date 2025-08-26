@@ -16,6 +16,115 @@
     <link rel="stylesheet" href="/tudo/css/menuResponsivel.css" />
   </head>
   <body>
+    <!-- Modal de Cadastro -->
+    <div id="modal-overlay" class="modal-overlay">
+      <div class="modal">
+        <div class="textCadastrar">Cadastrar Locatário</div>
+        <div class="modal-form">
+          <div class="input-group">
+            <input type="text" id="inputNome" required />
+            <label for="inputNome">Nome do Locatário</label>
+          </div>
+
+          <div class="input-group">
+            <input type="email" id="inputEmail" required />
+            <label for="inputEmail">Email</label>
+          </div>
+
+          <div class="input-group">
+            <input type="text" id="inputTelefone" required />
+            <label for="inputTelefone">Telefone</label>
+          </div>
+
+          <div class="input-group">
+            <input type="text" id="inputCPF" required />
+            <label for="inputCPF">CPF</label>
+          </div>
+
+          <div class="input-group">
+            <input type="text" id="inputEndereco" required />
+            <label for="inputEndereco">Endereço</label>
+          </div>
+
+          <!-- <input type="text" id="inputCEP" placeholder="CEP">
+                        <input type="text" id="inputUF" placeholder="UF">
+                        <input type="text" id="inputCidade" placeholder="Cidade">
+                        <input type="text" id="inputBairro" placeholder="Bairro">
+                        <input type="text" id="inputRua" placeholder="Rua">
+                        <input type="text" id="inputNumero" placeholder="N° Casa/Condomínio"> -->
+        </div>
+        <div class="modal-buttons">
+          <button class="btn-cadastrar">Cadastrar</button>
+          <button class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="modal-editar" class="modal-overlay">
+      <div class="modal">
+        <div class="textAtualizar">Atualizar Locatário</div>
+        <div class="modal-form" id="dadosAtualização">
+          <!-- Campos preenchidos via JS -->
+        </div>
+        <div class="modal-buttons">
+          <button class="btn-salvar" onclick="abrirModalConfirmarEditar()">
+            Atualizar
+          </button>
+          <button class="btn-cancelar" onclick="fecharModalAtualizar()">
+            Fechar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="modal-visualizar" class="modal-overlay">
+      <div class="modal">
+        <div class="textCadastrar">Visualizar Locatário</div>
+        <div class="modal-form" id="dadosVisualizacao">
+          <!-- Campos preenchidos via JS -->
+        </div>
+        <div class="modal-buttons">
+          <button class="btn-cancelar" onclick="fecharModalVisualizar()">
+            Fechar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Confirmação Deletar -->
+    <div id="modal-confirmar-deletar" class="modal-overlay">
+      <div class="modal-delet">
+        <div class="textModal1">Certeza que deseja excluir esse locatário?</div>
+        <div class="textModal2">Após essa ação não haverá retorno.</div>
+        <div class="modal-buttons-delet">
+          <button class="btn-deletar" id="btnConfirmarDeletar">Excluir</button>
+          <button
+            class="btn-cancelar-delet"
+            onclick="fecharModalConfirmarDeletar()"
+          >
+            Voltar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Confirmação Atualizar -->
+    <div id="modal-confirmar-editar" class="modal-overlay">
+      <div class="modal-Edit">
+        <div class="textModal1">
+          Certeza que deseja atualizar esse locatário?
+        </div>
+        <div class="modal-buttons-edit">
+          <button class="btn-confirmar" id="btnConfirmarEditar">
+            Atualizar
+          </button>
+          <button class="btn-cancelar" onclick="fecharModalConfirmarEditar()">
+            Voltar
+          </button>
+        </div>
+      </div>
+    </div>
+
     <div class="TelaLocatario">
       <header id="header-menu" class="header-menu">
         <nav>
@@ -85,51 +194,6 @@
         </div>
 
         <div class="titulo">Lista de Locatários</div>
-
-        <div id="modal-overlay" class="modal-overlay">
-          <div class="modal">
-            <div class="textModal1">Cadastrar Locatário</div>
-            <div class="modal-form">
-              <div class="input-group">
-                <input type="text" id="inputNome" required />
-                <label for="inputNome">Nome do Locatário</label>
-              </div>
-
-              <div class="input-group">
-                <input type="email" id="inputEmail" required />
-                <label for="inputEmail">Email</label>
-              </div>
-
-              <div class="input-group">
-                <input type="text" id="inputTelefone" required />
-                <label for="inputTelefone">Telefone</label>
-              </div>
-
-              <div class="input-group">
-                <input type="text" id="inputCPF" required />
-                <label for="inputCPF">CPF</label>
-              </div>
-
-              <div class="input-group">
-                <input type="text" id="inputEndereco" required />
-                <label for="inputEndereco">Endereço</label>
-              </div>
-
-              <!-- <input type="text" id="inputCEP" placeholder="CEP">
-                        <input type="text" id="inputUF" placeholder="UF">
-                        <input type="text" id="inputCidade" placeholder="Cidade">
-                        <input type="text" id="inputBairro" placeholder="Bairro">
-                        <input type="text" id="inputRua" placeholder="Rua">
-                        <input type="text" id="inputNumero" placeholder="N° Casa/Condomínio"> -->
-            </div>
-            <div class="modal-buttons">
-              <button class="btn-cadastrar">Cadastrar</button>
-              <button class="btn-cancelar" onclick="fecharModal()">
-                Cancelar
-              </button>
-            </div>
-          </div>
-        </div>
         <div class="tabela-container">
           <table class="tabela-locatarios">
             <thead>
@@ -148,75 +212,6 @@
             </tbody>
           </table>
           <div id="pagination" style="text-align: center; margin: 20px 0"></div>
-        </div>
-        <div id="modal-visualizar" class="modal-overlay">
-          <div class="modal">
-            <div class="textModal1">Visualizar Locatário</div>
-            <div class="modal-form" id="dadosVisualizacao">
-              <!-- Campos preenchidos via JS -->
-            </div>
-            <div class="modal-buttons">
-              <button class="btn-cancelar" onclick="fecharModalVisualizar()">
-                Fechar
-              </button>
-            </div>
-          </div>
-        </div>
-        <div id="modal-editar" class="modal-overlay">
-          <div class="modal">
-            <div class="textModal1">Atualizar Locatário</div>
-            <div class="modal-form" id="dadosAtualização">
-              <!-- Campos preenchidos via JS -->
-            </div>
-            <div class="modal-buttons">
-              <button class="btn-salvar" onclick="abrirModalConfirmarEditar()">
-                Atualizar
-              </button>
-              <button class="btn-cancelar" onclick="fecharModalAtualizar()">
-                Fechar
-              </button>
-            </div>
-          </div>
-        </div>
-        <!-- Modal Confirmação Atualizar -->
-        <div id="modal-confirmar-editar" class="modal-overlay">
-          <div class="modal-Edit">
-            <div class="textModal1">
-              Certeza que deseja atualizar esse locatário?
-            </div>
-            <div class="modal-buttons-edit">
-              <button class="btn-confirmar" id="btnConfirmarEditar">
-                Atualizar
-              </button>
-              <button
-                class="btn-cancelar"
-                onclick="fecharModalConfirmarEditar()"
-              >
-                Voltar
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Modal Confirmação Deletar -->
-        <div id="modal-confirmar-deletar" class="modal-overlay">
-          <div class="modal-delet">
-            <div class="textModal1">
-              Certeza que deseja excluir esse locatário?
-            </div>
-            <div class="textModal2">Após essa ação não haverá retorno.</div>
-            <div class="modal-buttons-delet">
-              <button class="btn-deletar" id="btnConfirmarDeletar">
-                Excluir
-              </button>
-              <button
-                class="btn-cancelar-delet"
-                onclick="fecharModalConfirmarDeletar()"
-              >
-                Voltar
-              </button>
-            </div>
-          </div>
         </div>
       </div>
     </div>

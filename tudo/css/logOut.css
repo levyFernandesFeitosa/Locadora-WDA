@@ -18,17 +18,16 @@ img{
   width: 85%;
   display: flex;
   flex-direction: column;
+  background-color: #f0ffff
 }
 .containerOptions{
     width: 15%;
     height: 100vh;
     font-size: 2.2vh;
     display: flex;
-    
     flex-direction: column;
     box-shadow: 5px 0 10px rgba(0, 0, 0, 0.5); /* sombra na direita */
-    background: RGBA(10, 101, 104, 1);
-    background: linear-gradient(180deg,rgba(10, 101, 104, 1) 19%, rgba(159, 252, 255, 1) 100%);
+    background: #404040;
 }
 .logoWDA{
     width: 37%;
@@ -70,7 +69,7 @@ a{
     display: flex;
     justify-content: center; /* centraliza na horizontal */
     align-items: center;  
-    background-color: rgba(10, 101, 104, 1);
+    background: #404040;
 }
 #containerMenu_heigh{
     height: 7vh;

@@ -1,6 +1,5 @@
 *{margin: 0; padding: 0; box-sizing: border-box;}
 
-
 body, html {
   font-family: 'Merriweather', serif;
   height: 100%;
@@ -18,16 +17,15 @@ img{
   width: 85%;
   display: flex;
   flex-direction: column;
-  background-color: #f0ffff
+  background-color: #f0ffff;
 }
 .containerOptions{
     width: 15%;
     height: 100vh;
     font-size: 2.2vh;
     display: flex;
-    
     flex-direction: column;
-    box-shadow: 5px 0 10px rgba(0, 0, 0, 0.5); /* sombra na direita */
+    box-shadow: 5px 0 10px rgba(0, 0, 0, 0.5);
     background: #404040;
 }
 .Option{
@@ -36,8 +34,6 @@ img{
 .logoWDA{
     width: 37%;
     margin-left: 5%;
-    /* background-color: brown; */
-
 }
 .editorasOption{
     background-color: rgba(159, 252, 255, 1);
@@ -56,19 +52,19 @@ a{
     padding-left: 5%;
     align-items: center;  
     display: flex;
-    transition: background-color 0.3s; /* animação suave */
-    cursor: pointer; /* muda o cursor para indicar interatividade */
+    transition: background-color 0.3s;
+    cursor: pointer;
 }
 
 #options-heigh:hover {
-  background-color: #0a6568; /* cor ao passar o mouse */
-  color:  rgba(159, 252, 255, 1); /* opcional: muda a cor do texto */
+  background-color: #0a6568;
+  color:  rgba(159, 252, 255, 1);
 }
 
 .containerMenu{
     width: 100%;
     display: flex;
-    justify-content: center; /* centraliza na horizontal */
+    justify-content: center;
     align-items: center;  
     background: #404040;
 }
@@ -87,19 +83,17 @@ a{
     width: 15%;
     margin-left: auto;
     height: 100%;
-    justify-content: center; /* centraliza na horizontal */
-    align-items: center;  
-    font-size: 2.5vh;
+    justify-content: center;
+    align-items: center; 
+    font-size: 2.5vh; 
     display: flex;
     color: rgba(159, 252, 255, 1);
-    /* background-color: rgb(20, 58, 58); */
 }
 .logoUser{
     width: 3%;
     height: 100%;
     margin-right: 2%;
     margin-left: auto;
-    /* background-color: aqua; */
 }
 
 .containerPesquisa{
@@ -111,16 +105,15 @@ a{
     font-size: 3vh;
     gap: 2vh;
     margin-top: 1%;
-    /* background-color: blueviolet; */
 }
 #pesquisa{
     width: 70%;
     height: 100%;
     border-radius: 8px;
-    background-color:  rgb(255, 255, 255);
+    background-color:  rgba(242, 255, 255, 1);
 }
 #button{
-    width: 10%; 
+    width: 10%;
     height: 100%;
     border-radius: 8px;
     font-size: 3vh;
@@ -131,20 +124,20 @@ a{
 .titulo{
     width: 100%;
     margin-top: 1%;
-    font-size: 4vh;
+    font-size: 5vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    
 }
+
 .modal-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
+    padding-top: 5%;
+    padding-bottom: 5%;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.6);
-    display: none; /* começa invisível */
+    display: none;
     justify-content: center;
     align-items: center;
     z-index: 1000;
@@ -153,7 +146,7 @@ a{
 .modal {
     background: #404040;
     width: 40%;
-    height: 60%; 
+    height: 100%; 
     margin-left: 15%;
     display: flex;
     justify-content: center;
@@ -161,7 +154,6 @@ a{
     align-items: center;
     border-radius: 3vh;
 }
-
 .modal-Edit, .modal-delet{
     background-color: rgba(68, 68, 68, 1);
     width: 30%;
@@ -173,122 +165,98 @@ a{
     align-items: center;
     border-radius: 3vh;
 }
+
+.modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5vh;
+    width: 100%;
+    height: 100%;
+    padding-left: 5%;
+    padding-right: 5%;
+}
 .modal-form label {
     display: block;
     font-weight: bold;
     margin-top: 10px;
     margin-bottom: 5px;
+    color: white;
 }
-.modal-form{
-    width: 100%;
-    height: 50%;
+.modal-form input {
+   padding-left: 2%;
+   width: 90%;
+   height: 4vh;
+   border-radius: 8px;
+   border: 1px solid #ccc;
 }
 
-.modal-form input {
+.textCadastrar, .textAtualizar{
     width: 100%;
-    height: 1vh;
-    padding: 8px;
-    box-sizing: border-box;
-}
-.textCadastrar{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     color: white;
-    margin-bottom: 2%;
-    font-size: 3vh;
+    margin: 2% 0;
+    font-size: 4vh;
 }
 .textModal1, .textModal2{
-    /* background-color: #aefcfc; */
     color: white;
-    margin-bottom: 5%;
     font-size: 2.5vh;
-    
-
 }
-.modal-form {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2vh;
-    justify-content: center;
+
+.modal-buttons,
+.modal-buttons-edit,
+.modal-buttons-delet {
     width: 100%;
-    margin-bottom: 5%;
-}
-
-.modal-form input {
-    width: 90%;
     height: 20%;
-    padding: 1rem;
-    font-size: 2vh;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+    padding-left: 10%;
+    padding-right: 10%;
+    margin-top: 4%;
+    margin-bottom: 4%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 3vh;
 }
-.modal-buttons-Cadastrar{
-    width: 100%;
-    height: 10%;
-    padding-left: 20%;
-    padding-right: 20%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1vh;
-}
-.modal-buttons {
-    width: 100%;
-    height: 10%;
-    padding-left: 20%;
-    padding-right: 20%;
-    margin-top: 2%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1vh;
-    
-} 
-.modal-buttons-edit, .modal-buttons-delet {
-    width: 100%;
-    height: 15%;
-    padding-left: 20%;
-    padding-right: 20%;
-    margin-top: 5%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1vh;
-    
-} 
 
-.btn-cadastrar, .btn-cancelar, .btn-cancelar-edit{
+.btn-cadastrar, .btn-cancelar, .btn-cancelar-edit,
+.btn-salvar, .btn-cancelar-delet {
     width: 100%;
     height: 100%;
-    padding-left: 5%;
-    padding-right: 5%;
-    font-size: 4vh;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-}
-.btn-salvar, .btn-cancelar-delet, .btn-cancelar-edit {
-    width: 100%;
-    height: 100%;
-    padding-left: 5%;
-    padding-right: 5%;
+    padding: 0 5%;
     font-size: 4vh;
     border: none;
     border-radius: 8px;
     cursor: pointer;
 }
 
-.btn-cadastrar {
-    background-color: #aefcfc;
-    color: black;
-}
+.btn-cadastrar { background-color: #aefcfc; color: black; }
+.btn-cancelar, .btn-cancelar-edit { background-color: #004a4d; color: white; }
+.btn-cancelar-delet { background-color: limegreen; color: white; }
+.btn-salvar { background-color: rgba(159, 252, 255, 1); color: black; }
 
-.btn-cancelar, .btn-cancelar-edit {
-    background-color: #004a4d;
-    color: white;
-}
-.btn-cancelar-delet {
+.btn-confirmar {
+    width: 100%;
+    height: 100%;
+    font-size: 4vh;
     background-color: limegreen;
-    color: white;
+    color: black;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
 }
+.btn-deletar {
+    width: 100%;
+    height: 100%;
+    font-size: 4vh;
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
 .tabela-container {
     width: 90%;
     margin: 2vh auto;
@@ -296,25 +264,24 @@ a{
     border-radius: 8px;
     overflow: hidden;
 }
-
 .tabela-locatarios {
     width: 100%;
     border-collapse: collapse;
     font-size: 2.5vh;
 }
-
+#tbody-locatarios{
+    font-size: 2vh;
+}
 .tabela-locatarios thead {
     background: #404040;
     color: white;
 }
-
 .tabela-locatarios th, .tabela-locatarios td {
     padding: 12px;
     text-align: left;
 }
-
 .tabela-locatarios tbody tr {
-    background-color: white     ;
+    background-color: white;
     border-bottom: 1px solid #ccc;
 }
 
@@ -326,74 +293,15 @@ a{
     margin-right: 10px;
     transition: transform 0.2s;
 }
-.icone-visualizar:hover {
-    transform: scale(1.1);
-}
-.icone-editar:hover {
-    transform: scale(1.1);
-}
+.icone-visualizar:hover,
+.icone-editar:hover,
+.icone-deletar:hover { transform: scale(1.1); }
+.icone-editar:hover { color: green; }
+.icone-deletar:hover { color: red; }
 
-.icone-deletar:hover {
-    transform: scale(1.1);
-}
-
-.icone-editar:hover {
-    color: green;
-}
-
-.icone-deletar:hover {
-    color: red;
-}
-.btn-salvar{
-    background-color: rgba(159, 252, 255, 1);
-    color: black;
-}
-
-#tbody-locatarios{
-    font-size: 2vh;
-}
-
-.btn-confirmar {
-    width: 100%;
-    height: 100%;
-    font-size: 4vh;
-    padding-left: 5%;
-    padding-right: 5%;
-    background-color: limegreen;
-    color: black;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-#delete_edit{
-    background-color: rgba(68, 68, 68, 1);
-    color: white;
-}
-
-.btn-deletar {
-    width: 100%;
-    height: 100%;
-    font-size: 4vh;
-    padding-left: 5%;
-    padding-right: 5%;
-    background-color: red;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-}
-
-#delete_edit{
-    width: 60%;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-}
 td:last-child {
     display: flex;
-    gap: 8px; /* espaço entre ícones */
+    gap: 8px;
     align-items: center;
 }
 td:last-child img {
@@ -402,85 +310,45 @@ td:last-child img {
     height: 20px;
 }
 
-/* Container para label + input lado a lado */
-.modal-form .form-group {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 0; /* Espaço entre label e input */
-    width: 100%;
-    height: 20%;
-}
-
-/* Label reduzida para caber ao lado do input */
-.modal-form .form-group label {
-    padding-left: 2%;
-    width: 25%; /* Ajuste conforme necessário */
-    font-weight: bold;
-    color: white;
-    font-size: 2vh;
-    margin-bottom: 0; /* Remove margem para ficar alinhado com input */
-}
-
-/* Input reduzido para caber ao lado do label */
-.modal-form .form-group input {
-    width: 70%; /* Ajuste conforme necessário */
-    font-size: 2vh;
-}
-
 .input-group {
   position: relative;
-  height: 20%;
+  height: 100%;
   width: 100%;
 }
-
 .input-group input {
-  width: 90%;
-  margin-left: 5%;
-  margin-right: 5%;
-  height: 5vh;
-  padding-top: 4%;
-  font-size: 2vh;
+  width: 100%;
+  height: 100%;
+  padding-top: 5%;
+  font-size: 3vh;
+  border-radius: 1vh;
   border: none;
   border-bottom: 2px solid #ccc;
   background: transparent;
   outline: none;
   background-color: white;
 }
-
 .input-group label {
-  width: 90%;
-  margin-left: 5%;
-  margin-right: 5%;
   position: absolute;
-  left: 8px;
+  padding-left: 2%;
   top: 0.1vh;
   color: #777;
   font-size: 16px;
   pointer-events: none;
   transition: 0.3s ease;
-  /* background-color: blueviolet; */
 }
-
-/* efeito do "label flutuante" */
 .input-group input:focus ~ label,
 .input-group input:valid ~ label {
   top: -0.8vh;
   left: 5px;
-  font-size: 1vh;
-  color: #002658; /* azul Google */
-  
+  font-size: 2vh;
+  color: #002658;
   padding: 0 4px;
 }
 
+/* RESPONSIVIDADE */
 @media (max-width: 768px) {
-  .TelaEditora {
-    flex-direction: column;
-  }
-
-  .ladoDireito {
-    width: 100%;
-  }
+  .TelaEditora { flex-direction: column; }
+  .ladoDireito { width: 100%; }
 
   .containerPesquisa {
     width: 100%;
@@ -488,63 +356,34 @@ td:last-child img {
     height: auto;
     gap: 1vh;
   }
-
-  #pesquisa {
-    width: 90%;
-    height: 5vh;
-  }
-
+  #pesquisa { width: 90%; height: 5vh; }
   #button {
-    margin-top: 5%;
-    margin-bottom: 5%;;
+    margin: 5% 0;
     width: 50%;
     height: 6vh;
     font-size: 2.5vh;
   }
-
-  .titulo {
-    
-    font-size: 4vh;
-    text-align: center;
-  }
-
+  .titulo { font-size: 4vh; text-align: center; }
   .modal {
     width: 90%;
-    height: 60%;
+    height: 85%;
     margin-left: 0;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
   }
-
-  .textModal1, .textModal2{
+  .textModal1, .textModal2 {
     width: 100%;
-    padding-left: 5%;
-    padding-right: 5%;
-    padding-top: 5%;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
+    padding: 0 5%;
     font-size: 4.3vh;
-    /* background-color: brown; */
+    text-align: center;
   }
-
   .modal-form input {
     width: 90%;
     height: 4vh;
   }
-
   .modal-buttons {
     width: 100%;
-    height: 100%;
-    padding-left: 5%;
-    padding-right: 5%;
-    /* flex-direction: column; */
+    padding: 0 5%;
     gap: 1vh;
   }
-
   .btn-cadastrar,
   .btn-cancelar,
   .btn-salvar,
@@ -553,48 +392,19 @@ td:last-child img {
     font-size: 4vh;
     height: 40%;
     width: 100%;
-    padding-left: 5%;
-    padding-right: 5%;
   }
-
-  #delete_edit{
-    width: 90%;
-    height: 50%;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .tabela-container {
-    width: 90%;
-    overflow-x: auto;
-  }
-
-  .tabela-locatarios {
-    font-size: 2vh;
-    min-width: 600px;
-  }
-
-  .icone-editar,
-  .icone-deletar,
-  .icone-visualizar {
-    width: 3vh;
-    height: 3vh;
+  .tabela-container { width: 90%; overflow-x: auto; }
+  .tabela-locatarios { font-size: 2vh; min-width: 600px; }
+  .icone-editar, .icone-deletar, .icone-visualizar {
+    width: 3vh; height: 3vh;
   }
 }
 
-/* ----- VISIBILIDADE BASE (DESKTOP) ----- */
-.header-menu {
-  display: none; /* Esconde o menu de celular por padrão */
-}
+/* MENU MOBILE */
+.header-menu { display: none; }
 
 @media screen and (max-width: 768px) {
-    .containerOptions,
-    .containerMenu {
-        display: none;
-    }
-
+    .containerOptions, .containerMenu { display: none; }
     #header-menu {
         display: block;
         width: 100%;
@@ -602,33 +412,28 @@ td:last-child img {
         color: white;
         z-index: 1000;
     }
-
     #header-menu nav {
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding: 10px 20px;
     }
-
     .logo {
         font-size: 2.5vh;
         font-family: 'Archivo Black', sans-serif;
     }
-
     .mobile-menu {
         cursor: pointer;
         display: flex;
         flex-direction: column;
         gap: 5px;
     }
-
     .mobile-menu div {
         width: 25px;
         height: 3px;
         background: white;
         border-radius: 2px;
     }
-
     .nav-list {
         list-style: none;
         display: none;
@@ -637,31 +442,14 @@ td:last-child img {
         width: 100%;
         padding: 0;
     }
-
     .nav-list li {
         text-align: center;
         padding: 15px 0;
         border-top: 1px solid #fff;
     }
-
     .nav-list li a {
         color: white;
         font-size: 2.2vh;
     }
-
-    /* Classe para abrir o menu (JS precisa adicionar/remover) */
-    .nav-list.active {
-        display: flex;
-    }
-
-    /* Ajustes de layout geral */
-    .TelaEditora {
-        flex-direction: column;
-    }
-
-    .ladoDireito {
-        width: 100%;
-    }
+    .nav-list.active { display: flex; }
 }
-
-
