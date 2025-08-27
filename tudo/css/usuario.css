@@ -4,6 +4,9 @@
 body, html {
   font-family: 'Merriweather', serif;
   height: 100%;
+  overflow-x: hidden; /* impede scroll lateral */
+  max-height: none;
+  overflow-y: auto;   /* força scroll vertical */
 }
 img{
     width: 100%;
@@ -11,24 +14,46 @@ img{
     object-fit: contain;
 }
 
-.TelaUsuario{
+.TelaUsuario {
     display: flex;
-}
-.ladoDireito {
-  width: 85%;
-  display: flex;
-  flex-direction: column;
-  background-color: #f0ffff
-}
-.containerOptions{
-    width: 15%;
     height: 100vh;
-    font-size: 2.2vh;
+    overflow: hidden;
+    position: relative; /* necessário para posicionar menu absoluto */
+}
+
+/* Menu lateral */
+.containerOptions {
+    width: 15%;
+    height: 100%;
+    background-color: #404040;
+    box-shadow: 5px 0 10px rgba(0,0,0,0.5);
+    position: absolute;
+}
+
+/* Menu ativo */
+.containerOptions.ativo {
+    transform: translateX(0);
+}
+
+/* Conteúdo à direita */
+.ladoDireito {
+    flex: 1; 
     display: flex;
     flex-direction: column;
-    box-shadow: 5px 0 10px rgba(0, 0, 0, 0.5); /* sombra na direita */
-    background: #404040;
+    background-color: #f0ffff;
 }
+
+.TelaUsuario.menu-ativo .ladoDireito {
+    margin-left: 15%; 
+}
+
+/* Animação inicial do menu */
+.containerOptions {
+    transform: translateX(-100%);
+    transition: transform 0.5s ease;
+    
+}
+
 .logoWDA{
     width: 37%;
     margin-left: 5%;
@@ -71,8 +96,13 @@ a{
     align-items: center;  
     background: #404040;
 }
+
+.containerMenu {
+    transition: height 0.5s ease;
+}
+
 #containerMenu_heigh{
-    height: 7vh;
+    height: 100%;
 }
 .Name{
     width: 85%;
@@ -152,8 +182,7 @@ a{
 .modal {
     background: #404040;
     width: 40%;
-    height: 100%; 
-    margin-left: 15%;
+    height: auto; 
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -161,10 +190,9 @@ a{
     border-radius: 3vh;
 }
 .modal-Edit, .modal-delet{
-    background-color: rgba(68, 68, 68, 1);
-    width: 30%;
-    height: 40%; 
-    margin-left: 15%;
+    background: #404040;
+    width: 40%;
+    height: auto; 
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -183,25 +211,23 @@ a{
 .modal-form {
     display: flex;
     flex-direction: column;
-    gap: 1.5vh;
-    width: 100%;
-    height: 100%;
-    padding-left: 5%;
-    padding-right: 5%;
+    width: 90%;
+    height: auto;
 }
 .modal-form label {
     display: block;
     font-weight: bold;
-    margin-top: 10px;
-    margin-bottom: 5px;
     color: white;
+    
 }
 .modal-form input {
    padding-left: 2%;
-   width: 90%;
-   height: 4vh;
+   width: 100%;
+   height: 100%;
    border-radius: 8px;
    border: 1px solid #ccc;
+   margin-bottom: 5%;
+   
 }
 
 .tipo-usuario {
@@ -213,11 +239,12 @@ a{
     align-items: center;
     margin-top: 2vh;
     color: white;
+    
 }
 
 .tipo-usuario input[type="radio"] {
     transform: scale(1.5);
-    margin-right: 1vh;
+   
     cursor: pointer;
     background-color: #aefcfc;
 }
@@ -241,9 +268,9 @@ a{
 .modal-buttons-edit,
 .modal-buttons-delet {
     width: 100%;
-    height: 20%;
-    padding-left: 10%;
-    padding-right: 10%;
+    height: auto;
+    padding-left: 20%;
+    padding-right: 20%;
     margin-top: 4%;
     margin-bottom: 4%;
     display: flex;
@@ -257,7 +284,9 @@ a{
     height: 100%;
     padding-left: 5%;
     padding-right: 5%;
-    font-size: 4vh;
+    padding-top: 2%;
+    padding-bottom: 2%;
+    font-size: 5vh;
     border: none;
     border-radius: 8px;
     cursor: pointer;
@@ -292,6 +321,9 @@ a{
     margin-top: 2%;
     border-radius: 8px;
     overflow: hidden;
+    max-height: none;
+    overflow-x: hidden; /* só oculta horizontal */
+    overflow-y: visible; /* deixa crescer pra baixo */
 }
 
 .tabela-locatarios {
@@ -403,12 +435,13 @@ td:last-child img {
   position: relative;
   height: 100%;
   width: 100%;
+  
 }
 .input-group input {
   width: 100%;
   height: 100%;
-  padding-top: 5%;
-  font-size: 3vh;
+  padding-top: 3%;
+  font-size: 3.5vh;
   border-radius: 1vh;
   border: none;
   border-bottom: 2px solid #ccc;
@@ -419,7 +452,7 @@ td:last-child img {
 .input-group label {
   position: absolute;
   padding-left: 2%;
-  top: 0.1vh;
+  top: 0vh;
   color: #777;
   font-size: 16px;
   pointer-events: none;
@@ -427,7 +460,7 @@ td:last-child img {
 }
 .input-group input:focus ~ label,
 .input-group input:valid ~ label {
-  top: -0.8vh;
+  top: -0vh;
   left: 5px;
   font-size: 2vh;
   color: #002658;
@@ -440,201 +473,216 @@ td:last-child img {
     font-size: 2vh;
 }
 
-@media (max-width: 768px) {
-  .TelaUsuario {
-    flex-direction: column;
-  }
-
-  .ladoDireito {
-    width: 100%;
-  }
-
-  .containerPesquisa {
-    width: 100%;
-    flex-direction: column;
-    height: auto;
-    gap: 1vh;
-  }
-
-  #pesquisa {
-    width: 90%;
-    height: 5vh;
-  }
-
-  #button {
-    margin-top: 5%;
-    margin-bottom: 5%;;
-    width: 50%;
-    height: 6vh;
-    font-size: 2.5vh;
-  }
-
-  .titulo {
-    
-    font-size: 4vh;
-    text-align: center;
-  }
-
-  .modal {
-    width: 90%;
-    height: 50%;
-    margin-left: 0;
+/* Posiciona o hamburger dentro do containerMenu */
+.containerMenu {
+    position: relative; /* necessário para posicionar o hamburger absoluto */
     display: flex;
-    justify-content: center;
-    flex-direction: column;
     align-items: center;
-  }
-
-  .textModal1, .textModal2{
-    width: 100%;
-    padding-left: 5%;
-    padding-right: 5%;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-    font-size: 4.3vh;
-    /* background-color: brown; */
-  }
-
-  .modal-form input {
-    width: 90%;
-    height: 4vh;
-  }
-
-  .modal-buttons {
-    width: 100%;
-    height: 100%;
-    padding-left: 5%;
-    padding-right: 5%;
-    /* flex-direction: column; */
-    /* background-color: brown; */
-  }
-
-  .btn-cadastrar,
-  .btn-cancelar,
-  .btn-salvar,
-  .btn-confirmar,
-  .btn-deletar {
-    font-size: 4vh;
-    height: 70%;
-    width: 100%;
-    padding-left: 5%;
-    padding-right: 5%;
-  }
-
-  #delete_edit{
-    width: 90%;
-    height: 50%;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .tabela-container {
-    width: 90%;
-    overflow-x: auto;
-  }
-
-  .tabela-locatarios {
-    font-size: 2vh;
-    min-width: 600px;
-  }
-
-  .icone-editar,
-  .icone-deletar,
-  .icone-visualizar {
-    width: 3vh;
-    height: 3vh;
-  }
+    justify-content: space-between; /* ajusta os elementos */
+    padding: 0 20px;
+    background: #404040;
+    height: 7vh;
 }
 
-/* ----- VISIBILIDADE BASE (DESKTOP) ----- */
-.header-menu {
-  display: none; /* Esconde o menu de celular por padrão */
+.hamburger {
+    margin-top: 2%;
+    margin-bottom: 0.2%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+    cursor: pointer;
+    
+}
+
+.hamburger span {
+    width: 5vh;
+    height: 0.5vh;
+    background: black;
+    border-radius: 2vh;
+    transition: 0.3s;
+}
+
+/* Transformar em X quando ativo */
+.hamburger.active span:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+.hamburger.active span:nth-child(2) {
+    opacity: 0;
+}
+.hamburger.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+}
+.btn-fechar-menu {
+    top: 1vh;
+    right: 1vh;
+    background: transparent;
+    border: none;
+    font-size: 3vh;
+    color: white;
+    cursor: pointer;
+    display: none;
 }
 
 @media screen and (max-width: 768px) {
-    .containerOptions,
-    .containerMenu {
-        display: none;
-    }
-
-    #header-menu {
-        display: block;
-        width: 100%;
-        background-color: #0a6568;
-        color: white;
-        z-index: 1000;
-    }
-
-    #header-menu nav {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 20px;
-    }
-
-    .logo {
-        font-size: 2.5vh;
-        font-family: 'Archivo Black', sans-serif;
-    }
-
-    .mobile-menu {
-        cursor: pointer;
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-    }
-
-    .mobile-menu div {
-        width: 25px;
-        height: 3px;
-        background: white;
-        border-radius: 2px;
-    }
-
-    .nav-list {
-        list-style: none;
-        display: none;
-        flex-direction: column;
-        background-color: #0a6568;
-        width: 100%;
-        padding: 0;
-    }
-
-    .nav-list li {
-        text-align: center;
-        padding: 15px 0;
-        border-top: 1px solid #fff;
-    }
-
-    .nav-list li a {
-        color: white;
-        font-size: 2.2vh;
-    }
-
-    /* Classe para abrir o menu (JS precisa adicionar/remover) */
-    .nav-list.active {
-        display: flex;
-    }
-
-    /* Ajustes de layout geral */
     .TelaUsuario {
         flex-direction: column;
+        height: auto;          
+        overflow-y: auto;      
+        overflow-x: hidden;   
+    }
+
+    .containerOptions {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 80%;
+        height: 100%;
+        z-index: 1001;
+        transform: translateX(-100%);
+        box-shadow: 2px 0 5px rgba(0,0,0,0.3);
+    }
+
+    .containerOptions.ativo {
+        transform: translateX(0);
     }
 
     .ladoDireito {
         width: 100%;
     }
+    .Name{
+        padding-top: 2%;
+        font-size: 100%;
+    }
+    .containerPesquisa {
+        flex-direction: row; /* input e botão lado a lado */
+        justify-content: center;
+        align-items: center;
+        margin-top: 5%;
+        margin-bottom: 2%;
+        gap: 1vh;
+    }
+
+    /* Esconde o texto */
+    .containerPesquisa .text1 {
+        display: none;
+    }
+
+    /* Ajusta input e botão */
+    #pesquisa {
+        width: 70%;
+        height: 5vh;
+        font-size: 2.5vh;
+    }
+
+    #button {
+        width: 25%;
+        height: 5vh;
+        font-size: 2.5vh;
+    }
+
+    .hamburger {
+        display: flex;
+        margin-top: 6%;
+    }
+    .logoWDA{
+        display: flex;
+    }
+    .btn-fechar-menu{
+        margin-left: 100%;
+        display: block;
+    }
 }
 
+@media screen and (max-width: 768px) {
+    .modal {
+        width: 90%; /* ocupa quase toda a tela */
+        padding: 4vw;
+    }
+    
+    .modal-form input {
+        height: 70%;
+        font-size: 4vh;
+        padding: 2vw;
+    }
 
+    .tipo-usuario select {
+        width: 30%;
+    }
 
+    .modal-buttons {
+        flex-direction: row;
+        gap: 2vw;
+        width: 100%;
+    }
 
+    .modal-buttons button {
+        width: 100%;
+        height: 70%;
+        font-size: 4vh;
+        padding: 2vw;
+    }
 
+    .textCadastrar {
+        font-size: 6vw;
+        text-align: center;
+        margin-bottom: 3vw;
+    }
 
+    .input-group input{
+        padding-top: 5%;
+        font-size: 3vh;
+    }
 
+}
+
+@media (max-width: 768px) {
+  .tabela-locatarios,
+  .tabela-locatarios thead,
+  .tabela-locatarios tbody,
+  .tabela-locatarios th,
+  .tabela-locatarios td,
+  .tabela-locatarios tr {
+    display: block;
+    width: 100%;
+  }
+
+  /* esconde cabeçalho */
+  .tabela-locatarios thead {
+    display: none;
+  }
+
+  .tabela-locatarios tr {
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    background: #f9f9f9;
+    box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
+  }
+
+  .tabela-locatarios td {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 5px;
+    border: none;
+    border-bottom: 1px solid #eee;
+  }
+
+  .tabela-locatarios td:last-child {
+    border-bottom: none;
+  }
+
+  /* aqui definimos os títulos com nth-child */
+  .tabela-locatarios td:nth-child(1)::before { content: "Id"; font-weight: bold; }
+  .tabela-locatarios td:nth-child(2)::before { content: "Nome do Usuário"; font-weight: bold; }
+  .tabela-locatarios td:nth-child(3)::before { content: "Email"; font-weight: bold; }
+  .tabela-locatarios td:nth-child(4)::before { content: "Permições"; font-weight: bold; }
+  .tabela-locatarios td:nth-child(5)::before { content: "Ações"; font-weight: bold; }
+
+  #pagination {
+    display: none; /* esconde paginação no celular */
+  }
+}
 
 

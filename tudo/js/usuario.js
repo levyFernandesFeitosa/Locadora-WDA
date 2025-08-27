@@ -119,11 +119,22 @@ function carregarUsuario(page = 1) {
         );
     });
 
-    let start = (page - 1) * rowsPerPage;
-    let end = start + rowsPerPage;
-    let paginatedItems = usuarioFiltradas.slice(start, end);
+    const isMobile = window.innerWidth <= 768;
+    let usuariosParaMostrar;
 
-    paginatedItems.forEach((usuario, index) => {
+    if (isMobile) {
+        // no celular, mostra todos de uma vez
+        usuariosParaMostrar = usuarioFiltradas;
+        document.getElementById("pagination").style.display = "none";
+    } else {
+        // no desktop, mantém a paginação
+        let start = (page - 1) * rowsPerPage;
+        let end = start + rowsPerPage;
+        usuariosParaMostrar = usuarioFiltradas.slice(start, end);
+        document.getElementById("pagination").style.display = "block";
+    }
+
+    usuariosParaMostrar.forEach((usuario, index) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
             <td>${usuario.id}</td>
@@ -131,15 +142,18 @@ function carregarUsuario(page = 1) {
             <td>${usuario.email}</td>
             <td>${usuario.role}</td>
             <td>
-                <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" data-index="${start + index}" alt="Editar">
-                <img src="/tudo/icons/lixo.png" class="icone-deletar" data-index="${start + index}" alt="Deletar">
+                <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" data-index="${index}" alt="Editar">
+                <img src="/tudo/icons/lixo.png" class="icone-deletar" data-index="${index}" alt="Deletar">
             </td>
         `;
         tbody.appendChild(tr);
     });
 
-    criarBotoesPaginacao(usuarioFiltradas.length, page);
+    if (!isMobile) {
+        criarBotoesPaginacao(usuarioFiltradas.length, page);
+    }
 }
+
 
 function criarBotoesPaginacao(totalItems, paginaAtual) {
     const totalPages = Math.ceil(totalItems / rowsPerPage);
@@ -164,6 +178,8 @@ function criarBotoesPaginacao(totalItems, paginaAtual) {
         pagination.appendChild(btn);
     }
 }
+
+
 
 botaoCadastrar.addEventListener('click', () => {
     limparCampos();
@@ -387,15 +403,37 @@ function fecharModalConfirmarDeletar() {
 const inputPesquisa = document.getElementById('pesquisa');
 
 inputPesquisa.addEventListener('input', () => {
-    const termo = inputPesquisa.value.toLowerCase();
-    const linhas = document.querySelectorAll('#tbody-locatarios tr');
-
-    linhas.forEach(linha => {
-        const textoLinha = linha.textContent.toLowerCase();
-        if (textoLinha.includes(termo)) {
-            linha.style.display = '';
-        } else {
-            linha.style.display = 'none';
-        }
-    });
+    carregarUsuario(1); // pesquisa integrada à paginação
 });
+
+
+
+const containerMenu = document.querySelector('.containerMenu');
+const containerOptions = document.querySelector('.containerOptions');
+
+function ajustarMenuAltura() {
+    const alturaMenu = containerOptions.offsetHeight;
+    containerMenu.style.height = alturaMenu * 0.07 + 'px'; // exemplo, 7% da altura
+}
+
+window.addEventListener('resize', ajustarMenuAltura);
+ajustarMenuAltura();
+
+const hamburger = document.getElementById('hamburger');
+const telaUsuario = document.querySelector('.TelaUsuario');
+
+hamburger.addEventListener('click', () => {
+    containerOptions.classList.toggle('ativo');
+    telaUsuario.classList.toggle('menu-ativo');
+    hamburger.classList.toggle('active');
+});
+
+const btnFechar = document.querySelector('.btn-fechar-menu');
+const menu = document.querySelector('.containerOptions');
+const tela = document.querySelector('.TelaUsuario');
+
+btnFechar.addEventListener('click', () => {
+    menu.classList.remove('ativo');
+    tela.classList.remove('menu-ativo');
+});
+
