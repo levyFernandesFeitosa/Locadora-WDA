@@ -120,43 +120,54 @@ function salvarLocatarios() {
 function carregarLocatarios(page = 1) {
     tbody.innerHTML = '';
 
-    const campoPesquisa = document.getElementById('pesquisa');
     const termo = campoPesquisa.value.toLowerCase();
 
-    const locatariosFiltradas = arrayLocatarios.filter(locatarios => {
+    const locatariosFiltrados = arrayLocatarios.filter(locatario => {
         return (
-            locatarios.name.toLowerCase().includes(termo) ||
-            locatarios.email.toLowerCase().includes(termo) ||
-            locatarios.telephone.toLowerCase().includes(termo) ||
-            locatarios.cpf.toLowerCase().includes(termo) ||
-            locatarios.address.toLowerCase().includes(termo)
+            locatario.name.toLowerCase().includes(termo) ||
+            locatario.email.toLowerCase().includes(termo) ||
+            locatario.telephone.toLowerCase().includes(termo) ||
+            locatario.cpf.toLowerCase().includes(termo) ||
+            locatario.address.toLowerCase().includes(termo)
         );
     });
 
-    let start = (page - 1) * rowsPerPage;
-    let end = start + rowsPerPage;
-    let paginatedItems = locatariosFiltradas.slice(start, end);
+    const isMobile = window.innerWidth <= 768;
+    let locatariosParaMostrar;
 
-    paginatedItems.forEach((locatarios, index) => {
+    if (isMobile) {
+        locatariosParaMostrar = locatariosFiltrados;
+        document.getElementById("pagination").style.display = "none";
+    } else {
+        let start = (page - 1) * rowsPerPage;
+        let end = start + rowsPerPage;
+        locatariosParaMostrar = locatariosFiltrados.slice(start, end);
+        document.getElementById("pagination").style.display = "block";
+    }
+
+    locatariosParaMostrar.forEach((locatario, index) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-            <td>${locatarios.id}</td>
-            <td>${locatarios.name}</td>
-            <td>${locatarios.email}</td>
-            <td>${locatarios.telephone}</td>
-            <td>${locatarios.cpf}</td>
-            
+            <td>${locatario.id}</td>
+            <td>${locatario.name}</td>
+            <td>${locatario.email}</td>
+            <td>${locatario.telephone}</td>
+            <td>${locatario.cpf}</td>
+            <td>${locatario.address}</td>
             <td>
-                <img src="/tudo/icons/olho.png" class="icone-visualizar" data-index="${start + index}" alt="Visualizar">
-                <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" data-index="${start + index}" alt="Editar">
-                <img src="/tudo/icons/lixo.png" class="icone-deletar" data-index="${start + index}" alt="Deletar">
+                <img src="/tudo/icons/olho.png" class="icone-visualizar" data-index="${index}" alt="Visualizar">
+                <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" data-index="${index}" alt="Editar">
+                <img src="/tudo/icons/lixo.png" class="icone-deletar" data-index="${index}" alt="Deletar">
             </td>
         `;
         tbody.appendChild(tr);
     });
 
-    criarBotoesPaginacao(locatariosFiltradas.length, page);
+    if (!isMobile) {
+        criarBotoesPaginacao(locatariosFiltrados.length, page);
+    }
 }
+
 
 function criarBotoesPaginacao(totalItems, paginaAtual) {
     const totalPages = Math.ceil(totalItems / rowsPerPage);
@@ -403,3 +414,42 @@ campoPesquisa.addEventListener('input', () => {
 
 // Inicializa exibindo a página 1
 carregarLocatarios(currentPage);
+
+const inputPesquisa = document.getElementById('pesquisa');
+
+inputPesquisa.addEventListener('input', () => {
+    carregarLocatarios(1); // pesquisa integrada à paginação
+});
+
+
+
+const containerMenu = document.querySelector('.containerMenu');
+const containerOptions = document.querySelector('.containerOptions');
+
+function ajustarMenuAltura() {
+    const alturaMenu = containerOptions.offsetHeight;
+    containerMenu.style.height = alturaMenu * 0.07 + 'px'; // exemplo, 7% da altura
+}
+
+window.addEventListener('resize', ajustarMenuAltura);
+ajustarMenuAltura();
+
+const hamburger = document.getElementById('hamburger');
+const telaUsuario = document.querySelector('.TelaLocal');
+
+hamburger.addEventListener('click', () => {
+    containerOptions.classList.toggle('ativo');
+    telaUsuario.classList.toggle('menu-ativo');
+    hamburger.classList.toggle('active');
+});
+
+const btnFechar = document.querySelector('.btn-fechar-menu');
+const menu = document.querySelector('.containerOptions');
+const tela = document.querySelector('.TelaLocal');
+
+btnFechar.addEventListener('click', () => {
+    menu.classList.remove('ativo');
+    tela.classList.remove('menu-ativo');
+});
+
+

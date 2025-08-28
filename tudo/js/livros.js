@@ -16,8 +16,10 @@ if (token) {
 }
 
 window.onload = function(){
-    getLivros()
-    carregarEditoras()
+    getLivros();
+    carregarEditoras().then(() => {
+        transformarSelect("inputEditora");
+    });
 }
 
 function listaTabela() {
@@ -65,7 +67,7 @@ function listaTabela() {
   atualizarPaginacao();
 }
 
-const arrayLocatarios = []
+const arrayLivros = []
 
 function getLivros() {
   if (!token) {
@@ -79,12 +81,12 @@ function getLivros() {
       let dadosLivros = response.data;
       livros = response.data; // ou ajuste conforme o formato da API
       // Limpar o array antes de inserir os dados
-      arrayLocatarios.length = 0;
+      arrayLivros.length = 0;
 
       if (Array.isArray(dadosLivros)) {
-        arrayLocatarios.push(...dadosLivros);
+        arrayLivros.push(...dadosLivros);
       } else {
-        arrayLocatarios.push(dadosLivros);
+        arrayLivros.push(dadosLivros);
       }
 
       carregarLivros(currentPage);
@@ -113,49 +115,76 @@ const rowsPerPage = 6;
 function salvarLivros() {
     localStorage.setItem('livros', JSON.stringify(livros));
 }
+const index = arrayLivros.findIndex(l => l.id == idLivro);
+if (index !== -1) {
+    arrayLivros[index] = {
+        id: parseInt(idLivro),
+        name: nome,
+        author: autor,
+        launchDate: datalancada,
+        totalQuantity: parseInt(disponivel),
+        totalInUse: parseInt(alugados),
+        publisher: { name: nomeEditora }
+    };
+}
 
+// depois recarrega a tabela
 function carregarLivros(page = 1) {
     tbody.innerHTML = '';
 
-    const campoPesquisa = document.getElementById('pesquisa');
-    const termo = campoPesquisa.value.toLowerCase();
+    const termoRaw = document.getElementById('pesquisa').value.trim();
+    const termo = termoRaw.toLowerCase();
 
-    const livrosFiltradas = arrayLocatarios.filter(livros => {
+    // Filtra os livros
+    const livrosFiltrados = arrayLivros.filter(livro => {
         return (
-            livros.name.toLowerCase().includes(termo) ||
-            livros.author.toLowerCase().includes(termo) ||
-            livros.launchDate.toLowerCase().includes(termo) ||
-            livros.totalQuantity.toLowerCase().includes(termo) ||
-            livros.totalInUse.toLowerCase().includes(termo) ||
-            livros.publisher.toLowerCase().includes(termo)
+            livro.name.toLowerCase().includes(termo) ||
+            livro.author.toLowerCase().includes(termo) ||
+            livro.launchDate.toLowerCase().includes(termo) ||
+            livro.totalQuantity.toString().includes(termo) ||
+            livro.totalInUse.toString().includes(termo) ||
+            livro.publisher.name.toLowerCase().includes(termo)
         );
     });
 
-    let start = (page - 1) * rowsPerPage;
-    let end = start + rowsPerPage;
-    let paginatedItems = livrosFiltradas.slice(start, end);
+    const isMobile = window.innerWidth <= 768;
+    let livrosParaMostrar;
 
-    paginatedItems.forEach((livros, index) => {
+    if (isMobile) {
+        // No celular, mostra todos
+        livrosParaMostrar = livrosFiltrados;
+        document.getElementById("pagination").style.display = "none";
+    } else {
+        // Desktop: mantém paginação
+        const start = (page - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+        livrosParaMostrar = livrosFiltrados.slice(start, end);
+        document.getElementById("pagination").style.display = "block";
+    }
+
+    livrosParaMostrar.forEach((livro, index) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-            <td>${livros.id}</td>
-            <td>${livros.name}</td>
-            <td>${livros.author}</td>
-            <td>${livros.launchDate}</td>
-            <td>${livros.totalQuantity}</td>
-            <td>${livros.totalInUse}</td>
-            <td>${livros.publisher.name}</td>
-            
+            <td>${livro.id}</td>
+            <td>${livro.name}</td>
+            <td>${livro.author}</td>
+            <td>${livro.launchDate}</td>
+            <td>${livro.totalQuantity}</td>
+            <td>${livro.totalInUse}</td>
+            <td>${livro.publisher.name}</td>
             <td>
-                <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" data-index="${start + index}" alt="Editar">
-                <img src="/tudo/icons/lixo.png" class="icone-deletar" data-index="${start + index}" alt="Deletar">
+                <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" data-index="${index}" alt="Editar">
+                <img src="/tudo/icons/lixo.png" class="icone-deletar" data-index="${index}" alt="Deletar">
             </td>
         `;
         tbody.appendChild(tr);
     });
 
-    criarBotoesPaginacao(livrosFiltradas.length, page);
+    if (!isMobile) {
+        criarBotoesPaginacao(livrosFiltrados.length, page);
+    }
 }
+
 
 function criarBotoesPaginacao(totalItems, paginaAtual) {
     const totalPages = Math.ceil(totalItems / rowsPerPage);
@@ -296,24 +325,24 @@ tbody.addEventListener('click', (e) => {
             </div>
 
             <div class="input-group">
-                <input type="text" id="editTelefone" value="${autor}" required>
-                <label for="editTelefone">Nome do Autor</label>
+                <input type="text" id="editAutor" value="${autor}" required>
+                <label for="editAutor">Nome do Autor</label>
             </div>
 
             <div class="input-group">
-                <input type="date" id="editEmail" value="${datalancada}" required>
-                <label for="editEmail">Data Lançada</label>
+                <input type="date" id="editDataLancada" value="${datalancada}" required>
+                <label for="editDataLancada">Data Lançamento</label>
             </div>
 
             <div class="input-group">
-                <input type="text" id="editSite" value="${disponivel}" required>
-                <label for="editSite">Disponivel</label>
+                <input type="number" id="editDisponivel" value="${disponivel}" required>
+                <label for="editDisponivel">Disponível</label>
             </div>
+
             <div class="input-group">
-                <input type="text" id="editSite" value="${editora}" required>
-                <label for="editSite">Editora</label>
+                <input type="text" id="editEditora" value="${editora}" required>
+                <label for="editEditora">Editora</label>
             </div>
-            
         `;
 
         document.getElementById('modal-editar').style.display = 'flex';
@@ -327,47 +356,53 @@ function Atualizar() {
         return;
     }
 
-    const idLivro = linhaEditando.children[0].textContent; // pega o ID do livro
+    const idLivro = linhaEditando.children[0].textContent;
     const nome = document.getElementById('editNome').value.trim();
     const autor = document.getElementById('editAutor').value.trim();
     const datalancada = document.getElementById('editDataLancada').value.trim();
     const disponivel = document.getElementById('editDisponivel').value.trim();
-    const nomeEditora = document.getElementById('editEditora').value.trim(); // nome da editora
-    const alugados = linhaEditando.children[5].textContent;
+    const nomeEditora = document.getElementById('editEditora').value.trim();
+    const alugados = parseInt(linhaEditando.children[5].textContent);
 
-    if (!nome || !autor || !nomeEditora || !disponivel || !datalancada) {
+    if (!nome || !autor || !datalancada || !disponivel || !nomeEditora) {
         alert("Preencha todos os campos!");
         return;
     }
 
-    // Pega o ID da editora pelo nome usando o editorasMap
     const idEditora = editorasMap[nomeEditora];
     if (!idEditora) {
         alert("Editora inválida! Verifique o nome da editora.");
         return;
     }
 
-    // Chamada PUT na API
     api.put(`/book/${idLivro}`, {
         name: nome,
         author: autor,
         launchDate: datalancada,
         totalQuantity: parseInt(disponivel),
-        totalInUse: parseInt(alugados),
-        publisherId: parseInt(idEditora) // envia o ID correto
+        totalInUse: alugados,
+        publisherId: parseInt(idEditora)
     })
-    .then(() => {   
-        fecharModalAtualizar();
-        fecharModalConfirmarEditar()
-        // Atualiza os valores na tabela
-        linhaEditando.children[1].textContent = nome;
-        linhaEditando.children[2].textContent = autor;
-        linhaEditando.children[3].textContent = datalancada;
-        linhaEditando.children[4].textContent = disponivel;
-        linhaEditando.children[5].textContent = alugados;
-        linhaEditando.children[6].textContent = nomeEditora; // mostra o nome
+    .then(() => {
+        // Atualiza o array local
+        const index = arrayLivros.findIndex(l => l.id == idLivro);
+        if (index !== -1) {
+            arrayLivros[index] = {
+                id: parseInt(idLivro),
+                name: nome,
+                author: autor,
+                launchDate: datalancada,
+                totalQuantity: parseInt(disponivel),
+                totalInUse: alugados,
+                publisher: { name: nomeEditora }
+            };
+        }
 
-        
+        // Recarrega a tabela
+        carregarLivros(currentPage);
+
+        fecharModalAtualizar();
+        fecharModalConfirmarEditar();
     })
     .catch(error => {
         console.error("Erro ao atualizar livro:", error.response?.data || error.message);
@@ -375,11 +410,12 @@ function Atualizar() {
     });
 }
 
-document.getElementById('btnConfirmarEditar').addEventListener('click', () => {
+const btnConfirmarEditar = document.getElementById('btnConfirmarEditar');
+btnConfirmarEditar.addEventListener('click', () => {
     Atualizar();
-    fecharModalConfirmarEditar();
 });
 
+// Funções para abrir/fechar modais
 function fecharModalAtualizar() {
     document.getElementById('modal-editar').style.display = 'none';
 }
@@ -430,6 +466,85 @@ function deletarLivro(id) {
             fecharModalConfirmarDeletar();
         });
 }
+
+const inputPesquisa = document.getElementById('pesquisa');
+
+inputPesquisa.addEventListener('input', () => {
+    carregarLivros(1); // pesquisa integrada à paginação
+});
+
+
+
+const containerMenu = document.querySelector('.containerMenu');
+const containerOptions = document.querySelector('.containerOptions');
+
+function ajustarMenuAltura() {
+    const alturaMenu = containerOptions.offsetHeight;
+    containerMenu.style.height = alturaMenu * 0.07 + 'px'; // exemplo, 7% da altura
+}
+
+window.addEventListener('resize', ajustarMenuAltura);
+ajustarMenuAltura();
+
+const hamburger = document.getElementById('hamburger');
+const telaUsuario = document.querySelector('.TelaUsuario');
+
+hamburger.addEventListener('click', () => {
+    containerOptions.classList.toggle('ativo');
+    telaUsuario.classList.toggle('menu-ativo');
+    hamburger.classList.toggle('active');
+});
+
+const btnFechar = document.querySelector('.btn-fechar-menu');
+const menu = document.querySelector('.containerOptions');
+const tela = document.querySelector('.TelaUsuario');
+
+btnFechar.addEventListener('click', () => {
+    menu.classList.remove('ativo');
+    tela.classList.remove('menu-ativo');
+});
+
+function transformarSelect(selectId) {
+    const select = document.getElementById(selectId);
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("custom-select");
+
+    // Cria a div que mostra a opção selecionada
+    const selected = document.createElement("div");
+    selected.classList.add("selected");
+    selected.textContent = select.options[select.selectedIndex].textContent;
+
+    // Cria a lista de opções
+    const optionsList = document.createElement("ul");
+    optionsList.classList.add("options");
+
+    Array.from(select.options).forEach((opt, index) => {
+        const li = document.createElement("li");
+        li.textContent = opt.textContent;
+
+        li.addEventListener("click", () => {
+            select.selectedIndex = index;
+            selected.textContent = opt.textContent;
+            optionsList.classList.remove("show");
+        });
+
+        optionsList.appendChild(li);
+    });
+
+    selected.addEventListener("click", () => {
+        optionsList.classList.toggle("show");
+    });
+
+    wrapper.appendChild(selected);
+    wrapper.appendChild(optionsList);
+
+    // Esconde o select original e insere o customizado no lugar
+    select.style.display = "none";
+    select.parentNode.insertBefore(wrapper, select);
+}
+
+
+
 
 
 

@@ -126,17 +126,28 @@ function carregarEditoras(page = 1) {
     const editorasFiltradas = arrayEditoras.filter(editora => {
         return (
             editora.name.toLowerCase().includes(termo) ||
-            editora.telephone.toLowerCase().includes(termo) ||
             editora.email.toLowerCase().includes(termo) ||
+            editora.telephone.toLowerCase().includes(termo) ||
             editora.site.toLowerCase().includes(termo)
         );
     });
 
-    let start = (page - 1) * rowsPerPage;
-    let end = start + rowsPerPage;
-    let paginatedItems = editorasFiltradas.slice(start, end);
+    const isMobile = window.innerWidth <= 768;
+    let editorasParaMostrar;
 
-    paginatedItems.forEach((editora, index) => {
+    if (isMobile) {
+        // no celular mostra tudo de uma vez
+        editorasParaMostrar = editorasFiltradas;
+        document.getElementById("pagination").style.display = "none";
+    } else {
+        // no desktop usa paginação
+        let start = (page - 1) * rowsPerPage;
+        let end = start + rowsPerPage;
+        editorasParaMostrar = editorasFiltradas.slice(start, end);
+        document.getElementById("pagination").style.display = "block";
+    }
+
+    editorasParaMostrar.forEach((editora, index) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
             <td>${editora.id}</td>
@@ -145,15 +156,18 @@ function carregarEditoras(page = 1) {
             <td>${editora.telephone}</td>
             <td>${editora.site}</td>
             <td>
-                <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" data-index="${start + index}" alt="Editar">
-                <img src="/tudo/icons/lixo.png" class="icone-deletar" data-index="${start + index}" alt="Deletar">
+                <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" data-index="${index}" alt="Editar">
+                <img src="/tudo/icons/lixo.png" class="icone-deletar" data-index="${index}" alt="Deletar">
             </td>
         `;
         tbody.appendChild(tr);
     });
 
-    criarBotoesPaginacao(editorasFiltradas.length, page);
+    if (!isMobile) {
+        criarBotoesPaginacao(editorasFiltradas.length, page);
+    }
 }
+
 
 function criarBotoesPaginacao(totalItems, paginaAtual) {
     const totalPages = Math.ceil(totalItems / rowsPerPage);
@@ -322,3 +336,42 @@ document.getElementById('pesquisa').addEventListener('input', () => {
 
 // Inicializa a tabela com paginação
 carregarEditoras(currentPage);
+
+const inputPesquisa = document.getElementById('pesquisa');
+
+inputPesquisa.addEventListener('input', () => {
+    carregarEditoras(1); // pesquisa integrada à paginação
+});
+
+
+
+const containerMenu = document.querySelector('.containerMenu');
+const containerOptions = document.querySelector('.containerOptions');
+
+function ajustarMenuAltura() {
+    const alturaMenu = containerOptions.offsetHeight;
+    containerMenu.style.height = alturaMenu * 0.07 + 'px'; // exemplo, 7% da altura
+}
+
+window.addEventListener('resize', ajustarMenuAltura);
+ajustarMenuAltura();
+
+const hamburger = document.getElementById('hamburger');
+const telaUsuario = document.querySelector('.TelaUsuario');
+
+hamburger.addEventListener('click', () => {
+    containerOptions.classList.toggle('ativo');
+    telaUsuario.classList.toggle('menu-ativo');
+    hamburger.classList.toggle('active');
+});
+
+const btnFechar = document.querySelector('.btn-fechar-menu');
+const menu = document.querySelector('.containerOptions');
+const tela = document.querySelector('.TelaUsuario');
+
+btnFechar.addEventListener('click', () => {
+    menu.classList.remove('ativo');
+    tela.classList.remove('menu-ativo');
+});
+
+

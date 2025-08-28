@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Locadora de Livros</title>
     <link rel="stylesheet" href="/tudo/css/editoras.css" />
+    <link rel="stylesheet" href="/tudo/css/cssAll.css">
     <link
       href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap"
       rel="stylesheet"
@@ -66,7 +67,7 @@
       <div class="modal-Edit">
         <div class="textModal1">Certeza que deseja atualizar essa Editora?</div>
         <div class="modal-buttons-edit">
-          <button class="btn-confirmar" id="btnConfirmarEditar">
+          <button class="btn-salvar-edit" id="btnConfirmarEditar">
             Atualizar
           </button>
           <button
@@ -96,38 +97,10 @@
     </div>
 
     <div class="TelaEditora">
-      <header id="header-menu" class="header-menu">
-        <nav>
-          <h1 class="logo">Locadora de Livros</h1>
-          <div class="mobile-menu">
-            <div class="line1"></div>
-            <div class="line2"></div>
-            <div class="line3"></div>
-          </div>
-          <ul class="nav-list">
-            <li>
-              <img
-                src="/tudo/logo/Captura_de_Tela__3_-removebg-preview.png"
-                alt=""
-              />
-            </li>
-            <li><a id="a-menu" href="dashboard.html">Dashboard</a></li>
-            <li><a id="a-menu" href="locatario.html">Locatário</a></li>
-            <li><a id="a-menu" href="editoras.html">Editora</a></li>
-            <li><a id="a-menu" href="livros.html">Livros</a></li>
-            <li><a id="a-menu" href="alugueis.html">Aluguéis</a></li>
-            <li><a id="a-menu" href="usuario.html">Usuário</a></li>
-            <li><a id="a-menu" href="logOut.html">Log out</a></li>
-          </ul>
-        </nav>
-      </header>
 
       <div class="containerOptions">
         <div class="logoWDA">
-          <img
-            src="/tudo/logo/Captura_de_Tela__3_-removebg-preview.png"
-            alt=""
-          />
+          <img src="/tudo/logo/Captura_de_Tela__3_-removebg-preview.png" alt=""><button class="btn-fechar-menu">✕</button>
         </div>
         <div id="options-heigh" class="Option">
           <a href="/tudo/html/dashboard.html">Dashboard</a>
@@ -135,7 +108,9 @@
         <div id="options-heigh" class="Option">
           <a href="/tudo/html/locatario.html">Locatários</a>
         </div>
-        <div class="editorasOption">Editoras</div>
+
+        <div class="localOption">Editoras</div>
+
         <div id="options-heigh" class="Option">
           <a href="/tudo/html/livros.html">Livros</a>
         </div>
@@ -151,9 +126,12 @@
       </div>
       <div class="ladoDireito">
         <div id="containerMenu_heigh" class="containerMenu">
+          <div class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
           <div class="Name">Locadora de Livros</div>
-          <div class="emailUser">test@gmail.com</div>
-          <div class="logoUser"><img src="/tudo/logo/user.png" alt="" /></div>
         </div>
         <div class="containerPesquisa">
           <div class="text1">Buscar Editora:</div>

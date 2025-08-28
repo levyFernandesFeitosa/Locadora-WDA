@@ -420,7 +420,7 @@ window.addEventListener('resize', ajustarMenuAltura);
 ajustarMenuAltura();
 
 const hamburger = document.getElementById('hamburger');
-const telaUsuario = document.querySelector('.TelaUsuario');
+const telaUsuario = document.querySelector('.TelaLocal');
 
 hamburger.addEventListener('click', () => {
     containerOptions.classList.toggle('ativo');
@@ -430,7 +430,7 @@ hamburger.addEventListener('click', () => {
 
 const btnFechar = document.querySelector('.btn-fechar-menu');
 const menu = document.querySelector('.containerOptions');
-const tela = document.querySelector('.TelaUsuario');
+const tela = document.querySelector('.TelaLocal');
 
 btnFechar.addEventListener('click', () => {
     menu.classList.remove('ativo');
