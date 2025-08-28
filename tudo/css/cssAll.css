@@ -69,7 +69,7 @@ img{
     display: flex;
 }
 .Option{
-    color: white;
+    color: black;
 }
 a{
     text-decoration: none;
@@ -192,7 +192,7 @@ a{
 }
 .modal-Edit, .modal-delet{
     background: #404040;
-    width: 40%;
+    width: 30%;
     height: auto; 
     display: flex;
     justify-content: center;
@@ -200,8 +200,12 @@ a{
     align-items: center;
     border-radius: 3vh;
 }
-
-.textModal1, .textModal2, .textModal1-2{
+.textModal1{
+    color: white;
+    margin-top: 5%;
+    font-size: 2.5vh;
+}
+.textModal2, .textModal1-2{
     /* background-color: #aefcfc; */
     color: white;
     margin-bottom: 5%;
@@ -292,6 +296,17 @@ a{
     border-radius: 8px;
     cursor: pointer;
 }
+#btnLogout{
+    width: 30%;
+    height: 15%;
+    margin-top: 2%;
+    border-radius: 0.5rem;
+    padding-left: 2%;
+    font-size: 3vh;
+    background-color:  rgba(10, 101, 104, 1);
+    color: white;
+    cursor: pointer;
+}
 .btn-salvar, .btn-cancelar-delet, .btn-cancelar-edit, .btn-deletar {
     width: 100%;
     height: 100%;
@@ -302,7 +317,9 @@ a{
     font-size: 5vh;
     border: none;
     border-radius: 8px;
-    cursor: pointer
+    cursor: pointer;
+    
+    
 }
 
 .btn-cadastrar {
@@ -403,16 +420,9 @@ a{
 }
 
 .btn-deletar {
-    width: 100%;
-    height: 100%;
-    font-size: 4vh;
-    padding-left: 5%;
-    padding-right: 5%;
     background-color: red;
     color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
+    
 }
 
 #delete_edit{
@@ -540,20 +550,21 @@ td:last-child img {
   padding: 8px 12px;
   border-radius: 1vh;
   cursor: pointer;
+  margin-bottom: 5%;
 }
 
 .custom-select .options {
   position: absolute;
-  
+  top: 0;
   left: 0;
   right: 0;
   max-height: 20vh;   
   overflow-y: auto;   
-  background: #ffffff; 
+  background: white; 
   border-radius: 6px;
   margin-top: 4px;
   display: none;
-  
+  z-index: 1100;
 }
 
 .custom-select .options.show {
@@ -577,9 +588,53 @@ td:last-child img {
 
 #modal-confirmar-editar {
     
+   
     z-index: 1100; /* modal de confirmação na frente */
 }
 
+.containerLogOutContent {
+  flex: 1;
+  padding: 5%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 3vh;
+  
+}
+
+.containerLog{
+    width: 50%;
+    height: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 1rem;
+    gap: 1rem;
+    background-color:rgba(159, 252, 255, 1);
+}
+
+
+@media (max-width: 768px) {
+  .TelaLogout {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .containerLogOutContent {
+    font-size: 2.5vh;
+  }
+
+  .containerLog {
+    width: 90%;
+    height: auto;
+    padding: 1.5rem;
+  }
+
+}
 @media screen and (max-width: 768px) {
     .TelaUsuario {
         flex-direction: column;
@@ -648,6 +703,10 @@ td:last-child img {
     .btn-fechar-menu{
         margin-left: 100%;
         display: block;
+    }
+
+    .Option{
+        color: white;
     }
 
 

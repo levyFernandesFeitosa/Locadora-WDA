@@ -237,6 +237,8 @@ btnConfirmarAluguel.addEventListener('click', async () => {
 });
 
 async function carregarLocatariosELivros() {
+    transformarSelect("nomeLocatario"); // agora todos podem alterar
+    transformarSelect("livro");
     try {
         // Pega locatários
         const resLocatarios = await api.get('/renter'); // Ajuste a rota conforme sua API
@@ -305,11 +307,11 @@ async function preparaAluguel(aluguel) {
     document.getElementById('editarLivro').value = aluguel.book?.id || '';
 }
 
-// Carrega locatários e livros no modal de edição
 async function carregarLocatariosELivrosEdicao() {
     try {
         const resLocatarios = await api.get('/renter');
         const selectLocatario = document.getElementById('editarLocatario');
+        selectLocatario.innerHTML = '<option value="">Selecione um locatário</option>';
         resLocatarios.data.forEach(l => {
             const option = document.createElement('option');
             option.value = l.id;
@@ -319,6 +321,38 @@ async function carregarLocatariosELivrosEdicao() {
 
         const resLivros = await api.get('/book');
         const selectLivro = document.getElementById('editarLivro');
+        selectLivro.innerHTML = '<option value="">Selecione um livro</option>';
+        resLivros.data.forEach(l => {
+            const option = document.createElement('option');
+            option.value = l.id;
+            option.textContent = l.name;
+            selectLivro.appendChild(option);
+        });
+        
+    } catch (error) {
+        console.error('Erro ao carregar locatários ou livros (edição):', error.response?.data || error.message);
+    }
+}
+
+
+// Carrega locatários e livros no modal de edição
+async function carregarLocatariosELivros() {
+    try {
+        // Pega locatários
+        const resLocatarios = await api.get('/renter');
+        const selectLocatario = document.getElementById('nomeLocatario');
+        selectLocatario.innerHTML = '<option value="">Selecione um locatário</option>';
+        resLocatarios.data.forEach(l => {
+            const option = document.createElement('option');
+            option.value = l.id;
+            option.textContent = l.name;
+            selectLocatario.appendChild(option);
+        });
+
+        // Pega livros
+        const resLivros = await api.get('/book');
+        const selectLivro = document.getElementById('livro');
+        selectLivro.innerHTML = '<option value="">Selecione um livro</option>';
         resLivros.data.forEach(l => {
             const option = document.createElement('option');
             option.value = l.id;
@@ -327,9 +361,10 @@ async function carregarLocatariosELivrosEdicao() {
         });
 
     } catch (error) {
-        console.error('Erro ao carregar locatários ou livros para edição:', error.response?.data || error.message);
+        console.error('Erro ao carregar locatários ou livros:', error.response?.data || error.message);
     }
 }
+
 
 // Função chamada ao clicar em "Atualizar" no modal de edição
 function abrirModalConfirmarEditar() {
@@ -441,4 +476,86 @@ function carregarAluguel(page = 1) {
     });
 
     criarBotoesPaginacao(aluguelFiltradas.length, page);
+}
+
+
+const inputPesquisa = document.getElementById('pesquisa');
+
+inputPesquisa.addEventListener('input', () => {
+    carregarLocatarios(1); // pesquisa integrada à paginação
+});
+
+
+
+const containerMenu = document.querySelector('.containerMenu');
+const containerOptions = document.querySelector('.containerOptions');
+
+function ajustarMenuAltura() {
+    const alturaMenu = containerOptions.offsetHeight;
+    containerMenu.style.height = alturaMenu * 0.07 + 'px'; // exemplo, 7% da altura
+}
+
+window.addEventListener('resize', ajustarMenuAltura);
+ajustarMenuAltura();
+
+const hamburger = document.getElementById('hamburger');
+const telaUsuario = document.querySelector('.TelaLocal');
+
+hamburger.addEventListener('click', () => {
+    containerOptions.classList.toggle('ativo');
+    telaUsuario.classList.toggle('menu-ativo');
+    hamburger.classList.toggle('active');
+});
+
+const btnFechar = document.querySelector('.btn-fechar-menu');
+const menu = document.querySelector('.containerOptions');
+const tela = document.querySelector('.TelaLocal');
+
+btnFechar.addEventListener('click', () => {
+    menu.classList.remove('ativo');
+    tela.classList.remove('menu-ativo');
+});
+
+
+function transformarSelect(selectId) {
+    const select = document.getElementById(selectId);
+
+    // Remove qualquer custom-select existente
+    const wrapperExistente = select.parentNode.querySelector(".custom-select");
+    if (wrapperExistente) {
+        wrapperExistente.remove();
+    }
+
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("custom-select");
+
+    const selected = document.createElement("div");
+    selected.classList.add("selected");
+    selected.textContent = select.options[select.selectedIndex].textContent;
+
+    const optionsList = document.createElement("ul");
+    optionsList.classList.add("options");
+
+    Array.from(select.options).forEach((opt, index) => {
+        const li = document.createElement("li");
+        li.textContent = opt.textContent;
+
+        li.addEventListener("click", () => {
+            select.selectedIndex = index;
+            selected.textContent = opt.textContent;
+            optionsList.classList.remove("show");
+        });
+
+        optionsList.appendChild(li);
+    });
+
+    selected.addEventListener("click", () => {
+        optionsList.classList.toggle("show");
+    });
+
+    wrapper.appendChild(selected);
+    wrapper.appendChild(optionsList);
+
+    select.style.display = "none";
+    select.parentNode.insertBefore(wrapper, select);
 }
