@@ -110,6 +110,64 @@ function salvarAluguel() {
     localStorage.setItem('aluguel', JSON.stringify(aluguel));
 }
 
+function carregarAluguel(page = 1) {
+    tbody.innerHTML = '';
+
+    const termo = document.getElementById('pesquisa').value.toLowerCase();
+
+    const aluguelFiltrados = arrayAluguel.filter(aluguel => {
+        return (
+            aluguel.id.toString().toLowerCase().includes(termo) ||
+            aluguel.renter?.name.toLowerCase().includes(termo) ||
+            aluguel.book?.name.toLowerCase().includes(termo) ||
+            aluguel.deadLine.toLowerCase().includes(termo) ||
+            aluguel.rentDate.toLowerCase().includes(termo) ||
+            (aluguel.devolutionDate || '').toLowerCase().includes(termo) ||
+            aluguel.status.toLowerCase().includes(termo)
+        );
+    });
+
+    const isMobile = window.innerWidth <= 768;
+    let aluguelParaMostrar;
+
+    if (isMobile) {
+        // Mobile: mostra todos os itens, sem paginação
+        aluguelParaMostrar = aluguelFiltrados;
+        document.getElementById("pagination").style.display = "none";
+    } else {
+        // Desktop: aplica paginação
+        const start = (page - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+        aluguelParaMostrar = aluguelFiltrados.slice(start, end);
+        document.getElementById("pagination").style.display = "block";
+    }
+
+    aluguelParaMostrar.forEach(aluguel => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${aluguel.id}</td>
+            <td>${aluguel.renter?.name}</td>
+            <td>${aluguel.book?.name}</td>
+            <td>${aluguel.deadLine}</td>
+            <td>${aluguel.rentDate}</td>
+            <td>${aluguel.devolutionDate || '-'}</td>
+            <td>${statusPT[aluguel.status] || aluguel.status}</td>
+            <td>
+                <img src="/tudo/icons/gostar.png" class="icone-recebido" alt="Recebido">
+                <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" alt="Editar">
+            </td>
+        `;
+        tbody.appendChild(tr);
+
+        tr.querySelector('.icone-recebido').addEventListener('click', () => registrarRecebimento(aluguel));
+        tr.querySelector('.icone-editar').addEventListener('click', () => preparaAluguel(aluguel));
+    });
+
+    if (!isMobile) {
+        criarBotoesPaginacao(aluguelFiltrados.length, page);
+    }
+}
+
 
 
 function criarBotoesPaginacao(totalItems, paginaAtual) {
@@ -328,11 +386,16 @@ async function carregarLocatariosELivrosEdicao() {
             option.textContent = l.name;
             selectLivro.appendChild(option);
         });
-        
+
+        // aplica transformação
+        transformarSelect("editarLocatario");
+        transformarSelect("editarLivro");
+
     } catch (error) {
         console.error('Erro ao carregar locatários ou livros (edição):', error.response?.data || error.message);
     }
 }
+
 
 
 // Carrega locatários e livros no modal de edição
@@ -360,10 +423,15 @@ async function carregarLocatariosELivros() {
             selectLivro.appendChild(option);
         });
 
+        // aplica transformação
+        transformarSelect("nomeLocatario");
+        transformarSelect("livro");
+
     } catch (error) {
         console.error('Erro ao carregar locatários ou livros:', error.response?.data || error.message);
     }
 }
+
 
 
 // Função chamada ao clicar em "Atualizar" no modal de edição
@@ -428,55 +496,6 @@ async function registrarRecebimento(aluguel) {
     }
 }
 
-// Alterar os ícones da tabela para usar as funções corretas
-function carregarAluguel(page = 1) {
-    tbody.innerHTML = '';
-
-    const campoPesquisa = document.getElementById('pesquisa');
-    const termo = campoPesquisa.value.toLowerCase();
-
-    const aluguelFiltradas = arrayAluguel.filter(aluguel => {
-        return (
-            aluguel.id.toString().toLowerCase().includes(termo) ||
-            aluguel.renter?.name.toLowerCase().includes(termo) ||
-            aluguel.book?.name.toLowerCase().includes(termo) ||
-            aluguel.deadLine.toLowerCase().includes(termo) ||
-            aluguel.rentDate.toLowerCase().includes(termo) ||
-            aluguel.devolutionDate.toLowerCase().includes(termo) ||
-            aluguel.status.toLowerCase().includes(termo)    
-        );
-    });
-
-    let start = (page - 1) * rowsPerPage;
-    let end = start + rowsPerPage;
-    let paginatedItems = aluguelFiltradas.slice(start, end);
-
-    paginatedItems.forEach((aluguel, index) => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>${aluguel.id}</td>
-            <td>${aluguel.renter?.name}</td>
-            <td>${aluguel.book?.name}</td>
-            <td>${aluguel.deadLine}</td>
-            <td>${aluguel.rentDate}</td>
-            <td>${aluguel.devolutionDate}</td>
-            <td>${statusPT[aluguel.status.charAt(0).toUpperCase() + aluguel.status.slice(1)] || aluguel.status}</td>
-
-
-            
-            <td>
-                <img src="/tudo/icons/gostar.png" class="icone-recebido" alt="Recebido">
-                <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" alt="Editar">
-            </td>
-        `;
-        tbody.appendChild(tr);
-
-        tr.querySelector('.icone-recebido').addEventListener('click', () => registrarRecebimento(aluguel));
-        tr.querySelector('.icone-editar').addEventListener('click', () => preparaAluguel(aluguel));
-    });
-
-    criarBotoesPaginacao(aluguelFiltradas.length, page);
-}
 
 
 const inputPesquisa = document.getElementById('pesquisa');
@@ -516,46 +535,50 @@ btnFechar.addEventListener('click', () => {
     tela.classList.remove('menu-ativo');
 });
 
+function transformarSelect(id) {
+    const select = document.getElementById(id);
+    if (!select) return;
 
-function transformarSelect(selectId) {
-    const select = document.getElementById(selectId);
+    // evita duplicar se já foi transformado
+    if (select.parentElement.classList.contains("custom-select")) return;
 
-    // Remove qualquer custom-select existente
-    const wrapperExistente = select.parentNode.querySelector(".custom-select");
-    if (wrapperExistente) {
-        wrapperExistente.remove();
-    }
-
+    // cria container
     const wrapper = document.createElement("div");
-    wrapper.classList.add("custom-select");
-
-    const selected = document.createElement("div");
-    selected.classList.add("selected");
-    selected.textContent = select.options[select.selectedIndex].textContent;
-
-    const optionsList = document.createElement("ul");
-    optionsList.classList.add("options");
-
-    Array.from(select.options).forEach((opt, index) => {
-        const li = document.createElement("li");
-        li.textContent = opt.textContent;
-
-        li.addEventListener("click", () => {
-            select.selectedIndex = index;
-            selected.textContent = opt.textContent;
-            optionsList.classList.remove("show");
-        });
-
-        optionsList.appendChild(li);
-    });
-
-    selected.addEventListener("click", () => {
-        optionsList.classList.toggle("show");
-    });
-
-    wrapper.appendChild(selected);
-    wrapper.appendChild(optionsList);
-
-    select.style.display = "none";
+    wrapper.className = "custom-select";
     select.parentNode.insertBefore(wrapper, select);
+    wrapper.appendChild(select);
+
+    // cria a div visível
+    const selected = document.createElement("div");
+    selected.className = "select-selected";
+    selected.textContent = select.options[select.selectedIndex]?.textContent || "Selecione...";
+    wrapper.appendChild(selected);
+
+    // cria lista de opções
+    const optionsDiv = document.createElement("div");
+    optionsDiv.className = "select-items";
+    for (let i = 0; i < select.options.length; i++) {
+        const option = select.options[i];
+        const item = document.createElement("div");
+        item.textContent = option.textContent;
+        item.addEventListener("click", () => {
+            select.selectedIndex = i;
+            selected.textContent = option.textContent;
+            optionsDiv.style.display = "none";
+        });
+        optionsDiv.appendChild(item);
+    }
+    wrapper.appendChild(optionsDiv);
+
+    // abre/fecha
+    selected.addEventListener("click", () => {
+        optionsDiv.style.display = optionsDiv.style.display === "block" ? "none" : "block";
+    });
+
+    // fecha se clicar fora
+    document.addEventListener("click", e => {
+        if (!wrapper.contains(e.target)) {
+            optionsDiv.style.display = "none";
+        }
+    });
 }

@@ -297,15 +297,16 @@ a{
     cursor: pointer;
 }
 #btnLogout{
-    width: 30%;
-    height: 15%;
-    margin-top: 2%;
-    border-radius: 0.5rem;
-    padding-left: 2%;
-    font-size: 3vh;
-    background-color:  rgba(10, 101, 104, 1);
-    color: white;
+    width: 40%;
+    height: 20%;
+    padding-left: 5%;
+    padding-right: 5%;
+    font-size: 5vh;
+    border: none;
+    border-radius: 8px;
     cursor: pointer;
+    background-color: #004a4d;
+    color: white;
 }
 .btn-salvar, .btn-cancelar-delet, .btn-cancelar-edit, .btn-deletar {
     width: 100%;
@@ -538,48 +539,7 @@ td:last-child img {
 }
 
 
-.custom-select {
-  position: relative;
-  width: 100%;
-  
-}
 
-.custom-select .selected {
-  background: #ffffff;
-  color: #000000;
-  padding: 8px 12px;
-  border-radius: 1vh;
-  cursor: pointer;
-  margin-bottom: 5%;
-}
-
-.custom-select .options {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  max-height: 20vh;   
-  overflow-y: auto;   
-  background: white; 
-  border-radius: 6px;
-  margin-top: 4px;
-  display: none;
-  z-index: 1100;
-}
-
-.custom-select .options.show {
-  display: block;
-}
-
-.custom-select .options li {
-  padding: 6px 10px;
-  cursor: pointer;
-}
-
-.custom-select .options li:hover {
-  background: #004a4d;
-  color: #fff;
-}
 
 #modal-editar {
     
@@ -740,6 +700,20 @@ td:last-child img {
         font-size: 4vh;
         padding: 2vw;
     }
+    #btnLogout{
+        width: 100%;
+        height: 100%;
+        padding-left: 5%;
+        padding-right: 5%;
+        padding-bottom: 2%;
+        padding-top: 2%;
+        font-size: 5vh;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        background-color: #004a4d;
+        color: white;
+    }
 
     .textCadastrar {
         font-size: 6vw;
@@ -756,6 +730,22 @@ td:last-child img {
         margin-left: 20%;
         padding: 6px 8px;
         width: 100%;
+        
+    }
+
+    #nomeLocatario option{
+        margin-right: 20%;
+        margin-left: 20%;
+        padding: 6px 8px;
+        width: 100%;
+        background-color: brown;
+    }
+
+    #livro option{
+        margin-right: 20%;
+        margin-left: 20%;
+        padding: 6px 8px;
+        width: 100%;
         background-color: brown;
     }
 
@@ -767,7 +757,7 @@ td:last-child img {
     }
 
     .textModal1, .textModal2 {
-        font-size: 2vh;
+        font-size: 1.8vh;
     }
     .textModal1-2{
         font-size: 1.8vh;

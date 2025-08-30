@@ -1,0 +1,49 @@
+.dashboard-grid {
+  display: flex;
+  
+   
+}
+
+.card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  width: 50%;
+  height: 50%;     
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card canvas {
+  width: 50% !important;   /* largura do gráfico = 40% */
+  height: 50% !important;  /* altura do gráfico = 40% */
+  max-width: 100%;
+  max-height: 100%;
+  
+}
+
+#tabelaLocatarios {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+#tabelaLocatarios th, #tabelaLocatarios td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+#tabelaLocatarios th {
+  background: #0a4d3c;
+  color: white;
+}
+
+.paginacao {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}

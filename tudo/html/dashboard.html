@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Locadora de Livros</title>
-    <link rel="stylesheet" href="/tudo/css/cssAll.css">
+    <link rel="stylesheet" href="/tudo/css/cssAll.css" />
+    <link rel="stylesheet" href="/tudo/css/dashboard.css">
     <link
       href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap"
       rel="stylesheet"
@@ -20,10 +21,13 @@
     <div class="TelaLocal">
       <div class="containerOptions">
         <div class="logoWDA">
-          <img src="/tudo/logo/Captura_de_Tela__3_-removebg-preview.png" alt=""><button class="btn-fechar-menu">✕</button>
+          <img
+            src="/tudo/logo/Captura_de_Tela__3_-removebg-preview.png"
+            alt=""
+          /><button class="btn-fechar-menu">✕</button>
         </div>
         <div class="localOption">Dashboard</div>
-        
+
         <div id="options-heigh" class="Option">
           <a href="/tudo/html/locatario.html">Locatários</a>
         </div>
@@ -52,13 +56,55 @@
           </div>
           <div class="Name">Locadora de Livros</div>
         </div>
-        
-        
+        <div class="dashboard">
+          <h2>Resumo da Locadora - Último Mês</h2>
+
+          <!-- Estatísticas -->
+          <div class="stats">
+            <div class="stat">
+              <p>Total de Aluguéis</p>
+              <span id="totalAlugueis">0</span>
+            </div>
+            <div class="dashboard-grid">
+            <!-- Gráfico de Pizza -->
+            <div class="card">
+              <canvas id="graficoDistribuicaoAlugueis"></canvas>
+            </div>
+
+            <!-- Gráfico de Livros Mais Alugados -->
+            <div class="card">
+              <canvas id="graficoLivrosMaisAlugados"></canvas>
+            </div>
+          </div>
+
+        </div>
       </div>
+      <div class="dashboard-extra">
+        <h3>Relação de locatários e empréstimos</h3>
+        <table id="tabelaLocatarios">
+          <thead>
+            <tr>
+              <th>Locatário</th>
+              <th>Total de empréstimos</th>
+              <th>Aluguéis ativos</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- preenchido via JS -->
+          </tbody>
+        </table>
+
+        <!-- Paginação -->
+        <div class="paginacao">
+          <button id="prevPage">◀</button>
+          <span id="paginaInfo"></span>
+          <button id="nextPage">▶</button>
+        </div>
+      </div>
+
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="/tudo/js/menu.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/tudo/js/dashBoard.js"></script>
   </body>
