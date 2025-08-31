@@ -57,30 +57,35 @@
           <div class="Name">Locadora de Livros</div>
         </div>
         <div class="dashboard">
-          <h2>Resumo da Locadora - Último Mês</h2>
 
           <!-- Estatísticas -->
           <div class="stats">
-            <div class="stat">
-              <p>Total de Aluguéis</p>
-              <span id="totalAlugueis">0</span>
-            </div>
+            
             <div class="dashboard-grid">
-            <!-- Gráfico de Pizza -->
-            <div class="card">
-              <canvas id="graficoDistribuicaoAlugueis"></canvas>
-            </div>
+              
+              <!-- Gráfico de Pizza -->
+              <div class="card">
+                <canvas id="graficoDistribuicaoAlugueis"></canvas>
+              </div>
 
-            <!-- Gráfico de Livros Mais Alugados -->
-            <div class="card">
-              <canvas id="graficoLivrosMaisAlugados"></canvas>
-            </div>
+              <!-- Gráfico de Livros Mais Alugados -->
+              <div class="card">
+                <canvas id="graficoLivrosMaisAlugados"></canvas>
+              </div>
+
+              <div class="cards-coluna">
+                
+
+                <div class="card total">
+                  <h3>Total de Aluguéis:</h3>
+                  <span id="totalAlugueis">X</span>
+                </div>
+              </div>
           </div>
 
         </div>
       </div>
       <div class="dashboard-extra">
-        <h3>Relação de locatários e empréstimos</h3>
         <table id="tabelaLocatarios">
           <thead>
             <tr>

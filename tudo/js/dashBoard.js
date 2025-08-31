@@ -61,6 +61,9 @@ async function carregarDashboard() {
             api.get('/dashboard/rentsQuantity', { params })
         ]);
 
+        // --- Totais (Aluguéis) ---
+        document.getElementById("totalAlugueis").textContent = quantidadeAlugueisRes.data ?? 0;
+    
         const livrosLabels = livrosMaisAlugadosRes.data.map(item => item.name);
         const livrosData = livrosMaisAlugadosRes.data.map(item => item.totalRents);
 
@@ -120,7 +123,7 @@ async function carregarDashboard() {
         const content = alugueisPorLocatarioRes.data.content ?? [];
 
         let currentPage = 1;
-        const rowsPerPage = 5;
+        const rowsPerPage = 3;
 
         function renderTablePage(page) {
             const tbody = document.querySelector("#tabelaLocatarios tbody");
@@ -132,12 +135,12 @@ async function carregarDashboard() {
 
             paginatedItems.forEach(item => {
                 const row = `
-      <tr>
-        <td>${item.name}</td>
-        <td>${item.rentsQuantity}</td>
-        <td>${item.activeRents ?? 0}</td>
-      </tr>
-    `;
+                <tr>
+                    <td>${item.name}</td>
+                    <td>${item.rentsQuantity}</td>
+                    <td>${item.activeRents ?? 0}</td>
+                </tr>
+                `;
                 tbody.insertAdjacentHTML("beforeend", row);
             });
 

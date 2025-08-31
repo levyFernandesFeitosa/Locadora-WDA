@@ -596,7 +596,7 @@ td:last-child img {
 
 }
 @media screen and (max-width: 768px) {
-    .TelaUsuario {
+    .TelaLocal {
         flex-direction: column;
         height: auto;          
         overflow-y: auto;      
