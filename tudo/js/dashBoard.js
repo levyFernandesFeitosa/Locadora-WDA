@@ -51,18 +51,24 @@ async function carregarDashboard() {
             entreguesAtrasoRes,
             alugueisAtrasadosRes,
             alugueisPorLocatarioRes,
-            quantidadeAlugueisRes
+            quantidadeAlugueisRes,
+            locatariosRes // 👈 aqui
         ] = await Promise.all([
             api.get('/dashboard/bookMoreRented', { params }),
             api.get('/dashboard/deliveredInTimeQuantity', { params }),
             api.get('/dashboard/deliveredWithDelayQuantity', { params }),
             api.get('/dashboard/rentsLateQuantity', { params }),
             api.get('/dashboard/rentsPerRenter', { params }),
-            api.get('/dashboard/rentsQuantity', { params })
+            api.get('/dashboard/rentsQuantity', { params }),
+            api.get('/renter') // 👈 pega todos os locatários
         ]);
 
-        // --- Totais (Aluguéis) ---
-        document.getElementById("totalAlugueis").textContent = quantidadeAlugueisRes.data ?? 0;
+        // --- Totais (Locatários) ---
+        const totalLocatarios = Array.isArray(locatariosRes.data) ? locatariosRes.data.length : 0;
+        document.getElementById("totalLocatarios").textContent = totalLocatarios;
+
+        const totalAlugueis = Array.isArray(quantidadeAlugueisRes.data) ? quantidadeAlugueisRes.data.length : 0;
+        document.getElementById("totalAlugueis").textContent = totalAlugueis;
     
         const livrosLabels = livrosMaisAlugadosRes.data.map(item => item.name);
         const livrosData = livrosMaisAlugadosRes.data.map(item => item.totalRents);

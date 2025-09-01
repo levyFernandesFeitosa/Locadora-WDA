@@ -30,7 +30,7 @@
 /* === COLUNA DE CARDS (locatários + aluguéis) === */
 .cards-coluna {
   display: flex;
-  flex-direction: column;
+  
   gap: 20px;
 }
 
@@ -39,10 +39,15 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 18px;
+  flex-direction: column;
+  font-size: 3vh;
   font-weight: bold;
   text-align: center;
+  background-color:#0a4d3c;
+  color: white;
+  border-radius: 1vh;
 }
+
 
 /* === RESPONSIVIDADE === */
 @media (max-width: 1024px) {
