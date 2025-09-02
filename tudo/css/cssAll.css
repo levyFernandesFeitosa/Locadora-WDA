@@ -575,8 +575,30 @@ td:last-child img {
     background-color:rgba(159, 252, 255, 1);
 }
 
+.mensagem {
+  position: fixed;
+  top: 20px;          /* distância do topo */
+  right: 20px;        /* distância da direita */
+  background-color: #333; /* cor de fundo */
+  color: #fff;        /* texto branco */
+  padding: 15px 25px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  z-index: 1000;
+}
 
-@media (max-width: 768px) {
+.mensagem.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+
+
+@media (max-width: 480px) {
   .TelaLogout {
     display: flex;
     flex-direction: column;
@@ -595,7 +617,7 @@ td:last-child img {
   }
 
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 480px) {
     .TelaLocal {
         flex-direction: column;
         height: auto;          
@@ -672,7 +694,7 @@ td:last-child img {
 
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 480px) {
     .modal {
         width: 90%; /* ocupa quase toda a tela */
         padding: 4vw;
@@ -752,7 +774,7 @@ td:last-child img {
 
     .modal-Edit,
     .modal-delet {
-        width: 80%;
+        width: 90%;
         padding: 4%;
     }
 

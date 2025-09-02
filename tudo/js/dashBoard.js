@@ -51,25 +51,27 @@ async function carregarDashboard() {
             entreguesAtrasoRes,
             alugueisAtrasadosRes,
             alugueisPorLocatarioRes,
-            quantidadeAlugueisRes,
-            locatariosRes // 👈 aqui
+            alugueisRes,
+            locatariosRes
         ] = await Promise.all([
             api.get('/dashboard/bookMoreRented', { params }),
             api.get('/dashboard/deliveredInTimeQuantity', { params }),
             api.get('/dashboard/deliveredWithDelayQuantity', { params }),
             api.get('/dashboard/rentsLateQuantity', { params }),
             api.get('/dashboard/rentsPerRenter', { params }),
-            api.get('/dashboard/rentsQuantity', { params }),
-            api.get('/renter') // 👈 pega todos os locatários
+            api.get('/rent'),
+            api.get('/renter')
         ]);
+
+        const totalAlugueis = Array.isArray(alugueisRes.data) ? alugueisRes.data.length : 0;
+        document.getElementById("totalAlugueis").textContent = totalAlugueis;
 
         // --- Totais (Locatários) ---
         const totalLocatarios = Array.isArray(locatariosRes.data) ? locatariosRes.data.length : 0;
         document.getElementById("totalLocatarios").textContent = totalLocatarios;
 
-        const totalAlugueis = Array.isArray(quantidadeAlugueisRes.data) ? quantidadeAlugueisRes.data.length : 0;
-        document.getElementById("totalAlugueis").textContent = totalAlugueis;
-    
+
+
         const livrosLabels = livrosMaisAlugadosRes.data.map(item => item.name);
         const livrosData = livrosMaisAlugadosRes.data.map(item => item.totalRents);
 
@@ -81,7 +83,7 @@ async function carregarDashboard() {
                 datasets: [{
                     label: 'Livros Mais Alugados',
                     data: livrosData,
-                    backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                    backgroundColor: 'rgba(75, 192, 192, 1)',
                     borderColor: 'rgba(75, 192, 192, 1)',
                     borderWidth: 1
                 }]
@@ -103,9 +105,9 @@ async function carregarDashboard() {
                         alugueisAtrasadosRes.data
                     ],
                     backgroundColor: [
-                        'rgba(75, 192, 192, 0.6)',   // Verde-água
-                        'rgba(255, 206, 86, 0.6)',   // Amarelo
-                        'rgba(255, 99, 132, 0.6)'    // Vermelho
+                        'rgba(75, 192, 192, 1)',   // Verde-água
+                        'rgba(255, 183, 0, 0.6)',   // Amarelo
+                        'rgba(255, 0, 55, 0.6)'    // Vermelho
                     ],
                     borderColor: [
                         'rgba(75, 192, 192, 1)',
@@ -119,15 +121,34 @@ async function carregarDashboard() {
                 responsive: true,
                 plugins: {
                     legend: {
-                        position: 'left'
+                        position: window.innerWidth <= 768 ? 'bottom' : 'left'
                     }
                 }
             }
         });
 
-        // --- Tabela de Aluguéis por Locatário ---
-        const content = alugueisPorLocatarioRes.data.content ?? [];
+        // --- Monta tabela de locatários com todos os dados ---
+        const locatarios = Array.isArray(locatariosRes.data) ? locatariosRes.data : [];
+        const alugueis = Array.isArray(alugueisRes.data) ? alugueisRes.data : [];
 
+        const tabelaLocatarios = locatarios.map(loc => {
+            const alugueisDoLoc = alugueis.filter(r => r.renter?.id === loc.id);
+
+            const totalAlugueis = alugueisDoLoc.length;
+            const alugueisAtivos = alugueisDoLoc.filter(r => r.status === "ATIVO").length;
+            const livrosDevolvidos = alugueisDoLoc.filter(r =>
+                r.status === "DELIVERED" || r.status === "DELIVERED_WITH_DELAY" || r.status === "IN_TIME"
+            ).length;
+
+            return {
+                nome: loc.name,
+                totalAlugueis,
+                alugueisAtivos,
+                livrosDevolvidos
+            };
+        });
+
+        // --- Paginação ---
         let currentPage = 1;
         const rowsPerPage = 3;
 
@@ -137,22 +158,24 @@ async function carregarDashboard() {
 
             const start = (page - 1) * rowsPerPage;
             const end = start + rowsPerPage;
-            const paginatedItems = content.slice(start, end);
+            const paginatedItems = tabelaLocatarios.slice(start, end);
 
             paginatedItems.forEach(item => {
                 const row = `
-                <tr>
-                    <td>${item.name}</td>
-                    <td>${item.rentsQuantity}</td>
-                    <td>${item.activeRents ?? 0}</td>
-                </tr>
-                `;
+        <tr>
+            <td>${item.nome}</td>
+            <td>${item.totalAlugueis}</td>
+            <td>${item.livrosDevolvidos}</td>
+        </tr>
+        `;
                 tbody.insertAdjacentHTML("beforeend", row);
             });
 
-            document.getElementById("paginaInfo").textContent = `${page} / ${Math.ceil(content.length / rowsPerPage)}`;
+            document.getElementById("paginaInfo").textContent =
+                `${page} / ${Math.ceil(tabelaLocatarios.length / rowsPerPage)}`;
         }
 
+        // --- Botões de paginação ---
         document.getElementById("prevPage").addEventListener("click", () => {
             if (currentPage > 1) {
                 currentPage--;
@@ -161,17 +184,58 @@ async function carregarDashboard() {
         });
 
         document.getElementById("nextPage").addEventListener("click", () => {
-            if (currentPage < Math.ceil(content.length / rowsPerPage)) {
+            if (currentPage < Math.ceil(tabelaLocatarios.length / rowsPerPage)) {
                 currentPage++;
                 renderTablePage(currentPage);
             }
         });
 
-        // Renderiza primeira página
+        // --- Primeira renderização ---
         renderTablePage(currentPage);
 
+        function renderTablePage(page = 1) {
+            const tbody = document.querySelector("#tabelaLocatarios tbody");
+            tbody.innerHTML = "";
 
-        
+            const isMobile = window.innerWidth <= 768; // Ajuste conforme necessário
+            let paginatedItems;
+
+            if (isMobile) {
+                // Se for celular, mostra todos os itens
+                paginatedItems = tabelaLocatarios;
+                document.getElementById("prevPage").style.display = "none";
+                document.getElementById("nextPage").style.display = "none";
+                document.getElementById("paginaInfo").style.display = "none";
+            } else {
+                // Desktop: aplica paginação
+                const start = (page - 1) * rowsPerPage;
+                const end = start + rowsPerPage;
+                paginatedItems = tabelaLocatarios.slice(start, end);
+
+                document.getElementById("prevPage").style.display = "inline-block";
+                document.getElementById("nextPage").style.display = "inline-block";
+                document.getElementById("paginaInfo").style.display = "inline-block";
+                document.getElementById("paginaInfo").textContent =
+                    `${page} / ${Math.ceil(tabelaLocatarios.length / rowsPerPage)}`;
+            }
+
+            paginatedItems.forEach(item => {
+                const row = `
+        <tr>
+            <td>${item.nome}</td>
+            <td>${item.totalAlugueis}</td>
+            <td>${item.livrosDevolvidos}</td>
+        </tr>
+        `;
+                tbody.insertAdjacentHTML("beforeend", row);
+            });
+        }
+
+        // Atualiza tabela ao redimensionar
+        window.addEventListener('resize', () => renderTablePage(currentPage));
+
+
+
     } catch (error) {
         console.error('Erro ao carregar dashboard:', error);
         if (error.response) {
@@ -186,3 +250,17 @@ async function carregarDashboard() {
 }
 
 document.addEventListener('DOMContentLoaded', carregarDashboard);
+function mostrarMensagem(texto, duracao = 3000) {
+  const mensagem = document.getElementById('mensagem');
+  mensagem.textContent = texto;
+  mensagem.classList.add('show');
+
+  // Esconde depois de 'duracao' ms
+  setTimeout(() => {
+    mensagem.classList.remove('show');
+  }, duracao);
+}
+// Sobrescreve o alert padrão
+window.alert = function(msg) {
+    mostrarMensagem(msg, 3000); // 3000ms = 3 segundos de duração
+};

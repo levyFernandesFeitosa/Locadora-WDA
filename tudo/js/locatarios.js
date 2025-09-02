@@ -11,9 +11,8 @@ if (token) {
     console.log('Token encontrado:', token);
     api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 } else {
-    alert("Token não encontrado. Por favor, faça login.");
-    // Aqui você pode redirecionar para a página de login se quiser:
-    // window.location.href = '/login.html';
+    mostrarMensagem("Token não encontrado. Por favor, faça login.");
+    window.location.href = '/login.html';
 }
 
 window.onload = function(){
@@ -214,7 +213,7 @@ btnCadastrar.addEventListener('click', () => {
     // const numeroDaCasa = document.getElementById('inputNumero').value.trim();
 
     if (!nome || !email || !telefone || !cpf || !endereco ) {
-        alert("Preencha todos os campos obrigatórios.");
+        mostrarMensagem("Preencha todos os campos obrigatórios.");
         return;
     }
     api.post('/renter', {
@@ -230,7 +229,7 @@ btnCadastrar.addEventListener('click', () => {
     })
     .catch(err => {
         console.error(err.response?.data || err.message);
-        alert("Erro ao cadastrar editora.");
+        mostrarMensagem("Erro ao cadastrar editora.");
     });
 
 });
@@ -357,7 +356,7 @@ function editarLocatario(linha) {
         })
         .catch(err => {
             console.error('Erro ao atualizar locatário:', err.response?.data || err.message);
-            alert('Não foi possível atualizar o locatário.');
+            mostrarMensagem('Não foi possível atualizar o locatário.');
         });
     };
 }
@@ -451,5 +450,22 @@ btnFechar.addEventListener('click', () => {
     menu.classList.remove('ativo');
     tela.classList.remove('menu-ativo');
 });
+
+function mostrarMensagem(texto, duracao = 3000) {
+  const mensagem = document.getElementById('mensagem');
+  mensagem.textContent = texto;
+  mensagem.classList.add('show');
+
+  // Esconde depois de 'duracao' ms
+  setTimeout(() => {
+    mensagem.classList.remove('show');
+  }, duracao);
+}
+// Sobrescreve o alert padrão
+window.alert = function(msg) {
+    mostrarMensagem(msg, 3000); // 3000ms = 3 segundos de duração
+};
+
+
 
 

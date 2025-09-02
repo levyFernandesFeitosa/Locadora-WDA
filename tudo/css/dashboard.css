@@ -1,22 +1,25 @@
 /* === DASHBOARD GRID === */
 .dashboard-grid {
   display: grid;
-  grid-template-columns: 2fr 2fr 1fr; /* 2 gráficos + 1 coluna de totais */
+  grid-template-columns: 2fr 2fr 1fr;
+  /* 2 gráficos + 1 coluna de totais */
   gap: 2vh;
   margin: 20px;
-  align-items: stretch; /* força todos os cards ficarem com mesma altura */
+  align-items: stretch;
+  /* força todos os cards ficarem com mesma altura */
 }
 
 /* === CARDS GENÉRICOS === */
 .dashboard-grid .card {
   background: #fff;
   border-radius: 2vh;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 300px;      /* 🔹 altura fixa para todos ficarem iguais */
+  height: 300px;
+  /* 🔹 altura fixa para todos ficarem iguais */
   padding: 10px;
 }
 
@@ -24,18 +27,19 @@
 .dashboard-grid .card canvas {
   width: 100% !important;
   height: auto !important;
-  max-height: 240px;   /* 🔹 limita o gráfico */
+  max-height: 240px;
+  /* 🔹 limita o gráfico */
 }
 
 /* === COLUNA DE CARDS (locatários + aluguéis) === */
 .cards-coluna {
   display: flex;
-  
+  flex-direction: column;
   gap: 20px;
 }
 
 .cards-coluna .card-total {
-  flex: 1; 
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -43,7 +47,7 @@
   font-size: 3vh;
   font-weight: bold;
   text-align: center;
-  background-color:#0a4d3c;
+  background-color: #0a4d3c;
   color: white;
   border-radius: 1vh;
 }
@@ -52,7 +56,8 @@
 /* === RESPONSIVIDADE === */
 @media (max-width: 1024px) {
   .dashboard-grid {
-    grid-template-columns: 1fr 1fr; /* 2 colunas no tablet */
+    grid-template-columns: 1fr 1fr;
+    /* 2 colunas no tablet */
   }
 
   .cards-coluna {
@@ -62,13 +67,30 @@
   .cards-coluna .card-total {
     flex: none;
     width: 50%;
-    height: 150px; /* 🔹 mantém proporção no tablet */
+    height: 150px;
+    /* 🔹 mantém proporção no tablet */
+  }
+
+  .card-grafico-pizza {
+    flex-direction: column;
+    /* gráfico em cima, info embaixo */
+    align-items: flex-start;
+  }
+
+  .card-grafico-pizza .grafico-info {
+    margin-top: 10px;
+  }
+
+  /* Esconder paginação da tabela no celular */
+  .paginacao {
+    display: none;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 480px) {
   .dashboard-grid {
-    grid-template-columns: 1fr; /* 1 coluna no celular */
+    grid-template-columns: 1fr;
+    /* 1 coluna no celular */
   }
 
   .cards-coluna {
@@ -88,7 +110,7 @@
   margin: 20px 0;
 }
 
-#tabelaLocatarios th, 
+#tabelaLocatarios th,
 #tabelaLocatarios td {
   border: 1px solid #ddd;
   padding: 8px;
@@ -96,7 +118,7 @@
 }
 
 #tabelaLocatarios th {
-  background: #0a4d3c;
+  background: #404040;
   color: white;
 }
 
@@ -109,9 +131,10 @@
 }
 
 /* Já existe, mas vamos reforçar */
-@media (max-width: 768px) {
+@media (max-width: 480px) {
   .dashboard-grid {
-    grid-template-columns: 1fr !important; /* força 1 coluna */
+    grid-template-columns: 1fr !important;
+    /* força 1 coluna */
     gap: 1rem;
   }
 
