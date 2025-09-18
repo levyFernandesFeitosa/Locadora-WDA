@@ -15,58 +15,55 @@ if (token) {
     // window.location.href = '/login.html';
 }
 
-window.onload = function(){
+window.onload = function () {
     getAluguel()
 }
 
 function listaTabela() {
-  let tbody = document.getElementById('tbody-locatarios');
-  tbody.innerText = '';
-  for (let i = 0; i < arrayAluguel.length; i++) {
-    let tr = tbody.insertRow();
-    let td_id = tr.insertCell();
-    let td_locatario = tr.insertCell();
-    let td_livro = tr.insertCell();
-    let td_tempo = tr.insertCell();
-    let td_alugado = tr.insertCell();
-    let td_devolucao = tr.insertCell();
-    let td_status = tr.insertCell();
-    let td_acoes = tr.insertCell();
+    let tbody = document.getElementById('tbody-locatarios');
+    tbody.innerText = '';
+    for (let i = 0; i < arrayAluguel.length; i++) {
+        let tr = tbody.insertRow();
+        let td_id = tr.insertCell();
+        let td_locatario = tr.insertCell();
+        let td_livro = tr.insertCell();
+        let td_tempo = tr.insertCell();
+        let td_alugado = tr.insertCell();
+        let td_devolucao = tr.insertCell();
+        let td_status = tr.insertCell();
+        let td_acoes = tr.insertCell();
 
-    td_id.innerText = arrayAluguel[i].id;
-    td_locatario.innerText = arrayAluguel[i].renter?.name;
-    td_livro.innerText = arrayAluguel[i].book?.name;
-    td_tempo.innerText = arrayAluguel[i].deadLine;
-    td_alugado.innerText = arrayAluguel[i].rentDate;
-    td_devolucao.innerText = arrayAluguel[i].devolutionDate;
-    td_status.innerText = statusPT[arrayAluguel[i].status] || arrayAluguel[i].status;
+        td_id.innerText = arrayAluguel[i].id;
+        td_locatario.innerText = arrayAluguel[i].renter?.name;
+        td_livro.innerText = arrayAluguel[i].book?.name;
+        td_tempo.innerText = arrayAluguel[i].deadLine;
+        td_alugado.innerText = arrayAluguel[i].rentDate;
+        td_devolucao.innerText = arrayAluguel[i].devolutionDate;
+        td_status.innerText = statusPT[arrayAluguel[i].status] || arrayAluguel[i].status;
 
 
-    td_id.setAttribute('data-label', 'Id:');
-    td_locatario.setAttribute('data-label', 'Locatário:');
-    td_livro.setAttribute('data-label', 'Livro:');
-    td_alugado.setAttribute('data-label', 'Alugado:');
-    td_devolucao.setAttribute('data-label', 'Devolução:');
-    td_status.setAttribute('data-label', 'Status:');
-    td_acoes.setAttribute('data-label', 'Ações:');
+        td_id.setAttribute('data-label', 'Id:');
+        td_locatario.setAttribute('data-label', 'Locatário:');
+        td_livro.setAttribute('data-label', 'Livro:');
+        td_alugado.setAttribute('data-label', 'Alugado:');
+        td_devolucao.setAttribute('data-label', 'Devolução:');
+        td_status.setAttribute('data-label', 'Status:');
+        td_acoes.setAttribute('data-label', 'Ações:');
 
-    let imgConfirm = document.createElement('img');
-    imgConfirm.src = "/tudo/icons/gostar.png";
-    imgConfirm.className = 'icone-recebido';
-    imgConfirm.setAttribute("onclick", "preparaAluguel(" + JSON.stringify(arrayAluguel[i]) + ")");
-    td_acoes.appendChild(imgConfirm);
+        let imgConfirm = document.createElement('img');
+        imgConfirm.src = "/tudo/icons/gostar.png";
+        imgConfirm.className = 'icone-recebido';
+        imgConfirm.setAttribute("onclick", "preparaAluguel(" + JSON.stringify(arrayAluguel[i]) + ")");
+        td_acoes.appendChild(imgConfirm);
 
-    let imgEdit = document.createElement('img');
-    imgEdit.src = "/tudo/icons/ferramenta-lapis.png";
-    imgEdit.className = 'icone-editar';
-    imgEdit.setAttribute("onclick", "preparaAluguel(" + JSON.stringify(arrayAluguel[i]) + ")");
-    td_acoes.appendChild(imgEdit);
-  }
-  atualizarPaginacao();
+        let imgEdit = document.createElement('img');
+        imgEdit.src = "/tudo/icons/ferramenta-lapis.png";
+        imgEdit.className = 'icone-editar';
+        imgEdit.setAttribute("onclick", "preparaAluguel(" + JSON.stringify(arrayAluguel[i]) + ")");
+        td_acoes.appendChild(imgEdit);
+    }
+    atualizarPaginacao();
 }
-
-const arrayAluguel = []
-
 const statusPT = {
     'IN_TIME': 'NO PRAZO',
     'DELIVERED_WITH_DELAY': "RECEBIDO COM ATRASO",
@@ -74,41 +71,125 @@ const statusPT = {
     // adicione outros status conforme necessário
 };
 
+let arrayAluguel = [];
+let arrayAluguelOriginal = [];
+let sortState = {}; // controla estado de cada coluna
+
 function getAluguel() {
-  if (!token) {
-    console.error("Não foi possível fazer a requisição: token ausente.");
-    return;
+    if (!token) {
+        console.error("Não foi possível fazer a requisição: token ausente.");
+        return;
+    }
+
+    api.get('/rent')
+        .then(response => {
+            console.log(response.data);
+            let dadosAluguel = response.data;
+
+            // Limpa o array antes de inserir os dados
+            arrayAluguel.length = 0;
+
+            if (Array.isArray(dadosAluguel)) {
+                arrayAluguel.push(...dadosAluguel);
+            } else {
+                arrayAluguel.push(dadosAluguel);
+            }
+
+            // salva a ordem original recebida da API
+            arrayAluguelOriginal = [...arrayAluguel];
+
+            carregarAluguel(currentPage);
+        })
+        .catch(e => {
+            console.error('Erro:', e.response?.data || e.message);
+            if (e.response && e.response.status === 403) {
+                alert('Acesso negado (403). Verifique suas credenciais ou permissões.');
+            }
+        });
+}
+
+function ordenarTabela(coluna) {
+    // limpa setas de todos os cabeçalhos
+    document.querySelectorAll("thead span").forEach(span => (span.textContent = ""));
+
+    if (!sortState[coluna] || sortState[coluna] === "original") {
+        // 1º clique → ASC
+        sortState[coluna] = "asc";
+        arrayAluguel.sort((a, b) => {
+            const valA = (a[coluna]?.name || a[coluna] || "").toString().toLowerCase();
+            const valB = (b[coluna]?.name || b[coluna] || "").toString().toLowerCase();
+            return valA.localeCompare(valB);
+        });
+        document.getElementById(`sort-${coluna}`).textContent = "↑";
+
+    } else if (sortState[coluna] === "asc") {
+        // 2º clique → DESC
+        sortState[coluna] = "desc";
+        arrayAluguel.sort((a, b) => {
+            const valA = (a[coluna]?.name || a[coluna] || "").toString().toLowerCase();
+            const valB = (b[coluna]?.name || b[coluna] || "").toString().toLowerCase();
+            return valB.localeCompare(valA);
+        });
+        document.getElementById(`sort-${coluna}`).textContent = "↓";
+
+    } else {
+        // 3º clique → volta ao ORIGINAL
+        sortState[coluna] = "original";
+        arrayAluguel = [...arrayAluguelOriginal];
+        document.getElementById(`sort-${coluna}`).textContent = "";
+    }
+
+    carregarAluguel(currentPage);
+}
+
+
+function ordenarTabela(coluna) {
+  // Limpa setas de todos
+  document.querySelectorAll("thead span").forEach(span => (span.textContent = ""));
+
+  if (!sortState[coluna] || sortState[coluna] === "original") {
+    // 1º clique → ASC
+    sortState[coluna] = "asc";
+    arrayAluguel.sort((a, b) => {
+      const valA = (a[coluna]?.name || a[coluna] || "").toString().toLowerCase();
+      const valB = (b[coluna]?.name || b[coluna] || "").toString().toLowerCase();
+      return valA.localeCompare(valB);
+    });
+    document.getElementById(`sort-${coluna}`).textContent = "↑";
+  } else if (sortState[coluna] === "asc") {
+    // 2º clique → DESC
+    sortState[coluna] = "desc";
+    arrayAluguel.sort((a, b) => {
+      const valA = (a[coluna]?.name || a[coluna] || "").toString().toLowerCase();
+      const valB = (b[coluna]?.name || b[coluna] || "").toString().toLowerCase();
+      return valB.localeCompare(valA);
+    });
+    document.getElementById(`sort-${coluna}`).textContent = "↓";
+  } else {
+    // 3º clique → volta pro ORIGINAL
+    sortState[coluna] = "original";
+    arrayAluguel = [...arrayAluguelOriginal];
+    document.getElementById(`sort-${coluna}`).textContent = "";
   }
 
-  api.get('/rent')
-    .then(response => {
-      console.log(response.data);
-      let dadosAluguel = response.data;
-      aluguel = response.data; // ou ajuste conforme o formato da API
-      // Limpar o array antes de inserir os dados
-      arrayAluguel.length = 0;
-
-      if (Array.isArray(dadosAluguel)) {
-        arrayAluguel.push(...dadosAluguel);
-      } else {
-        arrayAluguel.push(dadosAluguel);
-      }
-
-      carregarAluguel(currentPage);
-    })
-    .catch(e => {
-      console.error('Erro:', e.response?.data || e.message);
-      if (e.response && e.response.status === 403) {
-        alert('Acesso negado (403). Verifique suas credenciais ou permissões.');
-      }
-    });
+  carregarAluguel(currentPage);
 }
+
 let currentPage = 1;
-const rowsPerPage = 6   ;
+const rowsPerPage = 6;
 
 function salvarAluguel() {
     localStorage.setItem('aluguel', JSON.stringify(aluguel));
 }
+
+// Função utilitária para formatar datas (YYYY-MM-DD ou ISO) em DD/MM/YYYY
+function formatarData(data) {
+    if (!data) return "-"; // se não houver data, retorna traço
+    const d = new Date(data);
+    if (isNaN(d)) return data; // se não for uma data válida, retorna como está
+    return d.toLocaleDateString("pt-BR", { timeZone: "UTC" });
+}
+
 
 function carregarAluguel(page = 1) {
     tbody.innerHTML = '';
@@ -142,26 +223,47 @@ function carregarAluguel(page = 1) {
         document.getElementById("pagination").style.display = "block";
     }
 
+    const headers = ['Id', 'Locatário', 'Livro', 'Prazo', 'Alugado', 'Devolução', 'Status', 'Ações'];
+
     aluguelParaMostrar.forEach(aluguel => {
         const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>${aluguel.id}</td>
-            <td>${aluguel.renter?.name}</td>
-            <td>${aluguel.book?.name}</td>
-            <td>${aluguel.deadLine}</td>
-            <td>${aluguel.rentDate}</td>
-            <td>${aluguel.devolutionDate || '-'}</td>
-            <td>${statusPT[aluguel.status] || aluguel.status}</td>
-            <td>
-                <img src="/tudo/icons/gostar.png" class="icone-recebido" alt="Recebido">
-                <img src="/tudo/icons/ferramenta-lapis.png" class="icone-editar" alt="Editar">
-            </td>
-        `;
-        tbody.appendChild(tr);
 
-        tr.querySelector('.icone-recebido').addEventListener('click', () => registrarRecebimento(aluguel));
-        tr.querySelector('.icone-editar').addEventListener('click', () => preparaAluguel(aluguel));
+        const valores = [
+            aluguel.id,
+            aluguel.renter?.name,
+            aluguel.book?.name,
+            aluguel.deadLine,
+            formatarData(aluguel.rentDate),
+            formatarData(aluguel.devolutionDate),
+            statusPT[aluguel.status] || aluguel.status,
+            '' // ações
+        ];
+
+        valores.forEach((valor, i) => {
+            const td = document.createElement('td');
+            td.innerText = valor;
+            td.setAttribute('data-label', headers[i]);
+            tr.appendChild(td);
+        });
+
+        // ícones de ações
+        const tdAcoes = tr.querySelectorAll('td')[7];
+        const imgConfirm = document.createElement('img');
+        imgConfirm.src = "/tudo/icons/gostar.png";
+        imgConfirm.className = 'icone-recebido';
+        imgConfirm.addEventListener('click', () => registrarRecebimento(aluguel));
+
+        const imgEdit = document.createElement('img');
+        imgEdit.src = "/tudo/icons/ferramenta-lapis.png";
+        imgEdit.className = 'icone-editar';
+        imgEdit.addEventListener('click', () => preparaAluguel(aluguel));
+
+        tdAcoes.append(imgConfirm, imgEdit);
+
+        tbody.appendChild(tr);
     });
+
+
 
     if (!isMobile) {
         criarBotoesPaginacao(aluguelFiltrados.length, page);
@@ -175,7 +277,28 @@ function criarBotoesPaginacao(totalItems, paginaAtual) {
     const pagination = document.getElementById('pagination');
     pagination.innerHTML = '';
 
-    for (let i = 1; i <= totalPages; i++) {
+    const maxButtons = 3; // quantidade de bloquinhos
+    let startPage = Math.floor((paginaAtual - 1) / maxButtons) * maxButtons + 1;
+    let endPage = Math.min(startPage + maxButtons - 1, totalPages);
+
+    // Botão Anterior (se houver páginas antes)
+    if (startPage > 1) {
+        const prevBtn = document.createElement('button');
+        prevBtn.textContent = 'Anterior';
+        prevBtn.style.background = '#004a4d';
+        prevBtn.style.color = 'white';
+        prevBtn.style.borderRadius = '1vh';
+        prevBtn.style.padding = '0.5vh 1vh';
+        prevBtn.style.margin = '0 5px';
+        prevBtn.addEventListener('click', () => {
+            currentPage = startPage - 1;
+            carregarAluguel(currentPage);
+        });
+        pagination.appendChild(prevBtn);
+    }
+
+    // Cria os botões de página dentro do bloco
+    for (let i = startPage; i <= endPage; i++) {
         const btn = document.createElement('button');
         btn.textContent = i;
         btn.style.margin = '0 5px';
@@ -191,8 +314,25 @@ function criarBotoesPaginacao(totalItems, paginaAtual) {
         });
 
         pagination.appendChild(btn);
-    }   
+    }
+
+    // Botão Próximo (se houver mais páginas depois)
+    if (endPage < totalPages) {
+        const nextBtn = document.createElement('button');
+        nextBtn.textContent = 'Próximo';
+        nextBtn.style.background = '#004a4d';
+        nextBtn.style.color = 'white';
+        nextBtn.style.borderRadius = '1vh';
+        nextBtn.style.padding = '0.5vh 1vh';
+        nextBtn.style.margin = '0 5px';
+        nextBtn.addEventListener('click', () => {
+            currentPage = endPage + 1;
+            carregarAluguel(currentPage);
+        });
+        pagination.appendChild(nextBtn);
+    }
 }
+
 
 const tipoUsuario = localStorage.getItem("tipoUsuario");
 const emailUsuario = localStorage.getItem("emailUsuario");
@@ -252,8 +392,8 @@ function limparCamposAluguel() {
 
 btnConfirmarAluguel.addEventListener('click', async () => {
     // Pega os valores do formulário
-    const renterId = document.getElementById('nomeLocatario')?.value.trim(); 
-    const bookId = document.getElementById('livro')?.value.trim(); 
+    const renterId = document.getElementById('nomeLocatario')?.value.trim();
+    const bookId = document.getElementById('livro')?.value.trim();
     const tempo = document.getElementById('tempo')?.value; // tempo em dias
 
     if (!renterId || !bookId || !tempo) {
@@ -274,8 +414,8 @@ btnConfirmarAluguel.addEventListener('click', async () => {
 
     // Cria o objeto para enviar à API
     const novoAluguel = {
-        renterId, 
-        bookId,   
+        renterId,
+        bookId,
         rentDate: rentDateFormatted,
         devolutionDate: devolutionDateFormatted,
         deadLine: tempo
@@ -286,7 +426,7 @@ btnConfirmarAluguel.addEventListener('click', async () => {
         alert("Aluguel cadastrado com sucesso!");
 
         // Atualiza lista
-        getAluguel(); 
+        getAluguel();
         fecharModalAluguel();
     } catch (error) {
         console.error("Erro ao cadastrar aluguel:", error.response?.data || error.message);
@@ -442,10 +582,10 @@ function abrirModalConfirmarEditar() {
     const rentDate = document.getElementById('editarDataAluguel').value;
 
     // Guarda dados temporários
-    dadosEdicaoPendentes = { renterId, bookId, deadLine, rentDate};
+    dadosEdicaoPendentes = { renterId, bookId, deadLine, rentDate };
 
     // Abre modal de confirmação
-    modalConfirmarEditar.style.display = 'flex';    
+    modalConfirmarEditar.style.display = 'flex';
 }
 
 // Confirma atualização e envia para API
@@ -455,7 +595,7 @@ document.getElementById('btnConfirmarEditar').addEventListener('click', async ()
     try {
         await api.put(`/rent/${aluguelSelecionado.id}`, dadosEdicaoPendentes);
         alert('Aluguel atualizado com sucesso!');
-        getAluguel();                    
+        getAluguel();
         fecharModalAtualizar();
         fecharModalConfirmarEditar();
     } catch (error) {
@@ -583,16 +723,16 @@ function transformarSelect(id) {
     });
 }
 function mostrarMensagem(texto, duracao = 3000) {
-  const mensagem = document.getElementById('mensagem');
-  mensagem.textContent = texto;
-  mensagem.classList.add('show');
+    const mensagem = document.getElementById('mensagem');
+    mensagem.textContent = texto;
+    mensagem.classList.add('show');
 
-  // Esconde depois de 'duracao' ms
-  setTimeout(() => {
-    mensagem.classList.remove('show');
-  }, duracao);
+    // Esconde depois de 'duracao' ms
+    setTimeout(() => {
+        mensagem.classList.remove('show');
+    }, duracao);
 }
 // Sobrescreve o alert padrão
-window.alert = function(msg) {
+window.alert = function (msg) {
     mostrarMensagem(msg, 3000); // 3000ms = 3 segundos de duração
 };

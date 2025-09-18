@@ -38,9 +38,11 @@
             <label for="inputEstoque">Estoque</label>
           </div>
 
-          <select id="inputEditora">
-            <option class="option-heigh" value="">Selecione a Editora</option>
-          </select>
+          <div class="input-group">
+            <label for="inputEditora">Editora</label>
+            <input list="listaEditoras" id="inputEditora" name="editora" placeholder="Digite ou selecione">
+            <datalist id="listaEditoras"></datalist>
+          </div>
         </div>
         <div class="modal-buttons">
           <button class="btn-cadastrar">Cadastrar</button>

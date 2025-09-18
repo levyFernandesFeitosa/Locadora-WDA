@@ -215,18 +215,17 @@ async function carregarEditoras() {
     try {
         const response = await api.get("/publisher");
         const editoras = response.data;
-        const select = document.getElementById("inputEditora");
-        
-        // Limpa as opções existentes para evitar duplicatas
-        select.innerHTML = '<option value="">Selecione a Editora</option>';
+        const datalist = document.getElementById("listaEditoras");
+
+        // Limpa antes de popular
+        datalist.innerHTML = "";
 
         editoras.forEach(ed => {
             const option = document.createElement("option");
-            option.value = ed.id; // Define o valor como o ID
-            option.textContent = ed.name; // Define o texto visível como o nome
-            select.appendChild(option);
+            option.value = ed.name; // mostra o nome da editora
+            datalist.appendChild(option);
 
-            // guarda a relação nome -> id para o caso de edição
+            // salva no map nome->id
             editorasMap[ed.name] = ed.id;
         });
 
@@ -247,11 +246,16 @@ btnCadastrar.addEventListener('click', () => {
     const autor = document.getElementById('inputAutor').value.trim();
     const datalancada = document.getElementById('inputDataLancada').value.trim();
     const disponivel = document.getElementById('inputEstoque').value.trim();
-    const editora = document.getElementById('inputEditora').value.trim();
+    const nomeEditora = document.getElementById('inputEditora').value.trim();
+    const idEditora = editorasMap[nomeEditora];
     const alugados = 0;
 
-    if (!nome || !autor || !editora || !disponivel || !datalancada) {
+    if (!nome || !autor || !nomeEditora || !disponivel || !datalancada) {
         alert("Preencha todos os campos obrigatórios.");
+        return;
+    }
+    if (!idEditora) {
+        alert("Selecione uma editora válida!");
         return;
     }
 
@@ -262,7 +266,7 @@ btnCadastrar.addEventListener('click', () => {
             launchDate: datalancada,
             totalQuantity: parseInt(disponivel),
             totalInUse: alugados,
-            publisherId: parseInt(editora)
+            publisherId: idEditora
         });
 
         fecharModal();
@@ -287,6 +291,12 @@ function fecharModal() {
 
 function limparCampos() {
     document.querySelectorAll('.modal-form input').forEach(input => input.value = '');
+
+    const inputEditora = document.getElementById("inputEditora");
+    if (inputEditora) {
+        inputEditora.value = ""; // limpa o campo
+    }
+
 }
 
 

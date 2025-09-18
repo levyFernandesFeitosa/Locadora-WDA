@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Locadora de Livros</title>
-    <link rel="stylesheet" href="/tudo/css/cssAll.css">
+    <link rel="stylesheet" href="/tudo/css/cssAll.css" />
     <link rel="stylesheet" href="/tudo/css/alugueis.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap"
@@ -80,7 +80,10 @@
     <div class="TelaLocal">
       <div class="containerOptions">
         <div class="logoWDA">
-          <img src="/tudo/logo/Captura_de_Tela__3_-removebg-preview.png" alt=""><button class="btn-fechar-menu">✕</button>
+          <img
+            src="/tudo/logo/Captura_de_Tela__3_-removebg-preview.png"
+            alt=""
+          /><button class="btn-fechar-menu">✕</button>
         </div>
         <div id="options-heigh" class="Option">
           <a href="/tudo/html/dashboard.html">Dashboard</a>
@@ -112,7 +115,6 @@
             <span></span>
           </div>
           <div class="Name">Locadora de Livros</div>
-          
         </div>
         <div class="containerPesquisa">
           <div class="text1">Buscar Aluguel:</div>
@@ -124,12 +126,25 @@
           <table class="tabela-locatarios">
             <thead>
               <tr>
-                <th>Id</th>
-                <th>Locatário</th>
-                <th>Livro</th>
+                <th onclick="ordenarTabela('id')" style="cursor: pointer">
+                  Id <span id="sort-id"></span>
+                </th>
+                <th onclick="ordenarTabela('renter')" style="cursor: pointer">
+                  Locatário <span id="sort-renter"></span>
+                </th>
+                <th onclick="ordenarTabela('book')" style="cursor: pointer">
+                  Livro <span id="sort-book"></span>
+                </th>
                 <th>Prazo</th>
-                <th>alugado</th>
-                <th>Devolução</th>
+                <th onclick="ordenarTabela('rentDate')" style="cursor: pointer">
+                  Alugado <span id="sort-rentDate"></span>
+                </th>
+                <th
+                  onclick="ordenarTabela('devolutionDate')"
+                  style="cursor: pointer"
+                >
+                  Devolução <span id="sort-devolutionDate"></span>
+                </th>
                 <th>Status</th>
                 <th>Ações</th>
               </tr>

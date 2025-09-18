@@ -187,9 +187,9 @@ botaoCadastrar.addEventListener('click', () => {
 });
 
 btnCadastrar.addEventListener('click', () => {
-    const nome = document.getElementById('inputNomeUsuario').value.trim();
-    const email = document.getElementById('inputEmailUsuario').value.trim();
-    const senha = document.getElementById('inputSenhaUsuario').value.trim();
+    const nome = document.getElementById('inputNome').value.trim();
+    const email = document.getElementById('inputEmail').value.trim();
+    const senha = document.getElementById('inputSenha').value.trim();
     const confirmarSenha = document.getElementById('inputConfirmarSenha').value.trim();
     const permissao = document.getElementById('selectTipoUsuario').value;
 
